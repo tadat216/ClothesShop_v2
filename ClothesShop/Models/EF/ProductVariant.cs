@@ -22,7 +22,7 @@ namespace ClothesShop.Models.EF
         public string Id { get; set; }
         public string ProductId { get; set; }
         public string ColorId { get; set; }
-        public int IsDefault { get; set; } //la bien the duoc hien thi o 
+        public bool IsDefault { get; set; } //la bien the duoc hien thi o 
         public virtual Product Product { get; set; }
         public virtual Color Color { get; set; }
         public virtual ICollection<VariantSize> VariantSizes { get; set; }

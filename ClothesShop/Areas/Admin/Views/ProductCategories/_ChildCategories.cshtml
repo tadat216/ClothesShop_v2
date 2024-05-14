@@ -1,0 +1,50 @@
+﻿@model IEnumerable<ClothesShop.Models.EF.ProductCategory>
+
+@if (Model != null && Model.Any())
+{
+    var i = 1;
+    foreach (var item in Model)
+    {
+        <tr id="trow_@item.Id" parent-id="parRow_@item.IdParent">
+            <td>@addSpace(item.Level)@item.Title</td>
+            <td>
+                @if (item.IsActive == 1)
+                {
+                    <a href="@Url.Action("SetIsActive","ProductCategories", new { id = item.Id })" class="btn-sm btn-success"><i class="fa fa-toggle-on"></i></a>
+
+                }
+                else if (item.IsActive == 2)
+                {
+                    <a href="@Url.Action("SetIsActive","ProductCategories", new { id = item.Id })" class="btn-sm btn-danger"><i class="fa fa-trash" aria-hidden="true"></i></a>
+
+                }
+            </td>
+            <td>
+                <a href="/Admin/ProductCategories/Edit/@item.Id" class="btn btn-sm btn-primary"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                <a href="/Admin/ProductCategories/Delete/@item.Id" data-id="@item.Id" class="btn btn-sm btn-danger btnDelete"><i class="fa fa-trash"></i></a>
+                <a href="/Admin/ProductCategories/Create/@item.Id" class="btn btn-sm btn-primary"><i class="fa fa-plus" aria-hidden="true"></i></a>
+                <a href="/Admin/ProductCategories/Details/@item.Id" class="btn btn-sm btn-primary"><i class="fa fa-eye" aria-hidden="true"></i></a>
+            </td>
+            <td>
+                <div class="btn-group">
+                    <button class="btn btn-sm btn-info btnShowChildren" data-id="@item.Id" is-shown="false">
+                        <i class="fa fa-chevron-down"></i>
+                    </button>
+                </div>
+            </td>
+        </tr>
+        ++i;
+    }
+}
+
+@functions{
+    public HtmlString addSpace(int level)
+    {
+        string spaces = string.Empty;
+        for (int j = 0; j < level; j++)
+        {
+            spaces += "&nbsp;&nbsp;&nbsp;&nbsp"; // 4 spaces for each level
+        }
+        return new HtmlString(spaces);
+    }
+}

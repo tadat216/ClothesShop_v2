@@ -1,0 +1,47 @@
+﻿@model ClothesShop.Models.EF.News
+@{
+    ViewBag.Title = "Tin tức";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@*<link rel="stylesheet" type="text/css" href="~/Content/assets/plugins/OwlCarousel2-2.2.1/owl.carousel.css">
+<link rel="stylesheet" type="text/css" href="~/Content/assets/plugins/OwlCarousel2-2.2.1/owl.theme.default.css">
+<link rel="stylesheet" type="text/css" href="~/Content/assets/plugins/OwlCarousel2-2.2.1/animate.css">
+<link rel="stylesheet" type="text/css" href="~/Content/assets/plugins/jquery-ui-1.12.1.custom/jquery-ui.css">
+<link rel="stylesheet" type="text/css" href="~/Content/assets/styles/categories_styles.css">
+<link rel="stylesheet" type="text/css" href="~/Content/assets/styles/categories_responsive.css">*@
+
+<div class="container product_section_container">
+    <div class="row">
+        <div class="col product_section clearfix">
+            <h2>@Model.Title</h2>
+        </div>
+    </div>
+    <div>
+        <p>Lượt xem: <b>@Model.ViewCount</b></p>
+        <p>Ngày tạo: @Model.CreatedDate</p>
+        <p>Người tạo: @ViewBag.CreatedUser</p>
+        <p>Ngày cập nhât: @Model.ModifiedDate</p>
+        <p>Người cập nhật: @ViewBag.ModifiedUser</p>
+    </div>
+    <div class="row">
+        <div class="col product_section clearfix">
+            <div class="col-md-12">
+                @Model.Description
+            </div>
+            
+            <div class="col-md-12">
+                @Html.Raw(Model.Detail)
+            </div>
+        </div>
+    </div>
+</div>
+
+@*@section scripts{
+    <script src="~/Content/assets/plugins/Isotope/isotope.pkgd.min.js"></script>
+    <script src="~/Content/assets/plugins/OwlCarousel2-2.2.1/owl.carousel.js"></script>
+    <script src="~/Content/assets/plugins/easing/easing.js"></script>
+    <script src="~/Content/assets/plugins/jquery-ui-1.12.1.custom/jquery-ui.js"></script>
+    <script src="~/Content/assets/js/categories_custom.js"></script>
+}*@
+

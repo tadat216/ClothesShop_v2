@@ -1,0 +1,188 @@
+﻿@model ClothesShop.Models.EF.Order
+
+@{
+    ViewBag.Title = "Chi tiết đơn hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@section naviheader{
+    <ul class="navbar-nav">
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="~/Admin/Home" class="nav-link">Trang chủ</a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="~/Admin/News" class="nav-link">@ViewBag.Title</a>
+        </li>
+    </ul>
+}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>@ViewBag.Title</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active">@ViewBag.Title</li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+<section class="content">
+
+    <!-- Default box -->
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Chi tiết đơn hàng</h3>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Mã đơn hàng</label>
+                        <p class="form-control">@Model.Id</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Tên khách</label>
+                        @{
+                            var name = Model.User.FullName;
+                            if (Model.User.FullName == null)
+                            {
+                                name = Model.User.UserName;
+                            }
+                        }
+                        <p class="form-control">@name</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Số điện thoại</label>
+                        <p class="form-control">@Model.Phone</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Email</label>
+                        <p class="form-control">@Model.User.Email</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Địa chỉ</label>
+                        <p class="form-control">@Model.Address</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Email</label>
+                        <p class="form-control">@Model.OrderedDate</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Phương thức thnah toán</label>
+                        <p class="form-control">@Model.PaymentMethod</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Tổng tiền cần thanh toán</label>
+                        @{
+                            var totalMoney = 0;
+                            foreach (var od in Model.OrderDetails)
+                            {
+                                totalMoney += od.Price * od.Quantity;
+                            }
+                        }
+                        <p class="form-control">@totalMoney</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-12">
+                    <label>Trạng thái đơn hàng</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-6">
+                    @if (Model.IsVerified)
+                    {
+                        <span style="color: #008000;">Đã xác nhận</span>
+                    }
+                    else
+                    {
+                        <span style="color: #FF0000;">Chưa xác nhận</span>
+                    }
+                </div>
+                <div class="form-group col-6">
+                    @if (Model.IsPaid)
+                    {
+                        <span style="color: #008000; ">Đã thanh toán</span>
+                    }
+                    else
+                    {
+                        <span style="color: #FF0000;">Chưa thanh toán</span>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /.card-body -->
+    <div class="card-body">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>STT</th>
+                    <th>Mã sản phẩm</th>
+                    <th>Tên sản phẩm</th>
+                    <th>Màu</th>
+                    <th>Size</th>
+                    <th>Giá</th>
+                    <th>Số lượng</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    var i = 1;
+                    foreach (var od in Model.OrderDetails)
+                    {
+                        <tr id="trow_@od.Id">
+                            <td>@i</td>
+                            <td>@od.ProductVariantId</td>
+                            <td>@od.ProductVariant.Product.Title</td>
+                            <td>@od.ProductVariant.Color.Name</td>
+                            <td>@od.ProductVariant.Size.Name</td>
+                            <td>@od.Price</td>
+                            <td>@od.Quantity</td>
+
+                            <td>
+                                <a href="/Admin/Product/Details/@od.ProductVariant.Product.Id" data-id="@od.ProductVariant.Product.Id" class="btn btn-sm btn-primary btnDetail"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                            </td>
+                        </tr>
+                        ++i;
+                    }
+                }
+
+            </tbody>
+        </table>
+
+    </div>
+    <!-- /.card-footer-->
+    </div>
+    <!-- /.card -->
+
+</section>

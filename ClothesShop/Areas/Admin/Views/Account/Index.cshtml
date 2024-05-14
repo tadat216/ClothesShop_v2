@@ -1,0 +1,206 @@
+﻿@model IEnumerable<ClothesShop.Models.ApplicationUser>
+@{
+    ViewBag.Title = "Quản lý tài khoản";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+
+@section naviheader{
+    <ul class="navbar-nav">
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="~/Admin/Home" class="nav-link">Trang chủ</a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="~/Admin/Account" class="nav-link">Danh sách tài khoản</a>
+        </li>
+    </ul>
+}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Danh sách tài khoản</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active">Tài khoản</li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+<!-- Main content -->
+<section class="content">
+
+    <!-- Default box -->
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Danh sách tài khoản</h3>
+
+            <div class="card-tools">
+                <a href="~/Admin/Account/Create" class="btn btn-primary">Thêm mới</a>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <div class="col-12">
+                @using (Html.BeginForm("Index", "Account", FormMethod.Get, new { enctype = "multipart/form-data" }))
+                {
+                    var searchText = "";
+                    if (TempData["id"] != null)
+                    {
+                        searchText = TempData["id"].ToString();
+                    }
+
+
+                    <div class=" row mt-2">
+                        <div class="col-4">
+                            <div class="row">
+                                <label class="focus-label">Mã tài khoản hoặc từ khóa</label>
+                                <div class="col-2 btnSearchId"><a href="/Admin/Account/SearchId"><i class='fa fa-circle-notch'></i></a></div>
+                            </div>
+                            @Html.TextBox("Searchtext", searchText, new { @class = "form-control", @placeholder = "" })
+                        </div>
+                        <div class="col-4">
+                            <label class="focus-label">Số điện thoại</label>
+                            @Html.TextBox("phonenumber", "", new { @class = "form-control", @placeholder = "" })
+                        </div>
+                        <div class="col-4">
+                            <label class="focus-label">Quyền</label>
+                            <div>
+                                <select name="role" class="col-12" style="height: 37px; border: 1px solid #ced4da; border-radius: .25rem; box-shadow: inset 0 0 0 transparent; " name="role">
+                                    <option value="">--Quyền--</option>
+                                    @foreach (var role in ViewBag.ListRole)
+                                    {
+                                        <option value="@role.Id">@role.Name</option>
+
+                                    }
+
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class=" row mt-2">
+                        <div class="col-4">
+                            <label class="focus-label">Xác minh</label>
+                            <select name="confirm" class="col-12" style="height: 37px; border: 1px solid #ced4da; border-radius: .25rem; box-shadow: inset 0 0 0 transparent; " name="role">
+                                <option value="">--Không--</option>
+                                <option value="yes">Đã xác minh</option>
+                                <option value="no">Chưa xác minh</option>
+                            </select>
+                        </div>
+                        <div class="col-4">
+                            <label class="focus-label">Số dòng mỗi trang</label>
+                            @Html.TextBox("size", "", new { @class = "form-control", @placeholder = "" })
+                        </div>
+                        <div class="col-4">
+                            <div style="height:30px;"></div>
+                            <button type="submit" class="btn btn-default offset-4 col-5 btn-sm" style="height:37px;">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </div>
+
+
+                    </div>
+                   
+
+                }
+
+            </div>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Tên tài khoản</th>
+                        <th>Email</th>
+                        <th>Số điện thoại</th>
+                        <th>Đã xác minh</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        var i = 1;
+                        foreach (var item in Model)
+                        {
+                            var strCheck = item.EmailConfirmed ? "<i class='fa fa-check text-success'></i>" : "<i class='fa fa-times text-danger'></i>";
+                            <tr>
+                                <td>@i</td>
+                                <td>@item.UserName</td>
+                                <td>@item.Email</td>
+                                <td>@item.Phone</td>
+                                <td><a href="#" data-id="@item.Id" class="btnActive">@Html.Raw(strCheck)</a></td>
+                                <td>
+                                    <a href="~/Admin/Account/Edit/@item.Id" class="btn btn-sm btn-primary"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                                    @*<a href="#" data-user="@item.Id" class="btn btn-sm btn-danger btnDelete">Xóa</a>*@
+                                </td>
+                            </tr>
+                            ++i;
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="4">Không có bản ghi nào!!!</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <!-- /.card-body -->
+        <div class="card-footer">
+
+        </div>
+        <!-- /.card-footer-->
+    </div>
+    <!-- /.card -->
+
+</section>
+<!-- /.content -->
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $('body').on('click', '.btnDelete', function () {
+                var id = $(this).data("id");
+                var conf = confirm('Bạn có muốn xóa bản ghi này không?');
+                if (conf === true) {
+                    $.ajax({
+                        url: '/Account/Delete',
+                        type: 'POST',
+                        data: { id: id },
+                        success: function (rs) {
+                            if (rs.success) {
+                                $('#trow_' + id).remove();
+                            }
+                        }
+                    });
+                }
+            });
+            $('body').on('click', '.btnActive', function (e) {
+                e.preventDefault();
+                var btn = $(this);
+                var id = btn.data("id");
+                $.ajax({
+                    url: '/Admin/Account/IsActive',
+                    type: 'POST',
+                    data: { id: id },
+                    success: function (rs) {
+                        debugger;
+                        if (rs.success) {
+                            if (rs.isAcive) {
+                                btn.html("<i class='fa fa-check text-success'></i>");
+                            } else {
+                                btn.html("<i class='fas fa-times text-danger'></i>");
+                            }
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+}

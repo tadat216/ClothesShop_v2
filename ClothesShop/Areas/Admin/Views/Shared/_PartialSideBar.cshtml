@@ -1,0 +1,175 @@
+﻿
+@{
+    Layout = "";
+}
+
+<!-- Sidebar -->
+<div class="sidebar">
+    <!-- Sidebar user panel (optional) -->
+    <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+        <div class="image">
+            <img src="~/Content/client/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
+        </div>
+        <div class="info">
+            <a href="#" class="d-block">Xin chào, @User.Identity.Name</a>
+
+        </div>
+
+    </div>
+
+    <!-- Sidebar Menu -->
+    <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+            <!-- Add icons to the links using the .nav-icon class
+            with font-awesome or any other icon font library -->
+            <li class="nav-item">
+                <a href="~/Home" class="nav-link">
+                    <i class="nav-icon fas fa-home"></i>
+                    <p>
+                        Trang chủ khách hàng
+                    </p>
+                </a>
+            </li>
+            @if (this.User.IsInRole("Admin"))
+            {
+                <li class="nav-item">
+                    <a href="~/Admin/Category" class="nav-link">
+                        <i class="nav-icon fas fa-th"></i>
+                        <p>
+                            Danh mục
+                        </p>
+                    </a>
+                </li>
+            }
+            <li class="nav-item">
+                <a href="~/Admin/News" class="nav-link">
+                    <i class="nav-icon fas fa-th"></i>
+                    <p>
+                        Tin tức
+                    </p>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="~/Admin/Order" class="nav-link">
+                    <i class="nav-icon fas fa-th"></i>
+                    <p>
+                        Quản lý đơn hàng
+                    </p>
+                </a>
+            </li>
+            @*<li class="nav-item">
+                    <a href="~/Admin/Order/SaleReport" class="nav-link">
+                        <i class="nav-icon fas fa-th"></i>
+                        <p>
+                            Thống kê báo cáo
+                        </p>
+                    </a>
+                </li>*@
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <i class="nav-icon fas fa-th"></i>
+                    <p>
+                        Thống kê báo cáo
+                        <i class="right fas fa-angle-left"></i>
+                    </p>
+                </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="~/Admin/Order/SaleReport" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Thống kê đơn hàng</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="~/Admin/Statistical/Index" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Thống kê doanh thu</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="~/Admin/Products/ShowSoldQuantity" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Sản phẩm bán được</p>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <i class="nav-icon fas fa-th"></i>
+                    <p>
+                        Quản lý sản phẩm
+                        <i class="right fas fa-angle-left"></i>
+                    </p>
+                </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="~/Admin/ProductCategories" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Danh mục sản phẩm</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="~/Admin/Products" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Sản phẩm</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="~/Admin/Colors" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Màu sắc</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="~/Admin/Sizes" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Kích thước</p>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            @if (this.User.IsInRole("Admin"))
+            {
+
+
+                <li class="nav-item">
+                    <a href="~/Admin/Role" class="nav-link">
+                        <i class="nav-icon fas fa-th"></i>
+                        <p>
+                            Danh sách quyền
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="~/Admin/Account" class="nav-link">
+                        <i class="nav-icon fas fa-th"></i>
+                        <p>
+                            Danh sách tài khoản
+                        </p>
+                    </a>
+                </li>
+            }
+            <li class="nav-item">
+                <a href="javascript:document.getElementById('logOffForm').submit()" class="nav-link">
+                    <i class="nav-icon fas fa-power-off"></i>
+                    <p>
+                        Đăng xuất
+                    </p>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <!-- /.sidebar-menu -->
+</div>
+<!-- /.sidebar -->
+
+@if (Request.IsAuthenticated)
+{
+    <div style="display:none;">
+        @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { @id = "logOffForm" }))
+        {
+            @Html.AntiForgeryToken();
+        }
+    </div>
+}

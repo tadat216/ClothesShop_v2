@@ -1,0 +1,11 @@
+﻿@{
+    ViewBag.Title = "Xác minh tài khoản thành công";
+}
+<main aria-labelledby="title">
+    <h2 id="title">@ViewBag.Title.</h2>
+    <div>
+        <p>
+            Bạn đã xác minh tài khoản thành công. Hãy @Html.ActionLink("Truy cập link này để đăng nhập", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })
+        </p>
+    </div>
+</main>

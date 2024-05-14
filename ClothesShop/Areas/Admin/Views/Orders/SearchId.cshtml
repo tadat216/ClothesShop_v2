@@ -1,0 +1,170 @@
+﻿@model PagedList.PagedList<ClothesShop.Models.ApplicationUser>
+@using PagedList;
+@using PagedList.Mvc;
+
+@{
+    ViewBag.Title = "Tìm mã số khách hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@section naviheader{
+    <ul class="navbar-nav">
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="~/Admin/Home" class="nav-link">Trang chủ</a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="~/Admin/News" class="nav-link">@ViewBag.Title</a>
+        </li>
+    </ul>
+}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>@ViewBag.Title</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active">@ViewBag.Title</li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+@Html.Partial("_PartialMessage")
+
+<!-- Main content -->
+<section class="content">
+
+    <!-- Default box -->
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Danh sách khách hàng</h3>
+
+        </div>
+        <div class="card-body">
+            <div class="col-12">
+                @using (Html.BeginForm("SearchId", "Orders", FormMethod.Get, new { enctype = "multipart/form-data" }))
+                {
+                    <div class=" row mt-2">
+                       <div class="col-4">
+                           <label class="focus-label">Tên người dùng</label>
+                           @Html.TextBox("username", "", new { @class = "form-control", @placeholder = "" })
+                       </div>
+                        <div class="col-4">
+                            <label class="focus-label">Họ và tên</label>
+                            @Html.TextBox("fullname", "", new { @class = "form-control", @placeholder = "" })
+                        </div>
+                        <div class="col-4">
+                            <label class="focus-label">Email</label>
+                            @Html.TextBox("email", "", new { @class = "form-control", @placeholder = "" })
+                        </div>
+                    </div>
+                    <div class=" row mt-2">
+                        <div class="col-4">
+                            <label class="focus-label">Số điện thoại</label>
+                            @Html.TextBox("phone", "", new { @class = "form-control", @placeholder = "" })
+                        </div>
+                        <div class="col-4">
+                            <label class="focus-label">Số dòng mỗi trang</label>
+                            @Html.TextBox("size", "", new { @class = "form-control", @placeholder = "" })
+                        </div>
+                        <div class="col-4">
+                            <div style="height:30px;"></div>
+                            <button type="submit" class="btn btn-default offset-4 col-5 btn-sm" style="height:37px;">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                }
+
+            </div>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Mã</th>
+                        <th>Tên người dùng</th>
+                        <th>Họ và tên</th>
+                        <th>Email</th>
+                        <th>Số điện thoại</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        var i = 1;
+                        foreach (var item in Model)
+                        {
+                            var stt = (ViewBag.pageIndex - 1) * ViewBag.pageSize + i;
+                            <tr id="trow_@item.Id">
+                                <td>@stt</td>
+                                <td>@item.Id</td>
+                                <td>@item.UserName</td>
+                                <td>@item.FullName</td>
+                                <td>@item.Email</td>
+                                <td>@item.Phone</td>
+
+                                <td><input type="radio" name="option" value="@item.Id" class="btnRadioOption"></td>
+                            </tr>
+                            ++i;
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="5">Không có bản ghi nào!!!</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+        </div>
+        <!-- /.card-body -->
+        <div class="card-footer">
+
+        </div>
+        <!-- /.card-footer-->
+    </div>
+    <!-- /.card -->
+
+</section>
+<!-- /.content -->
+@section scripts{
+    <script>
+        $(document).ready(function () {
+
+
+            $('body').on('click', '.btnRadioOption', function (e) {
+                e.preventDefault();
+                var btn = $(this);
+                var radioButtons = document.getElementsByName("option");
+                var id = "";
+                //alert("ok");
+                for (var i = 0; i < radioButtons.length; i++) {
+                    if (radioButtons[i].checked) {
+                        id = radioButtons[i].value;
+                        //console.log(id);
+                        //alert(id);
+                        break;
+                    }
+                }
+                $.ajax({
+                    url: '/admin/orders/SetTempData',
+                    type: 'POST',
+                    data: { data: id },
+                    success: function () {
+                        window.location.href = 'Index'; // Chuyển hướng người dùng sau khi dữ liệu được xử lý
+                    }
+                });
+            });
+
+        });
+    </script>
+}

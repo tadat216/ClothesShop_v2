@@ -1,0 +1,147 @@
+﻿@model IEnumerable<ClothesShop.Models.EF.Order>
+@{
+    ViewBag.Title = "Lịch sử mua hàng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .QmO3Bu {
+        background: #fff;
+        border-top-left-radius: 2px;
+        border-top-right-radius: 2px;
+        display: flex;
+        margin-bottom: 12px;
+        overflow: hidden;
+        position: -webkit-sticky;
+        position: sticky;
+        top: 0;
+        width: 100%;
+        z-index: 10;
+    }
+
+    h1.a11y-hidden, h2.a11y-hidden, h3.a11y-hidden {
+        height: 1px;
+        left: -9999px;
+        overflow: hidden;
+        position: absolute;
+        width: 1px;
+    }
+
+    mRVNLm {
+        color: #ee4d2d;
+    }
+
+    .KI5har {
+        align-items: center;
+        background: #fff;
+        border-bottom: 2px solid rgba(0, 0, 0, .09);
+        color: rgba(0, 0, 0, .8);
+        cursor: pointer;
+        display: flex;
+        flex: 1;
+        font-size: 16px;
+        justify-content: center;
+        line-height: 19px;
+        overflow: hidden;
+        padding: 16px 0;
+        text-align: center;
+        transition: color .2s;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+    }
+</style>
+
+<div class="row col-12">
+    @using (Html.BeginForm("ShoppingHistory", "Account", FormMethod.Get, new { enctype = "multipart/form-data", @class = "form-inline d-flex col-12" }))
+    {
+        <div class="form-group mb-2 col-10">
+            <input name="Searchtext" value="" type="text" class="form-control " placeholder="Tìm kiếm theo Mã đơn hàng hoặc tên sản phẩm" style="width: 100%">
+        </div>
+        <div class="form-group mb-2 ml-2">
+            <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+        </div>
+    }
+    <section class="QmO3Bu" aria-role="tablist">
+        <h2 class="a11y-hidden"></h2>
+        <a href="#" class="KI5har mRVNLm btnOrder" data-id="all" title="Tất cả" aria-role="tab" aria-selected="true" aria-controls="olp_panel_id-0.08896883105868847" id="olp_tab_id-0.08896883105868847">
+            <span class="NoH9rC">Tất cả</span>
+        </a>
+        <a href="#" class="KI5har btnOrder" data-id="isVerified" title="Đã đi đơn" aria-role="tab" aria-selected="false" aria-controls="olp_panel_id-0.5641504579440175" id="olp_tab_id-0.5641504579440175">
+            <span class="NoH9rC">Đã đi đơn</span>
+        </a>
+        <a href="#" class="KI5har btnOrder" data-id="isPaid" title="Hoàn thành" aria-role="tab" aria-selected="false" aria-controls="olp_panel_id-0.8466887306709114" id="olp_tab_id-0.8466887306709114">
+            <span class="NoH9rC">Hoàn thành</span>
+        </a>
+    </section>
+    <section>
+        @if (Model != null && Model.Any())
+        {
+            //var imageLists = ViewBag.imageLists as IEnumerable<ClothesShop.Models.EF.ImageList>;
+            //var images = ViewBag.images as IEnumerable<ClothesShop.Models.EF.Image>;
+
+            foreach (var order in Model)
+            {
+                <div>
+                    <h4>@order.Id</h4>
+                </div>
+                <div class="row col-12">
+                    @foreach (var od in order.OrderDetails)
+                    {
+                        var money = od.Quantity * od.Price;
+                        //var imageId = images.FirstOrDefault(i => i.ProductId == od.ProductVariant.ProductId && i.ColorId == od.ProductVariant.ColorId).Id;
+                        //var imgUrl = imageLists.FirstOrDefault(i => i.ImageId == imageId && i.IsDefault).ImageUrl;
+                        var imgUrl = od.VariantSize.ProductVariant.ImageLists.Where(x => x.IsDefault);
+                        <img src="@imgUrl" class="col-3" />
+                        <div class="col-6">
+                            <h5>@od.VariantSize.ProductVariant.Product.Title</h5>
+                            <div class="row">
+                                <p>Màu: @od.VariantSize.ProductVariant.Color.Name</p>
+                                <p>Kích cỡ: @od.VariantSize.Size.Name</p>
+                            </div>
+                            <p>Số lượng: @od.Quantity</p>
+                        </div>
+                        <div><p>@money</p></div>
+                    }
+                </div>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="5">Không có đơn hàng!!!</td>
+            </tr>
+        }
+
+    </section>
+        </div>
+
+        @section scripts{
+            <script>
+                $(document).ready(function () {
+                    $('body').on('click', '.btnOrder', function () {
+                        var type = $(this).data("id");
+                        var searchtext = "";
+                        var searchInput = document.getElementByName('Searchtext');
+                        searchInput.addEventListener('keypress', function (event) {
+                            if (event.key === 'Enter') {
+                                event.preventDefault();
+                                searchtext = searchInput.value;
+                                console.log("Processing search for:", inputValue);
+                                $.ajax({
+                                    url: '/Account/ShoppingHistory',
+                                    type: 'GET',
+                                    data: { Searchtext: searchtext, type: type },
+                                    success: function (rs) {
+
+                                    }
+                                });
+                            }
+                        });
+
+                    });
+
+
+
+                });
+            </script>
+        }

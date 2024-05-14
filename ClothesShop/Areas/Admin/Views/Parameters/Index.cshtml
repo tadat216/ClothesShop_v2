@@ -1,0 +1,120 @@
+﻿@model PagedList.PagedList<ClothesShop.Models.EF.Parameter>
+@using PagedList;
+@using PagedList.Mvc;
+@{
+    ViewBag.Title = "Danh sách tham số";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+
+
+@section naviheader{
+    <ul class="navbar-nav">
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="~/Admin/Home" class="nav-link">Trang chủ</a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="~/Admin/Parameters" class="nav-link">Tham số</a>
+        </li>
+    </ul>
+}
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Danh sách tham số</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active">Tham số</li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+@Html.Partial("_PartialMessage")
+
+<!-- Main content -->
+<section class="content">
+
+    <!-- Default box -->
+    <div class="card">
+        <div class="card-header">
+
+
+            <div class="card-tools">
+                <a href="~/Admin/Parameters/Create" class="btn btn-primary">Thêm mới</a>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-6">
+                    @using (Html.BeginForm("index", "Parameters", FormMethod.Get, new { enctype = "multipart/form-data" }))
+                    {
+                        <div class="input-group">
+                            @*<input type="search" name="searchText" class="form-control form-control-lg" placeholder="Nhập vào từ khóa">*@
+                            @Html.TextBox("Searchtext", "", new { @class = "form-control", @placeholder = "Nhập từ khóa tìm kiếm", @id = "searchText" })
+                            @Html.TextBox("size", "", new { @class = "form-control", @placeholder = "" })
+                            <div class="input-group-append">
+                                <button type="submit" class="btn btn-default">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Tên tham số</th>
+                        <th>Giá trị</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        var i = 1;
+                        foreach (var item in Model)
+                        {
+                            var stt = (ViewBag.page - 1) * ViewBag.pageSize + i;
+
+                            <tr id="trow_@item.Id">
+                                <td>@stt</td>
+                                <td>@item.Name</td>
+                                <td>@item.Value</td>
+
+                                <td>
+                                    <a href="/Admin/Parameters/Edit/@item.Id"  class="btn btn-sm btn-primary">Sửa</a>
+                                </td>
+                            </tr>
+                            ++i;
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="5">Không có bản ghi nào!!!</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+        </div>
+        <!-- /.card-body -->
+        <div class="card-footer">
+
+        </div>
+        <!-- /.card-footer-->
+    </div>
+    <!-- /.card -->
+
+</section>
+<!-- /.content -->
+

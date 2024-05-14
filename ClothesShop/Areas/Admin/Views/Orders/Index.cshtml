@@ -1,0 +1,230 @@
+﻿
+@model PagedList.PagedList<ClothesShop.Models.EF.Order>
+@using PagedList;
+@using PagedList.Mvc;
+
+@{
+    ViewBag.Title = "Quản lý đơn hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+
+@section naviheader{
+    <ul class="navbar-nav">
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="~/Admin/Home" class="nav-link">Trang chủ</a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="~/Admin/News" class="nav-link">@ViewBag.Title</a>
+        </li>
+    </ul>
+}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>@ViewBag.Title</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active">@ViewBag.Title</li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+@Html.Partial("_PartialMessage")
+
+<!-- Main content -->
+<section class="content">
+
+    <!-- Default box -->
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Danh sách đơn hàng</h3>
+        </div>
+        <div class="card-body">
+            <div class="col-12">
+                @using (Html.BeginForm("index", "Orders", FormMethod.Get, new { enctype = "multipart/form-data" }))
+                {
+
+                    var userId = "";
+                    if (TempData["id"] != null)
+                    {
+                        userId = TempData["id"].ToString();
+                    }
+                    <div class=" row mt-2">
+                        <div class="col-4">
+                            <label class="focus-label">Từ</label>
+                            <input name="from" class="form-control floating" value="@ViewBag.FromDate" type="date">
+
+                        </div>
+                        <div class="col-4">
+                            <div class="row">
+                                <label class="focus-label">Mã khách hàng</label>
+                                <div class="col-2 btnSearchId"><a href="/Admin/Orders/SearchId"><i class='fa fa-circle-notch'></i></a></div>
+                            </div>
+                            @Html.TextBox("userId", userId, new { @class = "form-control", @placeholder = "" })
+                        </div>
+                        <div class="col-4">
+                            <label class="focus-label">Xác nhận đơn</label>
+                            <select name="isVerified" class="col-12" style="height: 37px; border: 1px solid #ced4da; border-radius: .25rem; box-shadow: inset 0 0 0 transparent; " name="role">
+                                <option value="">--Không--</option>
+                                <option value="yes">Đã xác nhận</option>
+                                <option value="no">Không xác nhận</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class=" row mt-2">
+                        <div class="col-4">
+                            <label class="focus-label">Đến</label>
+                            <input name="to" class="form-control floating" value="@ViewBag.ToDate" type="date">
+                        </div>
+                        <div class="col-4">
+                            <label class="focus-label">Thanh toán</label>
+                            <select name="isPaid" class="col-12" style="height: 37px; border: 1px solid #ced4da; border-radius: .25rem; box-shadow: inset 0 0 0 transparent; " name="role">
+                                <option value="">--Không--</option>
+                                <option value="yes">Đã thanh toán</option>
+                                <option value="no">Chưa thanh toán</option>
+                            </select>
+                        </div>
+                        <div class="col-4">
+                            <label class="focus-label">Số dòng mỗi trang</label>
+                            @Html.TextBox("size", "", new { @class = "form-control", @placeholder = "" })
+                        </div>
+                        
+                    </div>
+                    <div class="row mt-2">
+                        <div class=" offset-5 col-4">
+                            <div style="height:30px;"></div>
+                            <button type="submit" class="btn btn-default  col-5 btn-sm" style="height:37px;">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                }
+
+            </div>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Mã</th>
+                        <th>Khách hàng</th>
+                        <th>Địa chỉ</th>
+                        <th>Số điện thoại</th>
+                        <th>Email</th>
+                        <th>Phương thức thanh toán</th>
+                        <th>Ngày đặt</th>
+                        <th>Xác nhận đi đơn</th>
+                        <th>Thanh toán</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        var i = 1;
+                        foreach (var item in Model)
+                        {
+                            var stt = (ViewBag.pageIndex - 1) * ViewBag.pageSize + i;
+                            var strVerified = item.IsVerified ? "<i class='fa fa-check text-success'></i>" : "<i class='fa fa-times text-danger'></i>";
+                            var strPaid = item.IsPaid ? "<i class='fa fa-check text-success'></i>" : "<i class='fa fa-times text-danger'></i>";
+                            <tr id="trow_@item.Id">
+                                <td>@stt</td>
+                                <td>@item.Id</td>
+                                <td>@item.User.UserName</td>
+                                <td>@item.Address</td>
+                                <td>@item.Phone</td>
+                                <td>@item.User.Email</td>
+                                <td>@item.PaymentMethod</td>
+                                <td>@item.OrderedDate.ToString("dd/MM/yyyy")</td>
+                                <td>
+                                    <a href="#" data-id="@item.Id" class="btnVerified">@Html.Raw(strPaid)</a>
+                                </td>
+                                <td>
+                                    <a href="#" data-id="@item.Id" class="btnPaid">@Html.Raw(strVerified)</a>
+                                </td>
+                                <td>
+                                    <a href="/Admin/Orders/Details/@item.Id" data-id="@item.Id" class="btn btn-sm btn-primary btnDetail"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                                </td>
+                            </tr>
+                            ++i;
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="5">Không có bản ghi nào!!!</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+        </div>
+        <!-- /.card-body -->
+        <div class="card-footer">
+
+        </div>
+        <!-- /.card-footer-->
+    </div>
+    <!-- /.card -->
+
+</section>
+<!-- /.content -->
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $('body').on('click', '.btnDelete', function () {
+                var id = $(this).data("id");
+                var conf = confirm('Bạn có muốn xóa bản ghi này không?');
+                if (conf === true) {
+                    $.ajax({
+                        url: '/admin/News/delete',
+                        type: 'POST',
+                        data: { id: id },
+                        success: function (rs) {
+                            if (rs.success) {
+                                $('#trow_' + id).remove();
+                            }
+                        }
+                    });
+                }
+            });
+
+            $('body').on('click', '.btnVerified', function (e) {
+                e.preventDefault();
+                var btn = $(this);
+                var id = btn.data("id");
+                $.ajax({
+                    url: '/admin/orders/IsVerified',
+                    type: 'POST',
+                    data: { id: id },
+                    success: function (rs) {
+                        debugger;
+                        if (rs.success) {
+                            if (rs.isVerified) {
+                                btn.html("<i class='fa fa-check text-success'></i>");
+                            } else {
+                                btn.html("<i class='fas fa-times text-danger'></i>");
+                            }
+                        }
+                    }
+                });
+            });
+
+        });
+    </script>
+}
+
+
+
+
+

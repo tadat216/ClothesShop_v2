@@ -1,0 +1,106 @@
+﻿@{
+    ViewBag.Title = "Danh mục";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    ViewBag.IdPar = null;
+}
+
+@section naviheader{
+    <ul class="navbar-nav">
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="~/Admin/Home" class="nav-link">Trang chủ</a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="~/Admin/ProductCategories" class="nav-link">Danh mục</a>
+        </li>
+    </ul>
+}
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Danh sách danh mục</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active">Danh mục</li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+@Html.Partial("_PartialMessage")
+
+<!-- Main content -->
+<section class="content">
+
+    <!-- Default box -->
+    <div class="card">
+        <div class="card-header">
+            <div class="card-tools">
+                <a href="~/Admin/ProductCategories/Create" class="btn btn-primary">Thêm mới</a>
+                <a href="~/Admin/ProductCategories/Trash" class="btn btn-primary">Thùng rác</a>
+            </div>
+        </div>
+        <div class="card-body">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Tên danh mục</th>
+                        <th>Trạng thái</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @Html.Action("GetChildren", "ProductCategories", new { id = string.Empty })
+                </tbody>
+            </table>
+        </div>
+        <!-- /.card-body -->
+        <div class="card-footer">
+
+        </div>
+        <!-- /.card-footer-->
+    </div>
+    <!-- /.card -->
+
+</section>
+<!-- /.content -->
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $('body').on('click', '.btnShowChildren', function () {
+                var itemId = $(this).attr("data-id");
+                var isShown = $(this).attr('is-shown');
+                var $icon = $(this).find('i');
+                if (isShown == "false") {
+                    $.ajax({
+                        url: '/Admin/ProductCategories/GetChildren', // Địa chỉ URL để lấy partial view
+                        type: 'GET',
+                        data: { parentId: itemId },
+                        success: function (data) {
+                            var rowId = '#trow_' + itemId;
+                            //alert(data)
+                            $(data).insertAfter($(rowId));
+                            $icon.removeClass('fa-chevron-down').addClass('fa-chevron-up');
+                        },
+                        error: function () {
+                            alert('Có lỗi xảy ra khi tải thông tin.');
+                        }
+                    });
+                    $(this).attr("is-shown", "true");
+                }
+                else {
+                    //alert("3")
+                    $('tr[parent-id="parRow_' + itemId + '"]').remove();
+                    $(this).attr("is-shown", "false");
+                    $icon.removeClass('fa-chevron-up').addClass('fa-chevron-down');
+                }
+
+            });
+        });
+    </script>
+}

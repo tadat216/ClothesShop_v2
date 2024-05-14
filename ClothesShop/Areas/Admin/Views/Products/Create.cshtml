@@ -1,0 +1,184 @@
+﻿@model ClothesShop.Models.ViewModel.ProductCreateViewModel
+
+@{
+    ViewBag.Title = "Create New Product";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Thêm sản phẩm mới</h2>
+
+<section class="content">
+    @using (Html.BeginForm("Create", "Products", FormMethod.Post, new { enctype = "multipart/form-data", @class = "needs-validation", novalidate = "novalidate" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="mb-3">
+            @Html.LabelFor(model => model.ProductCategoryId, "Chọn danh mục", new { @class = "form-label" })
+            @Html.DropDownListFor(model => model.ProductCategoryId, Model.Categories, "- Chọn danh mục -", new { @class = "form-select", required = "required" })
+            @Html.ValidationMessageFor(model => model.ProductCategoryId, "", new { @class = "text-danger" })
+        </div>
+        <div class="mb-3">
+            @Html.LabelFor(model => model.Title, "Tiêu đề", new { @class = "form-label" })
+            @Html.TextBoxFor(model => model.Title, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+        </div>
+        <div class="mb-3">
+            @Html.LabelFor(model => model.ProductCode, "Code sản phẩm", new { @class = "form-label" })
+            @Html.TextBoxFor(model => model.ProductCode, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.ProductCode, "", new { @class = "text-danger" })
+        </div>
+        <div class="mb-3">
+            @Html.LabelFor(model => model.Description, "Mô tả ngắn", new { @class = "form-label" })
+            @Html.TextAreaFor(model => model.Description, new { @class = "form-control", rows = "3" })
+            @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+        </div>
+        <div class="form-group mb-3">
+            <label for="NewsDescription">Chi tiết</label>
+            @Html.TextAreaFor(x => x.Detail, new { @class = "form-control", @id = "txtDetail" })
+        </div>
+
+        <div class="mb-3">
+            @Html.LabelFor(model => model.Price, "Giá", new { @class = "form-label" })
+            @Html.TextBoxFor(model => model.Price, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Price, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="mb-3">
+            @Html.LabelFor(model => model.PriceSale, "Giá sale", new { @class = "form-label" })
+            @Html.TextBoxFor(model => model.PriceSale, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.PriceSale, "", new { @class = "text-danger" })
+        </div>
+
+
+        <div class="d-flex justify-content-between">
+            <h3>Biến thể</h3>
+            <button type="button" id="addVariantBtn" class="btn btn-info mb-3">Thêm biến thể</button>
+        </div>
+        <div id="variantContainer"></div>
+
+
+        <div class="text-right">
+            <button type="submit" class="btn btn-success">Thêm sản phẩm</button>
+        </div>
+    }
+</section>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+<script src="~/Content/ckfinder/ckfinder.js"></script>
+<script src="~/Content/ckeditor/ckeditor.js"></script>
+
+<script>
+
+
+$(document).ready(function () {
+
+    var variantIndex = 0;
+    var variantClicked = 0;
+
+    function BrowseServer(index) {
+        //alert(1);
+        var finder = new CKFinder();
+        finder.selectActionFunction = function (fileUrl) {
+            //alert(index);
+            var imageHtml = `<img src="${fileUrl}" class="img-thumbnail my-2" style="height:100px;">` +
+                `<input type="text" name="Variants[${index}].Images" value="{fileUrl}" style="display:none;" />`;
+            $(`#imagesContainer${index}`).append(imageHtml);
+        };
+        finder.popup();
+    }
+
+    $('#addVariantBtn').click(function () {
+        var variantHtml = `
+            <div class="card mb-3" id="variant${variantIndex}">
+                <div class="card-body">
+                    <button type="button" class="btn btn-danger removeVariantBtn float-right" data-index="${variantIndex}">Xóa</button>
+                    <div class="mb-3">
+                        <label class="form-label">Mặc định</label>
+                        <input type="radio" name="IsDefaultVariant" class="form-radio" value="${variantIndex}" style="height: 15px; width: 15px; vertical-align: middle;">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Màu sắc:</label>
+                        <select name="Variants[${variantIndex}].ColorId" class="form-select colorSelect">
+                            @foreach (var color in Model.Colors)
+                            {
+
+                                <option value="@color.Value">
+                                    @color.Text
+                                </option>
+                            }
+                        </select>
+                    </div>
+
+                    <div id="imagesContainer${variantIndex}"></div>
+                     <input type="button" class="btn btn-primary addImageBtn my-2" data-index="${variantIndex}" id="iTaiAnh" value="Tải ảnh">
+
+                    <div id="sizeContainer${variantIndex}"></div>
+                    <button type="button" class="btn btn-primary addSizeBtn my-2" data-index="${variantIndex}">Thêm Size</button>
+                </div>
+            </div>
+        `;
+        $('#variantContainer').append(variantHtml);
+        addSize(variantIndex); // Add initial size input
+        variantIndex++;
+        $('.colorSelect').change(checkForDuplicateColor);
+    });
+
+   function addSize(index) {
+        var sizeHtml = `
+            <div class="mb-3">
+                <div class="row">
+                    <label class="form-label mt-2 mr-2">Size: </label>
+                    <select name="Variants[${index}].SizeId" class="form-select">
+                        @foreach (var size in Model.Sizes)
+                        {
+                            <option value="@size.Value">@size.Text</option>
+                        }
+                    </select>
+
+                    <label class="form-label mt-2 mr-2">Số lượng: </label>
+                    <input name="Variants[${index}].Amount" class="form-control" style="width: 150px;" />
+
+                </div>
+            </div>
+        `;
+        $(`#sizeContainer${index}`).append(sizeHtml);
+    }
+
+    function removeVariant(index) {
+        $(`#variant${index}`).remove();
+    }
+
+    $(document).on('click', '.removeVariantBtn', function () {
+        var index = $(this).attr('data-index');
+        removeVariant(index);
+    });
+
+    $(document).on('click', '.addSizeBtn', function () {
+        var index = $(this).attr('data-index');
+        addSize(index);
+    });
+
+    $(document).on('click', '.addImageBtn', function () {
+        var variantClicked = $(this).attr('data-index');
+        BrowseServer(variantClicked);
+    });
+
+    function checkForDuplicateColor() {
+        var selectedColors = {};
+        var isDuplicate = false;
+
+        $('select[name^="Variants["][name$=".ColorId"]').each(function () {
+            var colorId = $(this).val();
+            if (selectedColors[colorId]) {
+                alert('Các biến thể không được trùng màu với nhau.');
+                $(this).val(''); 
+                isDuplicate = true;
+                return false; 
+            }
+            selectedColors[colorId] = true;
+        });
+
+        return isDuplicate;
+    }
+});
+</script>

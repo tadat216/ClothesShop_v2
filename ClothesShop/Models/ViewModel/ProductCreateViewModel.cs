@@ -23,7 +23,7 @@ namespace ClothesShop.Models.ViewModel
         public bool IsSale { get; set; }
         public bool IsFeature { get; set; }
         public bool IsHot { get; set; }
-        public bool IsActive { get; set; }
+        public bool IsActive { get; set; } = true;
 
         // Product Variants
         public List<ProductVariantViewModel> Variants { get; set; }

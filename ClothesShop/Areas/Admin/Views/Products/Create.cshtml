@@ -48,6 +48,32 @@
             @Html.ValidationMessageFor(model => model.PriceSale, "", new { @class = "text-danger" })
         </div>
 
+        <div class="d-flex justify-content-between">
+            <div class="mb-3">
+                @Html.LabelFor(model => model.IsHome, "Trang chủ")
+                @Html.CheckBoxFor(model => model.IsHome)
+            </div>
+
+            <div class="mb-3">
+                @Html.LabelFor(model => model.IsSale, "Đang sale")
+                @Html.CheckBoxFor(model => model.IsSale)
+            </div>
+
+            <div class="mb-3">
+                @Html.LabelFor(model => model.IsFeature, "Nổi bật")
+                @Html.CheckBoxFor(model => model.IsFeature)
+            </div>
+
+            <div class="mb-3">
+                @Html.LabelFor(model => model.IsHot, "Đang hot")
+                @Html.CheckBoxFor(model => model.IsHot)
+            </div>
+
+            <div class="mb-3">
+                @Html.LabelFor(model => model.IsActive, "Hiển thị")
+                @Html.CheckBoxFor(model => model.IsActive)
+            </div>
+        </div>
 
         <div class="d-flex justify-content-between">
             <h3>Biến thể</h3>

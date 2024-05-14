@@ -1,8 +1,38 @@
 ﻿
+@model ClothesShop.Models.EF.Order
 @{
-    ViewBag.Title = "OrderDetail";
+    ViewBag.Title = "Chi tiết đơn hàng";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>OrderDetail</h2>
+<div style="height:150px;" class="remove"></div>
+<section id="order-content" style="margin-left: 150px; margin-right: 150px">
+    @if (Model != null)
+    {
+        <div class="row">
+            <h4 class="col-5">Đơn Hàng: @Model.Id</h4>
+            <p class="col-5">Đặt ngày: @Model.OrderedDate</p>
+        </div>
+        foreach (var od in Model.OrderDetails)
+        {
+            var money = od.Quantity * od.Price;
+            var imgUrl = od.VariantSize.ProductVariant.ImageLists.FirstOrDefault(x => x.IsDefault)?.ImageUrl;
+            <div class="media row ">
+                <img src="@imgUrl" class="mr-3 col-2" style="width: 100px;">
+                <div class="media-body col-8">
+                    <a href="/Product/Detail/@od.VariantSize.ProductVariant.Product.Id"><h5>@od.VariantSize.ProductVariant.Product.Title</h5></a>
+                    <p>Màu: @od.VariantSize.ProductVariant.Color.Name</p>
+                    <p>Kích cỡ: @od.VariantSize.Size.Name</p>
+                    <p>Số lượng: @od.Quantity</p>
+                </div>
+                <div class="col-2 d-flex justify-content-center  align-items-center"><p>@od.Price x @od.Quantity = @money</p></div>
+            </div>
+            
+        }
+    }
+    else
+    {
+        <p>Không có mặt hàng!!!</p>
+    }
+</section>
 

@@ -1,0 +1,10 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs
+/ClothesShop/.vs/ClothesShop
+/ClothesShop/bin
+/ClothesShop/Migrations
+/ClothesShop/obj/Debug
+/ClothesShop/Web.config

@@ -9,6 +9,9 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using ClothesShop.Models;
+using System.Data.Entity.ModelConfiguration.Configuration;
+using ClothesShop.Models.EF;
+using System.Data.Entity;
 
 
 namespace ClothesShop.Controllers
@@ -56,31 +59,30 @@ namespace ClothesShop.Controllers
         }
 
         public async Task<ActionResult> ShoppingHistory(string Searchtext, string type = "all")
-        
+
         {
             var user = await UserManager.FindByNameAsync(User.Identity.Name);
-            var orders = db.Orders.Where(x => x.UserId == user.Id);
-            //var imageLists = db.ImageLists;
-            //var images = db.Images;
+            var orders = db.Orders.Where(x => x.UserId == user.Id).ToList();
+            ViewBag.stringSearch = false;
             switch (type)
             {
                 case "isVerified"://đã đi đơn
-                    orders = orders.Where(x => x.IsVerified && !x.IsPaid); break;
+                    orders = orders.Where(x => x.IsVerified && !x.IsPaid).ToList(); break;
                 case "isPaid"://đã nhận đơn
-                    orders = orders.Where(x => x.IsPaid); break;
+                    orders = orders.Where(x => x.IsPaid).ToList(); break;
                 case "all":
+                    if (type == "all") ViewBag.stringSearch = true;
+                    else ViewBag.stringSearch = false;
                     break;
             }
-
             if (!string.IsNullOrEmpty(Searchtext))
                 orders = orders.Where(x =>
                     x.Id.IndexOf(Searchtext, StringComparison.OrdinalIgnoreCase) >= 0 ||
-                    x.OrderDetails.Any(od => od.VariantSize.ProductVariant.Product.Title.IndexOf(Searchtext, StringComparison.OrdinalIgnoreCase) >= 0));
-            
-            //ViewBag.imageLists = db.ImageLists;
-            //ViewBag.images = db.Images;
+                    x.OrderDetails.Any(od => od.VariantSize.ProductVariant.Product.Title.IndexOf(Searchtext, StringComparison.OrdinalIgnoreCase) >= 0)).ToList();
+           
             return View(orders);
         }
+        
 
         public ActionResult OrderDetail(string id)
         {

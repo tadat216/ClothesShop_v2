@@ -1,8 +1,47 @@
-﻿@{
-    ViewBag.Title = "Danh mục";
+﻿@using System.Linq;
+@using PagedList;
+@using PagedList.Mvc;
+@model IPagedList<ClothesShop.Models.EF.Product>
+
+@{
+    ViewBag.Title = "Sản phẩm";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
     ViewBag.IdPar = null;
 }
+
+<head>
+    <style>
+        .color-circle {
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+    </style>
+    <style>
+        .checkbox-color {
+            visibility: hidden; /* Ẩn checkbox thực tế */
+            position: absolute;
+        }
+
+            .checkbox-color + label {
+                height: 20px;
+                width: 20px;
+                border-radius: 50%;
+                display: inline-block;
+                cursor: pointer;
+                position: relative;
+                border: 2px solid transparent; /* Thêm border để khi zoom không làm ảnh hưởng đến layout xung quanh */
+                transition: transform 0.3s, border-color 0.3s;
+                background-color: #fff; /* Màu nền mặc định */
+            }
+
+            .checkbox-color:checked + label {
+                transform: scale(1.5); /* Phóng to label */
+                border-color: #000; /* Thay đổi màu viền khi được chọn */
+            }
+    </style>
+</head>
 
 @section naviheader{
     <ul class="navbar-nav">
@@ -35,7 +74,50 @@
 
 <!-- Main content -->
 <section class="content">
+    <div class="my-3">
+        @using (Html.BeginForm("Index", "Products", FormMethod.Get))
+        {
+            <div>
+                <div class="col-6">
+                    <label class="focus-label">Danh mục</label>
+                    <select name="categoryId">
+                        <option value="">Chọn danh mục</option>
+                        @foreach (var category in ViewBag.Categories as IEnumerable<SelectListItem>)
+                        {
+                            <option value="@category.Value" @(ViewBag.SelectedCategoryId == category.Value ? "selected" : "")>@category.Text</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Mã sản phẩm:</label>
+                <input type="text" name="id" value="@ViewBag.Id" class="form-control" />
+            </div>
 
+            <div class="form-group">
+                <label>Tên sản phẩm:</label>
+                <input type="text" name="title" value="@ViewBag.PTitle" class="form-control" />
+            </div>
+            <div>
+                <label>Màu Sắc:</label>
+                <div class="d-flex">
+                    @foreach (var color in ViewBag.Colors as IEnumerable<SelectListItem>)
+                    {
+                        <div class="mx-3">
+                            <input type="checkbox" class="checkbox-color" id="color_@color.Value" name="colorIds" value="@color.Value" @(ViewBag.SelectedColorIds != null && (ViewBag.SelectedColorIds as string[]).Contains(color.Value) ? "checked" : "") />
+                            <label for="color_@color.Value" style="background-color: #@color.Text;"></label>
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="text-right">
+                <button type="submit" class="btn btn-success col-1 btn-sm" style="height:37px;">
+                    <i class="fa fa-search"></i>
+                </button>
+            </div>
+            @*<button  class="btn btn-g">Search</button>*@
+        }
+    </div>
     <!-- Default box -->
     <div class="card">
         <div class="card-header">
@@ -44,20 +126,74 @@
                 <a href="~/Admin/Products/Trash" class="btn btn-primary">Thùng rác</a>
             </div>
         </div>
-        @*<div class="card-body">
-            <table class="table table-hover">
+        <div class="card-body">
+            <table class="table">
                 <thead>
                     <tr>
-                        <th>Tên danh mục</th>
-                        <th>Trạng thái</th>
-                        <th></th>
+                        <th>STT</th>
+                        <th>Tiêu đề</th>
+                        <th>Danh mục</th>
+                        <th>Ảnh</th>
+                        <th>Màu sắc</th>
+                        <th>Giá</th>
+                        <th>Giá Sale</th>
+                        <th>IsHome</th>
+                        <th>IsSale</th>
+                        <th>IsHot</th>
+                        <th>IsActive</th>
+                        <th>IsFeature</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @Html.Action("GetChildren", "ProductCategories", new { id = string.Empty })
+                    @{var i = 1;}
+
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@i</td>
+                            <td>@Html.DisplayFor(modelItem => item.Title)</td>
+                            <td>@Html.DisplayFor(modelItem => item.ProductCategory.Title)</td>
+                            <td>
+                                @foreach (var variant in item.ProductVariants.Where(v => v.IsDefault))
+                                {
+                                    <img src="@variant.ImageLists.FirstOrDefault().ImageUrl" width="100" />
+                                }
+                            </td>
+                            <td>
+                                @foreach (var color in item.ProductVariants.Select(v => v.Color).Distinct())
+                                {
+                                    <span class="color-circle" style="background-color: #@color.Code"></span>
+                                }
+                            </td>
+                            <td>@Html.DisplayFor(modelItem => item.Price)</td>
+                            <td>@Html.DisplayFor(modelItem => item.PriceSale)</td>
+                            <td>@Html.DisplayFor(modelItem => item.IsHome)</td>
+                            <td>@Html.DisplayFor(modelItem => item.IsSale)</td>
+                            <td>@Html.DisplayFor(modelItem => item.IsHot)</td>
+                            <td>@Html.DisplayFor(modelItem => item.IsActive)</td>
+                            <td>@Html.DisplayFor(modelItem => item.IsFeature)</td>
+                        </tr>
+                        ++i;
+                    }
                 </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="12">
+                            @{
+                                var colorIds = ViewBag.SelectedColorIds as string[];
+                                var colorIdsParam = colorIds != null ? string.Join(",", colorIds) : "";
+                            }
+                            @Html.PagedListPager(Model, page => Url.Action("Index",
+                                new { page, categoryId = ViewBag.SelectedCategoryId,
+                                    colorIds = colorIdsParam,
+                                    title = ViewBag.PTitle,
+                                    id = ViewBag.Id
+                                }))
+                        </td>
+                    </tr>
+                </tfoot>
             </table>
-        </div>*@
+        </div>
         <!-- /.card-body -->
         <div class="card-footer">
 

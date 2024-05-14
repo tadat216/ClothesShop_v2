@@ -107,7 +107,7 @@ $(document).ready(function () {
         finder.selectActionFunction = function (fileUrl) {
             //alert(index);
             var imageHtml = `<img src="${fileUrl}" class="img-thumbnail my-2" style="height:100px;">` +
-                `<input type="text" name="Variants[${index}].Images" value="{fileUrl}" style="display:none;" />`;
+                `<input type="text" name="Variants[${index}].Images" value="${fileUrl}" style="display:none;" />`;
             $(`#imagesContainer${index}`).append(imageHtml);
         };
         finder.popup();

@@ -80,7 +80,7 @@
         foreach (var order in Model)
         {
             <div class="order-card mt-3 p-3 border">
-                <h4>Đơn Hàng: @order.Id</h4>
+                <h4><a href="/Account/OrderDetail/@order.Id" style="color: black">Đơn Hàng: @order.Id</a></h4>
                 @foreach (var od in order.OrderDetails)
                 {
                     var money = od.Quantity * od.Price;
@@ -88,7 +88,7 @@
                     <div class="media row ">
                         <img src="@imgUrl" class="mr-3 col-2" style="width: 100px;">
                         <div class="media-body col-8">
-                            <h5>@od.VariantSize.ProductVariant.Product.Title</h5>
+                            <a href="/Product/Detail/@od.VariantSize.ProductVariant.Product.Id"><h5>@od.VariantSize.ProductVariant.Product.Title</h5></a>
                             <p>Màu: @od.VariantSize.ProductVariant.Color.Name</p>
                             <p>Kích cỡ: @od.VariantSize.Size.Name</p>
                             <p>Số lượng: @od.Quantity</p>

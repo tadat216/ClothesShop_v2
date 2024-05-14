@@ -28,7 +28,7 @@ namespace ClothesShop.Controllers
         {
         }
 
-        public AccountController(UserManager userManager, ApplicationSignInManager signInManager )
+        public AccountController(UserManager userManager, ApplicationSignInManager signInManager)
         {
             UserManager = userManager;
             SignInManager = signInManager;
@@ -40,9 +40,9 @@ namespace ClothesShop.Controllers
             {
                 return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
             }
-            private set 
-            { 
-                _signInManager = value; 
+            private set
+            {
+                _signInManager = value;
             }
         }
 
@@ -79,15 +79,50 @@ namespace ClothesShop.Controllers
                 orders = orders.Where(x =>
                     x.Id.IndexOf(Searchtext, StringComparison.OrdinalIgnoreCase) >= 0 ||
                     x.OrderDetails.Any(od => od.VariantSize.ProductVariant.Product.Title.IndexOf(Searchtext, StringComparison.OrdinalIgnoreCase) >= 0)).ToList();
-           
+
             return View(orders);
         }
-        
+
 
         public ActionResult OrderDetail(string id)
         {
             var order = db.Orders.Find(id);
             return View(order);
+        }
+        public async Task<ActionResult> Profile()
+        {
+            var user = await UserManager.FindByNameAsync(User.Identity.Name);
+            var item = new CreateAccountViewModel();
+            item.Email = user.Email;
+            item.FullName = user.FullName;
+            item.Phone = user.Phone;
+            item.UserName = user.UserName;
+            return View(item);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Profile(CreateAccountViewModel profile)
+        {
+            //TempData["TB"] = "1";
+            //var user = await UserManager.FindByEmailAsync(profile.Email);
+            //user.FullName = profile.FullName;
+            //user.Phone = profile.Phone;
+            //var rs = await UserManager.UpdateAsync(user);
+            //if (rs.Succeeded)
+            //{
+            //    return RedirectToAction("Profile");
+            //}
+            //TempData["TB"] = "0";
+            //return View(profile);
+            var user = await UserManager.FindByEmailAsync(profile.Email);
+            user.FullName = profile.FullName;
+            user.Phone = profile.Phone;
+            var rs = await UserManager.UpdateAsync(user);
+            if (rs.Succeeded)
+            {
+                return Json(new {tb=true});
+            }
+            return Json(new { tb = false });
         }
 
 
@@ -176,7 +211,7 @@ namespace ClothesShop.Controllers
             // If a user enters incorrect codes for a specified amount of time then the user account 
             // will be locked out for a specified amount of time. 
             // You can configure the account lockout settings in IdentityConfig
-            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent:  model.RememberMe, rememberBrowser: model.RememberBrowser);
+            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent: model.RememberMe, rememberBrowser: model.RememberBrowser);
             switch (result)
             {
                 case SignInStatus.Success:
@@ -211,7 +246,7 @@ namespace ClothesShop.Controllers
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    
+
                     //await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
                     UserManager.AddToRole(user.Id, "Customer"); //new
                                                                 // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
@@ -223,7 +258,7 @@ namespace ClothesShop.Controllers
 
                     ViewBag.Message = "Kiểm tra Email và xác minh tài khoản. Bạn phải tiến hành xác minh tài khoản để đăng nhập.";
                     return View("Info");
-                   // return RedirectToAction("Index", "Home");
+                    // return RedirectToAction("Index", "Home");
                 }
                 AddErrors(result);
             }

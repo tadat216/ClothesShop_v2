@@ -20,7 +20,7 @@ namespace ClothesShop.Areas.Admin.Controllers
 
         public ActionResult Index(string id, string title, string categoryId, string[] colorIds, int? page)
         {
-            int pageSize = 1;
+            int pageSize = 10;
             int pageNumber = (page ?? 1);
             // Lấy danh sách danh mục và màu sắc để hiển thị trên form
             var categories = db.ProductCategories.Select(c => new SelectListItem

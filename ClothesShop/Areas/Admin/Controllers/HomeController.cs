@@ -6,6 +6,7 @@ using System.Web.Mvc;
 
 namespace ClothesShop.Areas.Admin.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class HomeController : Controller
     {
         // GET: Admin/Home

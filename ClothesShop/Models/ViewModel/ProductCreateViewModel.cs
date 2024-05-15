@@ -15,6 +15,7 @@ namespace ClothesShop.Models.ViewModel
         public string Title { get; set; }
         public string Description { get; set; }
         public string ProductCode { get; set; }
+        [AllowHtml]
         public string Detail { get; set; }
         public int Price { get; set; }
         public int PriceSale { get; set; }

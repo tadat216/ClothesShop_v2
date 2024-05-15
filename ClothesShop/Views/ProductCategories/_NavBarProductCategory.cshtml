@@ -1,0 +1,23 @@
+﻿@model IEnumerable<ClothesShop.Models.EF.ProductCategory>
+
+<div class="mega-menu-area mma-970">
+    @foreach(var item in Model)
+    {
+        if(item.Level == 0)
+        {
+            <ul class="single-mega-item coloum-4">
+                <li class="menu-title uppercase">@item.Title</li>
+                @foreach (var item1 in Model)
+                {
+                    if (item1.Level == 1 && item1.IdParent == item.Id)
+                    {
+                        <li><a href="shop.html">@item1.Title</a></li>
+                    }
+                }
+            </ul>
+        }
+    }
+    <div class="mega-banner-img">
+        <a href="single-product.html"><img src="Content/ShopPage/Content/ShopPage/images/banner/banner-fashion-02.jpg" alt=""></a>
+    </div>
+</div>

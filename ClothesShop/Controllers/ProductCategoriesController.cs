@@ -7,26 +7,12 @@ using System.Web.Mvc;
 
 namespace ClothesShop.Controllers
 {
-    [RequireHttps]
-    public class HomeController : Controller
+    public class ProductCategoriesController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
+        // GET: ProductCategories
         public ActionResult Index()
         {
-            return View();
-        }
-
-        public ActionResult About()
-        {
-            ViewBag.Message = "Your application description page.";
-
-            return View();
-        }
-
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-
             return View();
         }
 
@@ -34,12 +20,6 @@ namespace ClothesShop.Controllers
         {
             var items = db.ProductCategories.ToList();
             return PartialView("_NavBarProductCategory", items);
-        }
-
-        public ActionResult BlogPartial()
-        {
-            var items = db.Newes.ToList();
-            return PartialView("_BlogPartial", items);
         }
     }
 }

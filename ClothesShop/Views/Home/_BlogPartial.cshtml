@@ -1,0 +1,58 @@
+﻿@model IEnumerable<ClothesShop.Models.EF.News>
+
+<div class="blog-area pb-70">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <div class="heading-title heading-style pos-rltv mb-50 text-center">
+                    <h5 class="uppercase">Tin tức</h5>
+                </div>
+                <div class="total-blog">
+                    @foreach(var item in Model) { 
+                        <div class="blog-item" style="height: 800px">
+                            <div class="single-blog">
+                                <div class="blog-img pos-rltv product-overlay">
+                                    <a href="#"><img src="@item.Image" style="height: 400px; object-fit: cover;"></a>
+                                </div>
+                                <div class="blog-content">
+                                    <div class="blog-title">
+                                        <h5 class="uppercase font-bold">
+                                            <a href="#">@item.Title</a>
+                                        </h5>
+                                        <div class="like-comments-date">
+                                            <ul>
+                                                <li>
+                                                    <a href="#">
+                                                        <i class="zmdi zmdi-favorite-outline"></i>13
+                                                        Like
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">
+                                                        <i class="zmdi zmdi-comment-outline"></i>03
+                                                        Comments
+                                                    </a>
+                                                </li>
+                                                <li class="blog-date">
+                                                    <a href="#">
+                                                        <i class="zmdi zmdi-calendar-alt"></i>@item.CreatedDate.ToString("d")
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="blog-text">
+                                            <p>
+                                                @item.Description
+                                            </p>
+                                        </div>
+                                        <a class="read-more montserrat" href="single-blog.html">Read More</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

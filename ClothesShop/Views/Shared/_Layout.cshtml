@@ -29,6 +29,85 @@
     <link rel="stylesheet" href="~/Content/ShopPage/css/color/skin-default.css">
     <script src="~/Content/ShopPage/js/vendor/modernizr-3.11.2.min.js"></script>
 </head>
+<style>
+    .account {
+        display: inline-block;
+        position: relative;
+        min-width: 50px;
+        padding-left: 20px;
+        text-align: center;
+        vertical-align: middle;
+        /*background: #1e1e27;*/
+    }
+
+        .account > a {
+            display: block;
+            color: #b5aec4;
+            font-weight: 400;
+            height: 50px;
+            line-height: 50px;
+            font-size: 13px;
+        }
+
+            .account > a > i {
+                margin-left: 8px;
+            }
+
+        .account:hover .account_selection {
+            visibility: visible;
+            opacity: 1;
+            top: 100%;
+        }
+
+    .account_selection {
+        display: block;
+        position: absolute;
+        right: 0;
+        top: 120%;
+        margin: 0;
+        width: 100%;
+        background: #FFFFFF;
+        visibility: hidden;
+        opacity: 0;
+        z-index: 1;
+        box-shadow: 0 0 25px rgba(63, 78, 100, 0.15);
+        -webkit-transition: opacity 0.3s ease;
+        -moz-transition: opacity 0.3s ease;
+        -ms-transition: opacity 0.3s ease;
+        -o-transition: opacity 0.3s ease;
+        transition: all 0.3s ease;
+    }
+
+        .account_selection li {
+            padding-left: 10px;
+            padding-right: 10px;
+            line-height: 50px;
+        }
+
+            .account_selection li a {
+                display: block;
+                color: #232530;
+                border-bottom: solid 1px #dddddd;
+                font-size: 14px;
+                -webkit-transition: all 0.3s ease;
+                -moz-transition: all 0.3s ease;
+                -ms-transition: all 0.3s ease;
+                -o-transition: all 0.3s ease;
+                transition: all 0.3s ease;
+            }
+
+                .account_selection li a:hover {
+                    color: #b5aec4;
+                }
+
+            .account_selection li:last-child a {
+                border-bottom: none;
+            }
+
+            .account_selection li a i {
+                margin-right: 10px;
+            }
+</style>
 
 <body>
     <header class="header-area header-wrapper">
@@ -36,12 +115,37 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-3 col-sm-6 col-6">
-                        <div class="login-register-area">
-                            <ul>
-                                <li><a href="#">Login</a></li>
-                                <li><a href="#">Register</a></li>
-                            </ul>
-                        </div>
+                        <ul class="top_nav_menu">
+                            <li class="account">
+                                @if (!Request.IsAuthenticated)
+                                {
+                                    <a href="#">
+                                        Đăng nhập/Đăng kí
+                                        <i class="fa fa-angle-down"></i>
+                                    </a>
+                                    <ul class="account_selection">
+                                        <li><a href="/Account/Login"><i class="fa fa-sign-in" aria-hidden="true"></i>Đăng nhập</a></li>
+                                        <li><a href="/Account/Register"><i class="fa fa-user-plus" aria-hidden="true"></i>Đăng kí</a></li>
+                                    </ul>
+                                }
+                                else
+                                {
+                                    <a href="#">
+                                        Xin chào, @User.Identity.Name
+                                        <i class="fa fa-angle-down"></i>
+                                    </a>
+                                    <ul class="account_selection">
+                                        @if (this.User.IsInRole("Admin") || this.User.IsInRole("Employee"))
+                                        {
+                                            <li><a href="/Admin/Home"><i class="fa fa-vcard" aria-hidden="true"></i>Trang admin</a></li>
+                                        }
+                                        <li><a href="/Account/Profile"><i class="fa fa-user" aria-hidden="true"></i>Hồ sơ</a></li>
+                                        <li><a href="/Account/ShoppingHistory"><i class="fa fa-money" aria-hidden="true"></i>Lịch sử mua hàng</a></li>
+                                        <li><a href="javascript:document.getElementById('logOffForm').submit()"><i class="fa fa-sign-out" aria-hidden="true"></i>Đăng xuất</a></li>
+                                    </ul>
+                                }
+                            </li>
+                        </ul>
                     </div>
                     <div class="col-md-6 d-none d-md-block">
                         <div class="social-search-area text-center">

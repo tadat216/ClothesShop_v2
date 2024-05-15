@@ -3,7 +3,12 @@
 @{
     ViewBag.Title = "Đăng nhập";
 }
-<div style="height:150px;" class="remove"></div>
+<style>
+    .small-checkbox {
+        transform: scale(0.4); /* Thu nhỏ checkbox xuống 75% kích thước ban đầu */
+        transform-origin: top left; /* Đặt điểm gốc của phép biến đổi */
+    }
+</style>
 <main aria-labelledby="title" class="vh-100 d-flex align-items-center justify-content-center">
     <div class="row bg-light border rounded shadow w-75">
         <div class="col-md-8 p-5">
@@ -28,16 +33,11 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="offset-md-2 col-md-10">
-                            <div class="checkbox">
-                                @Html.CheckBoxFor(m => m.RememberMe)
-                                @Html.LabelFor(m => m.RememberMe)
-                            </div>
-
-                        </div>
+                        @Html.CheckBoxFor(m => m.RememberMe, new {@class = "offset-md-4 col-md-1  small-checkbox" })
+                        @Html.LabelFor(m => m.RememberMe, new { @class = "col-md-4 ", @style = "font-size: 14px;" })
                     </div>
                     <div class="row m-3 ">
-                        <div class="offset-md-3 col-md-10">
+                        <div class="offset-md-3 col-md-5">
                             <input type="submit" value="Đăng nhập" class="btn btn-outline-dark" />
                         </div>
                     </div>

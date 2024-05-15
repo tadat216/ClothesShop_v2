@@ -1,5 +1,4 @@
-﻿
-@model IEnumerable<ClothesShop.Models.EF.Order>
+﻿@model IEnumerable<ClothesShop.Models.EF.Order>
 @{
     ViewBag.Title = "Lịch sử mua hàng";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -62,7 +61,7 @@
     ? "<div class='form-group mb-2 col-md-11'><input name='SearchText' value='' id='SearchText' type='text' class='form-control ' placeholder='Tìm kiếm theo mã đơn hàng hoặc tên sản phẩm' style='width: 100%;'></div><div class='form-group' ><button type='submit' class='btn .btn-outline-dark' style='height:40px;background-color:#cc3333;'>Tìm kiếm</button></div>"
     : "<div></div>";
 
-        @Html.Raw(strSearch)
+        @*@Html.Raw(strSearch)*@
         <section class="QmO3Bu" aria-role="tablist">
             <h2 class="a11y-hidden"></h2>
             <a href="/Account/ShoppingHistory?Searchtext=&type=all" class="KI5har mRVNLm tab-link active btnOrder" data-id="all" title="Tất cả" aria-role="tab" aria-selected="true" aria-controls="olp_panel_id-0.08896883105868847">

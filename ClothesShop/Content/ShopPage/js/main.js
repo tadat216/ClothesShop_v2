@@ -1,4 +1,4 @@
-/*
+﻿/*
 
 Template:  clothing- Responsive Multi-purpose HTML5 Template
 Template URI: http://bootexperts.com
@@ -307,7 +307,33 @@ Version: 1.0
 		}
 	});
 		
-	
+
+	$('.color-variant').click(function () {
+		// Lấy id sản phẩm và id biến thể từ thuộc tính của button
+		var productId = $(this).attr('data-product-id');
+		var variantId = $(this).attr('data-variant-id');
+		var btnId = $(this).attr('id');
+		var ImgId = 'image-' + productId + '-' + variantId;
+		var imageUrl = $(this).attr('data-image-url');
+		// alert(btnId + " " + productId + " " + variantId)
+		// Tạo ID của img và button tương ứng
+		var newimageId = '#image-' + productId + '-' + variantId;
+		var newbuttonId = '#btn-' + productId + '-' + variantId;
+		var imgListId = '#img_list-' + productId;
+		updateImages(imgListId, ImgId, imageUrl);
+	});
+	function updateImages(imgListId, chosenId, imageUrl) {
+		//console.log(imgListId, chosenId, imageUrl)
+		$(imgListId + ' .product-image').each(function () {
+			if (this.id === chosenId) {
+				//console.log(this.id)
+				$(this).attr('src', imageUrl);  // Cập nhật src với URL mới
+				$(this).removeClass("d-none");  // Hiển thị thẻ img với chosenId
+			} else {
+				$(this).addClass("d-none");  // Ẩn tất cả các thẻ img khác
+			}
+		});
+	}
 	
 
 })(jQuery);

@@ -16,21 +16,36 @@
                         {
                             if (item.ProductCategory.IdParent == cateId)
                             {
-                                <div class="product-item position-relative" >
+                                <div class="product-item" >
                                     <!-- single product start-->
-                                    <div class="single-product" style="width: 500px;">
+                                    <div class="single-product d-flex flex-column">
                                         <div class="product-img">
                                             <div class="product-label">
                                                 <div class="new">New</div>
                                             </div>
                                             <div class="single-prodcut-img  product-overlay pos-rltv">
-                                                <a href="single-product.html">
-                                                    @foreach (var variant in item.ProductVariants.Where(v => v.IsDefault))
+                                                <a href="Products/Index/@item.Id" id="img_list-@item.Id">
+                                                    @foreach (var variant in item.ProductVariants)
                                                     {
-                                                        <img src="@variant.ImageLists.FirstOrDefault().ImageUrl" width="100" />
+                                                        <img id="image-@item.Id-@variant.Id" src="@variant.ImageLists.FirstOrDefault().ImageUrl" width="100" class="product-image @(variant.IsDefault ? "" : "d-none")" />
                                                     }
                                                 </a>
                                             </div>
+
+                                            <div class="color-variants d-flex justify-content-center mt-2">
+                                                @foreach (var variant in item.ProductVariants)
+                                                {
+
+                                                    <button class="color-variant-product-single @(variant.IsDefault? "selected" : "") " 
+                                                            id = "btn-@item.Id-@variant.Id"
+                                                            data-product-id = "@item.Id"
+                                                            data-variant-id = "@variant.Id"
+                                                            data-image-url = "@variant.ImageLists.FirstOrDefault().ImageUrl"
+                                                            style = "background-color:#@variant.Color.Code; width: 20px; height: 20px; border-radius: 50%; border: 1px solid #ddd; margin: 0 5px;" >
+                                                    </button>
+                                                }
+                                            </div>
+
                                             <div class="product-icon socile-icon-tooltip text-center">
                                                 <ul>
                                                     <li>
@@ -44,7 +59,7 @@
                                                     </li>
                                                     <li>
                                                         <a href="#" data-tooltip="Compare" class="cpare">
-                                                                <i class="fa fa-refresh"></i>
+                                                            <i class="fa fa-refresh"></i>
                                                         </a>
                                                     </li>
                                                     <li>
@@ -56,15 +71,23 @@
                                                 </ul>
                                             </div>
                                         </div>
-                                        <div class="product-text">
+                                        <div class="product-text d-flex flex-column justify-content-between" style="height: 150px;">
                                             <div class="prodcut-name">
-                                                <a href="single-product.html">@item.Title</a>
+                                                <a href="Products/Index/@item.Id">@item.Title</a>
                                             </div>
-                                            <div class="prodcut-ratting-price position-absolute bottom-0 start-0">
-                                                <div class="prodcut-price">
-                                                    <div class="new-price"> $220 </div>
+                                            @if (item.IsSale)
+                                                {
+                                                <div class="prodcut-price d-flex flex-column text-end">
+                                                    <div class="old-price">@Common.FormatNumber(item.Price)</div>
+                                                    <div class="new-price">@Common.FormatNumber(item.PriceSale)</div>
                                                 </div>
-                                            </div>
+                                            }else
+                                            { 
+                                                <div class="prodcut-price text-end">
+                                                    <div class="new-price">@Common.FormatNumber(item.Price)</div>
+                                                </div>
+                                            }
+
                                         </div>
                                     </div>
                                     <!-- single product end-->
@@ -77,3 +100,7 @@
         </div>
     </div>
 }
+
+<script>
+
+</script>

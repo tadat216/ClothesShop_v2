@@ -323,7 +323,7 @@ Version: 1.0
 		updateImages(imgListId, ImgId, imageUrl);
 	});
 	function updateImages(imgListId, chosenId, imageUrl) {
-		//console.log(imgListId, chosenId, imageUrl)
+		console.log(imgListId, chosenId, imageUrl)
 		$(imgListId + ' .product-image').each(function () {
 			if (this.id === chosenId) {
 				//console.log(this.id)

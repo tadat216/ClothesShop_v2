@@ -36,7 +36,7 @@
                                                 @foreach (var variant in item.ProductVariants)
                                                 {
 
-                                                    <button class="color-variant-product-single @(variant.IsDefault? "selected" : "") " 
+                                                    <button class="color-variant @(variant.IsDefault? "selected" : "") " 
                                                             id = "btn-@item.Id-@variant.Id"
                                                             data-product-id = "@item.Id"
                                                             data-variant-id = "@variant.Id"
@@ -101,6 +101,4 @@
     </div>
 }
 
-<script>
-
-</script>
+<script src="~/Content/ShopPage/js/main.js"></script>

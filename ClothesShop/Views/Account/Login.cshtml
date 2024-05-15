@@ -8,8 +8,12 @@
         transform: scale(0.4); /* Thu nhỏ checkbox xuống 75% kích thước ban đầu */
         transform-origin: top left; /* Đặt điểm gốc của phép biến đổi */
     }
+    a, button, input {
+        outline: medium none;
+        color: #000000;
+    }
 </style>
-<main aria-labelledby="title" class="vh-100 d-flex align-items-center justify-content-center">
+<main aria-labelledby="title" class="m-5 d-flex align-items-center justify-content-center">
     <div class="row bg-light border rounded shadow w-75">
         <div class="col-md-8 p-5">
             <section id="loginForm">
@@ -41,10 +45,10 @@
                             <input type="submit" value="Đăng nhập" class="btn btn-outline-dark" />
                         </div>
                     </div>
-                    <div class="row offset-md-2">
-                        <div class="col-md-3">@Html.ActionLink("Đăng ký", "Register")</div>
+                    <div class="row ">
+                        <div class="col-md-9">@Html.ActionLink("Đăng ký", "Register")</div>
                         
-                        <div class="col-md-5">@Html.ActionLink("Quên mật khẩu", "ForgotPassword")</div>
+                        <div class="col-md-3">@Html.ActionLink("Quên mật khẩu", "ForgotPassword")</div>
                     </div>
                     
                     @* Enable this once you have account confirmation enabled for password reset functionality
@@ -54,8 +58,8 @@
                 }
             </section>
         </div>
-        <div class="col-md-4" style="background-color: #384aeb; ">
-            <section id="socialLoginForm" class="p-2">
+        <div class="col-md-4" style="background-color: #cc3333;">
+            <section id="socialLoginForm" class="p-2 d-flex">
                 @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })
             </section>
         </div>

@@ -171,8 +171,8 @@
 		type.DeniedExtensions = new string[] { };
 
 		type = ResourceType.Add( "Images" );
-		type.Url = BaseUrl + "images/";
-		type.Dir = BaseDir == "" ? "" : BaseDir + "images/";
+		type.Url = BaseUrl + "Content/ShopPage/Content/ShopPage/images/";
+		type.Dir = BaseDir == "" ? "" : BaseDir + "Content/ShopPage/Content/ShopPage/images/";
 		type.MaxSize = 0;
 		type.AllowedExtensions = new string[] { "bmp", "gif", "jpeg", "jpg", "png" };
 		type.DeniedExtensions = new string[] { };

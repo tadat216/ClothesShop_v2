@@ -999,22 +999,22 @@ textarea:focus {
 /*image background*/
 
  .bg-1 {
-  background: url(../../images/bg/1.html);}
- .bg-2 { background: url(../../images/bg/2.html);}
- .bg-3 { background: url(../../images/bg/3.html);}
- .bg-4 { background: url(../../images/bg/4.html);}
- .bg-5 { background: url(../../images/bg/5.html);}
- .bg-6 { background: url(../../images/bg/6.html);}
- .bg-7 { background: url(../../images/bg/7.html);}
- .bg-8 { background: url(../../images/bg/8.html);}
- .bg-9 { background: url(../../images/bg/9.html);}
- .bg-10 { background: url(../../images/bg/10.html);}
+  background: url(../../Content/ShopPage/Content/ShopPage/images/bg/1.html);}
+ .bg-2 { background: url(../../Content/ShopPage/Content/ShopPage/images/bg/2.html);}
+ .bg-3 { background: url(../../Content/ShopPage/Content/ShopPage/images/bg/3.html);}
+ .bg-4 { background: url(../../Content/ShopPage/Content/ShopPage/images/bg/4.html);}
+ .bg-5 { background: url(../../Content/ShopPage/Content/ShopPage/images/bg/5.html);}
+ .bg-6 { background: url(../../Content/ShopPage/Content/ShopPage/images/bg/6.html);}
+ .bg-7 { background: url(../../Content/ShopPage/Content/ShopPage/images/bg/7.html);}
+ .bg-8 { background: url(../../Content/ShopPage/Content/ShopPage/images/bg/8.html);}
+ .bg-9 { background: url(../../Content/ShopPage/Content/ShopPage/images/bg/9.html);}
+ .bg-10 { background: url(../../Content/ShopPage/Content/ShopPage/images/bg/10.html);}
 
 .bg-1, .bg-2, .bg-3, .bg-4, .bg-5, .bg-6, .bg-7, .bg-8, .bg-9, .bg-10{
     background-attachment: fixed; background-clip: initial; background-color: rgba(0, 0, 0, 0); background-origin: initial; background-position: center center; background-repeat: no-repeat; background-size: cover; position: relative; z-index: 0;
 }
   /*pattern background*/
-.pattern-bg { background:url(../../images/pattern/pattern-bg.html) repeat; background-position: top right; background-color: rgba(236, 239, 247, 1); }
+.pattern-bg { background:url(../../Content/ShopPage/Content/ShopPage/images/pattern/pattern-bg.html) repeat; background-position: top right; background-color: rgba(236, 239, 247, 1); }
 
 
 

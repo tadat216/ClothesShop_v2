@@ -41,5 +41,19 @@ namespace ClothesShop.Controllers
             var items = db.Newes.ToList();
             return PartialView("_BlogPartial", items);
         }
+
+        public ActionResult ProductByCategoryPartial()
+        {
+            ViewBag.CategoryTitles = db.ProductCategories
+                .Where(pc => pc.Level == 0)
+                .Select(pc => pc.Title)
+                .ToList();
+            ViewBag.CategoryIds = db.ProductCategories
+                .Where(pc => pc.Level == 0)
+                .Select(pc => pc.Id)
+                .ToList();
+            var items = db.Products.ToList();
+            return PartialView("_ProductByCategoryPartial", items);
+        }
     }
 }

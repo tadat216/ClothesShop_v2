@@ -323,10 +323,10 @@ Version: 1.0
 		updateImages(imgListId, ImgId, imageUrl);
 	});
 	function updateImages(imgListId, chosenId, imageUrl) {
-		console.log(imgListId, chosenId, imageUrl)
+		//console.log(imgListId, chosenId, imageUrl)
 		$(imgListId + ' .product-image').each(function () {
 			if (this.id === chosenId) {
-				console.log(this.id)
+				//console.log(this.id)
 				$(this).attr('src', imageUrl);  // Cập nhật src với URL mới
 				$(this).removeClass("d-none");  // Hiển thị thẻ img với chosenId
 			} else {

@@ -82,20 +82,47 @@ namespace ClothesShop.Controllers
         }
         //new  [AllowAnonymous] cho checkout, checkoutsuccess
         [AllowAnonymous]
+        public async Task<ActionResult> CheckOut()
+        {
+            var user = await UserManager.FindByNameAsync(User.Identity.Name);
+            var cart = db.Carts.FirstOrDefault(x => x.UserId == user.Id);
+            var orders = db.Orders.Where(x=>x.UserId == user.Id).ToList();
+            HashSet<string> receiverInfs = new HashSet<string>();
+            if (orders != null)
+            {
+                foreach(var o in orders)
+                {
+                    var inf = o.ReceiverName + " " + o.Phone + " " + o.Address;
+                    receiverInfs.Add(inf);
+                }
+            }
+            ViewBag.receiverInfs = receiverInfs.ToList();
+            if (cart == null)
+            {
+                ViewBag.Message = "Không tìm thấy giỏ hàng";
+                return View();  
+            }
 
-        //public async Task<ActionResult> CheckOut()
-        //{
+            var cartDetails = db.CartDetails.Where(x => x.CartId == cart.Id).ToList();
 
-        //    var user = await UserManager.FindByNameAsync(User.Identity.Name);
-        //    var cart = db.Carts.FirstOrDefault(x => x.UserId == user.Id);
-        //    var cartDetails = db.CartDetails.Where(x => x.CartId == cart.Id).ToList();
-        //    if (cart != null && cart.Items.Any())
-        //    {
-        //        ViewBag.CheckCart = cart;
-        //    }
-        //    return View();
-        //}
-        //[AllowAnonymous]
+            if (cartDetails != null && cartDetails.Any())
+            {
+                cartDetails = cartDetails.Where(x => x.Selected).ToList();
+                if (cartDetails.Count > 0)
+                {
+                    return View(cartDetails); 
+                }
+                else
+                {
+                    ViewBag.Message = "Hãy chọn sản phẩm trong giỏ hàng để đặt hàng";
+                    return View(); 
+                }
+            }
+
+            
+            return View(); 
+        }
+        [AllowAnonymous]
 
         //public ActionResult CheckOutSuccess()
         //{
@@ -111,6 +138,18 @@ namespace ClothesShop.Controllers
         //    }
         //    return PartialView();
         //}
+        [HttpPost]
+        public ActionResult ChangeAddress()
+        {
+            return Json(new {});
+        }
+        [HttpPost]
+        public ActionResult AddAddress()
+        {
+            return Json(new { });
+        }
+
+
         //    [AllowAnonymous]
         //    public ActionResult PartialItemCartCheckOut()
         //    {

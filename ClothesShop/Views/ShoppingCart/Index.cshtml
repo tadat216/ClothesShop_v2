@@ -1,0 +1,326 @@
+﻿@model IEnumerable<ClothesShop.Models.EF.CartDetail>
+@{
+    ViewBag.Title = "Giỏ hàng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .GO0LDV {
+        color: rgba(0, 0, 0, .8);
+        display: flex;
+        flex-direction: column;
+        padding-top: 20px;
+    }
+    .Za1N64 {
+        align-items: center;
+        background: #fff;
+        border-radius: 0.125rem;
+        border-radius: 3px;
+        box-shadow: 0 1px 1px 0 rgba(0,0,0,.05);
+        color: #888;
+        display: flex;
+        font-size: 14px;
+        height: 55px;
+        margin-bottom: 12px;
+        overflow: hidden;
+        padding: 0 20px;
+    }
+    .SQGY8I {
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: row-reverse;
+        min-width: 58px;
+        padding: 0 12px 0 20px;
+    }
+    .stardust-checkbox {
+        align-items: center;
+        color: rgba(0, 0, 0, .54);
+        cursor: default;
+        display: flex;
+        font-family: -apple-system, HelveticaNeue-Light, Helvetica Neue Light, Helvetica Neue, Helvetica, Roboto, Droid Sans, Arial, sans-serif;
+        font-size: 12px;
+        font-weight: 300;
+        max-width: 400px;
+        position: relative;
+    }
+    input[type=checkbox], input[type=radio] {
+        box-sizing: border-box;
+        padding: 0;
+    }
+
+    .stardust-checkbox__input {
+        left: 0;
+        opacity: 0;
+        position: absolute;
+        top: 0;
+    }
+    .stardust-checkbox__box {
+        border: 1px solid rgba(0, 0, 0, .14);
+        border-radius: 2px;
+        box-shadow: inset 0 2px 0 0 rgba(0,0,0,.02);
+        flex-shrink: 0;
+        height: 16px;
+        margin-right: 8px;
+        position: relative;
+        text-align: center;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+        width: 16px;
+    }
+    .jX4z5R {
+        color: rgba(0, 0, 0, .8);
+        width: 46.27949%;
+    }
+    .jHcdvj, .o1QlcH {
+        text-align: center;
+    }
+
+    .jHcdvj {
+        width: 15.88022%;
+    }
+    .o1QlcH {
+        width: 15.4265%;
+    }
+
+    .jHcdvj, .o1QlcH {
+        text-align: center;
+    }
+    .RT5qRd, .TkKRaF {
+        text-align: center;
+    }
+
+    .RT5qRd {
+        width: 10.43557%;
+    }
+    .TkKRaF {
+        width: 12.70417%;
+    }
+
+    .RT5qRd, .TkKRaF {
+        text-align: center;
+    }
+    /*.RqMReY {
+        padding-bottom: 1px;
+        position: relative;
+    }
+    .lDiGJB:last-child {
+        padding-bottom: 20px;
+    }
+
+    .lDiGJB:first-child {
+        padding-top: 15px;
+    }
+
+    .lDiGJB {
+        color: rgba(0, 0, 0, .87);
+        display: block;
+        margin-top: 15px;
+        padding: 0 20px 15px;
+        -webkit-text-decoration: none;
+        text-decoration: none;
+    }
+    .f1bSN6 {
+        align-items: center;
+        display: flex;
+    }
+    div.a11y-hidden, h1.a11y-hidden, h2.a11y-hidden, h3.a11y-hidden, h4.a11y-hidden, span.a11y-hidden {
+        height: 1px;
+        left: -9999px;
+        overflow: hidden;
+        position: absolute;
+        width: 1px;
+    }
+    .Xp4RLg {
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: row-reverse;
+        min-width: 58px;
+        padding: 0 12px 0 20px;
+    }
+    .brf29Y, .bzhajK {
+        display: flex;
+    }
+
+    .brf29Y {
+        box-sizing: border-box;
+        flex-direction: column;
+        position: relative;
+        width: 29.03811%;
+    }
+    .eHDC_o, .gJyWia {
+        align-items: center;
+        display: flex;
+        justify-content: center;
+    }
+
+    .eHDC_o {
+        width: 17.24138%;
+    }
+    .qNRZqG {
+        align-items: center;
+        cursor: pointer;
+        display: flex;
+        flex: 1;
+        justify-content: space-between;
+        outline: none;
+        position: relative;
+    }
+    .mM4TZ8 {
+        background: none;
+        border: 0;
+        color: rgba(0, 0, 0, .54);
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        font-size: .875rem;
+        margin-right: 10px;
+        padding: 0;
+    }
+    .gJyWia {
+        flex-direction: column;
+        width: 15.88022%;
+    }
+
+    .eHDC_o, .gJyWia {
+        align-items: center;
+        display: flex;
+        justify-content: center;
+    }
+    .vjkBXu:last-child {
+        margin: 0;
+    }
+    .sluy3i {
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        width: 15.4265%;
+    }
+    .GpmJtT {
+        align-items: center;
+        display: flex;
+    }
+    .HRvCAv, .bRSn43 {
+        align-items: center;
+        display: flex;
+        justify-content: center;
+    }
+
+    .HRvCAv {
+        color: #ee4d2d;
+        width: 10.43557%;
+    }
+    div.a11y-hidden, h1.a11y-hidden, h2.a11y-hidden, h3.a11y-hidden, h4.a11y-hidden, span.a11y-hidden {
+        height: 1px;
+        left: -9999px;
+        overflow: hidden;
+        position: absolute;
+        width: 1px;
+    }
+    TvSDdG {
+        flex-direction: column;
+    }
+
+    .bRSn43 {
+        text-transform: capitalize;
+        width: 12.70417%;
+    }
+
+    .HRvCAv, .bRSn43 {
+        align-items: center;
+        display: flex;
+        justify-content: center;
+    }
+    .lSrQtj {
+        background: none;
+        border: 0;
+        cursor: pointer;
+    }
+    .J8cCGR {
+        max-width: 100%;
+        z-index: 2;
+    }
+    
+
+    .shopee-button-no-outline {
+        position: relative;
+        overflow: visible;
+        outline: 0px;
+        padding: 0.3125rem 0.4375rem;
+        color: rgba(0, 0, 0, 0.8);
+        background-color: transparent;
+        border: 0px;
+    }
+
+    .shopee-button-no-outline, .shopee-icon-button, .shopee-image-button {
+        outline: none;
+        cursor: pointer;
+        border: 0px;
+        font-size: 0.875rem;
+        font-weight: 300;
+        line-height: 1;
+        letter-spacing: 0px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background-color 0.1s cubic-bezier(0.4, 0, 0.6, 1) 0s;
+    }*/
+
+</style>
+<div style="height:150px;" class="remove"></div>
+<div class="container">
+    <main class="GO0LDV" style="margin-bottom: 0px;">
+        <div class="Za1N64 row">
+            <div class="SQGY8I col-1">
+                <label class="stardust-checkbox">
+                    <input class="stardust-checkbox__input" type="checkbox" aria-checked="false" aria-disabled="false" tabindex="0" role="checkbox" aria-label="Click here to select all products">
+                    <div class="stardust-checkbox__box"></div>
+                </label>
+            </div>
+            <div class="jX4z5R col-5">Sản Phẩm</div>
+            <div class="jHcdvj col-1">Đơn Giá</div>
+            <div class="o1QlcH col-2">Số Lượng</div>
+            <div class="RT5qRd col-1">Số Tiền</div>
+            <div class="TkKRaF col-2">Thao Tác</div>
+        </div>
+        <section class=" row" role="list">
+            <div class="col-1">
+                <label class="stardust-checkbox">
+                    <input class="stardust-checkbox__input" type="checkbox" aria-checked="false" aria-disabled="false" tabindex="0" role="checkbox" aria-label="Click here to select this product">
+                    <div class="stardust-checkbox__box"></div>
+                </label>
+            </div>
+            <div class="col-5 row">
+                <img />
+                <a>Tên</a>
+                <div class="qNRZqG">
+                    <button class="mM4TZ8" role="button" tabindex="0">
+                        <div class="iIg1CN">
+                            Phân loại hàng:
+                            <div class="E33rwr"></div>
+                        </div>
+                        <div class="dDPSp3">Nâu 408g</div>
+                    </button>
+                    <div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-1">
+                <span class="vjkBXu">₫85.000</span>
+            </div>
+            <div class="row col-2">
+                <button>-</button>
+                <p>1</p>
+                <button>+</button>
+            </div>
+            <div class="col-1">Số tiền</div>
+            <div class="col-2">
+                <p>Xóa</p>
+                <p>Sản phẩm tương tự</p>
+            </div>
+        </section>
+    </main>
+    @*<section class="yn6AIc dhqg2H"><h2 class="a11y-hidden">cart_accessibility_footer</h2><div class="CzLyKQ lRHCcS"><h3 class="a11y-hidden">cart_accessibility_footer_voucher_row</h3><svg fill="none" viewBox="0 -2 23 22" class="shopee-svg-icon icon-voucher-line"><g filter="url(#voucher-filter0_d)"><mask id="a" fill="#fff"><path fill-rule="evenodd" clip-rule="evenodd" d="M1 2h18v2.32a1.5 1.5 0 000 2.75v.65a1.5 1.5 0 000 2.75v.65a1.5 1.5 0 000 2.75V16H1v-2.12a1.5 1.5 0 000-2.75v-.65a1.5 1.5 0 000-2.75v-.65a1.5 1.5 0 000-2.75V2z"></path></mask><path d="M19 2h1V1h-1v1zM1 2V1H0v1h1zm18 2.32l.4.92.6-.26v-.66h-1zm0 2.75h1v-.65l-.6-.26-.4.91zm0 .65l.4.92.6-.26v-.66h-1zm0 2.75h1v-.65l-.6-.26-.4.91zm0 .65l.4.92.6-.26v-.66h-1zm0 2.75h1v-.65l-.6-.26-.4.91zM19 16v1h1v-1h-1zM1 16H0v1h1v-1zm0-2.12l-.4-.92-.6.26v.66h1zm0-2.75H0v.65l.6.26.4-.91zm0-.65l-.4-.92-.6.26v.66h1zm0-2.75H0v.65l.6.26.4-.91zm0-.65l-.4-.92-.6.26v.66h1zm0-2.75H0v.65l.6.26.4-.91zM19 1H1v2h18V1zm1 3.32V2h-2v2.32h2zm-.9 1.38c0-.2.12-.38.3-.46l-.8-1.83a2.5 2.5 0 00-1.5 2.29h2zm.3.46a.5.5 0 01-.3-.46h-2c0 1.03.62 1.9 1.5 2.3l.8-1.84zm.6 1.56v-.65h-2v.65h2zm-.9 1.38c0-.2.12-.38.3-.46l-.8-1.83a2.5 2.5 0 00-1.5 2.29h2zm.3.46a.5.5 0 01-.3-.46h-2c0 1.03.62 1.9 1.5 2.3l.8-1.84zm.6 1.56v-.65h-2v.65h2zm-.9 1.38c0-.2.12-.38.3-.46l-.8-1.83a2.5 2.5 0 00-1.5 2.29h2zm.3.46a.5.5 0 01-.3-.46h-2c0 1.03.62 1.9 1.5 2.3l.8-1.84zM20 16v-2.13h-2V16h2zM1 17h18v-2H1v2zm-1-3.12V16h2v-2.12H0zm1.4.91a2.5 2.5 0 001.5-2.29h-2a.5.5 0 01-.3.46l.8 1.83zm1.5-2.29a2.5 2.5 0 00-1.5-2.3l-.8 1.84c.18.08.3.26.3.46h2zM0 10.48v.65h2v-.65H0zM.9 9.1a.5.5 0 01-.3.46l.8 1.83A2.5 2.5 0 002.9 9.1h-2zm-.3-.46c.18.08.3.26.3.46h2a2.5 2.5 0 00-1.5-2.3L.6 8.65zM0 7.08v.65h2v-.65H0zM.9 5.7a.5.5 0 01-.3.46l.8 1.83A2.5 2.5 0 002.9 5.7h-2zm-.3-.46c.18.08.3.26.3.46h2a2.5 2.5 0 00-1.5-2.3L.6 5.25zM0 2v2.33h2V2H0z" mask="url(#a)"></path></g><path clip-rule="evenodd" d="M6.49 14.18h.86v-1.6h-.86v1.6zM6.49 11.18h.86v-1.6h-.86v1.6zM6.49 8.18h.86v-1.6h-.86v1.6zM6.49 5.18h.86v-1.6h-.86v1.6z"></path><defs><filter id="voucher-filter0_d" x="0" y="1" width="20" height="16" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood><feColorMatrix in="SourceAlpha" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"></feColorMatrix><feOffset></feOffset><feGaussianBlur stdDeviation=".5"></feGaussianBlur><feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.09 0"></feColorMatrix><feBlend in2="BackgroundImageFix" result="effect1_dropShadow"></feBlend><feBlend in="SourceGraphic" in2="effect1_dropShadow" result="shape"></feBlend></filter></defs></svg><div class="FGs2jP">Shopee Voucher</div><div class="oI3JPG"></div><button class="nOoMrG">Chọn hoặc nhập mã</button></div><div class="Z6oxZ3 iDgxib"></div><h3 class="a11y-hidden">cart_accessibility_footer_coin_row</h3><div class="WuLbM9 BjTxuU"><label class="stardust-checkbox stardust-checkbox--disabled"><input class="stardust-checkbox__input" type="checkbox" aria-checked="false" aria-disabled="true" tabindex="0" role="checkbox" aria-label="Coins Balance 0"><div class="stardust-checkbox__box"></div></label></div><div class="WuLbM9 ificCM dOZlXw T5n8VV"><svg fill="none" viewBox="0 0 18 18" class="shopee-svg-icon Iz070x icon-coin-line"><path stroke="#FFA600" stroke-width="1.3" d="M17.35 9A8.35 8.35 0 11.65 9a8.35 8.35 0 0116.7 0z"></path><path fill="#FFA600" fill-rule="evenodd" stroke="#FFA600" stroke-width=".2" d="M6.86 4.723c-.683.576-.998 1.627-.75 2.464.215.725.85 1.258 1.522 1.608.37.193.77.355 1.177.463.1.027.2.051.3.08.098.03.196.062.294.096.06.021.121.044.182.067.017.006.107.041.04.014-.07-.028.071.03.087.037.286.124.56.27.82.44.114.076.045.024.151.111a2.942 2.942 0 01.322.303c.087.093.046.042.114.146.18.275.245.478.235.8-.01.328-.14.659-.325.867-.47.53-1.232.73-1.934.696a4.727 4.727 0 01-1.487-.307c-.45-.182-.852-.462-1.242-.737-.25-.176-.643-.04-.788.197-.17.279-.044.574.207.75.753.532 1.539.946 2.474 1.098.885.144 1.731.124 2.563-.224.78-.326 1.416-.966 1.607-1.772.198-.838-.023-1.644-.61-2.29-.683-.753-1.722-1.17-2.706-1.43a4.563 4.563 0 01-.543-.183c.122.048-.044-.02-.078-.035a4.77 4.77 0 01-.422-.212c-.594-.338-.955-.722-.872-1.369.105-.816.757-1.221 1.555-1.28.808-.06 1.648.135 2.297.554.614.398 1.19-.553.58-.947-1.33-.86-3.504-1.074-4.77-.005z" clip-rule="evenodd"></path></svg><div class="BBQR6_">Shopee Xu</div><div class="PkMsif">Bạn chưa chọn sản phẩm</div><div class="stardust-popover Prdzh0" id="stardust-popover0" tabindex="0"><div role="button" class="stardust-popover__target"><div><svg enable-background="new 0 0 15 15" viewBox="0 0 15 15" x="0" y="0" class="shopee-svg-icon eXBxkv icon-help"><g><circle cx="7.5" cy="7.5" fill="none" r="6.5" stroke-miterlimit="10"></circle><path d="m5.3 5.3c.1-.3.3-.6.5-.8s.4-.4.7-.5.6-.2 1-.2c.3 0 .6 0 .9.1s.5.2.7.4.4.4.5.7.2.6.2.9c0 .2 0 .4-.1.6s-.1.3-.2.5c-.1.1-.2.2-.3.3-.1.2-.2.3-.4.4-.1.1-.2.2-.3.3s-.2.2-.3.4c-.1.1-.1.2-.2.4s-.1.3-.1.5v.4h-.9v-.5c0-.3.1-.6.2-.8s.2-.4.3-.5c.2-.2.3-.3.5-.5.1-.1.3-.3.4-.4.1-.2.2-.3.3-.5s.1-.4.1-.7c0-.4-.2-.7-.4-.9s-.5-.3-.9-.3c-.3 0-.5 0-.7.1-.1.1-.3.2-.4.4-.1.1-.2.3-.3.5 0 .2-.1.5-.1.7h-.9c0-.3.1-.7.2-1zm2.8 5.1v1.2h-1.2v-1.2z" stroke="none"></path></g></svg></div></div></div></div><div class="WuLbM9 fDdBqs IR54W9">-₫0</div><div class="Z6oxZ3 MOZmZ1"></div><div class="WhvsrO Kk1Mak"><h3 class="a11y-hidden">cart_accessibility_footer_checkout_row</h3><div class="u4pma8"><label class="stardust-checkbox"><input class="stardust-checkbox__input" type="checkbox" aria-checked="false" aria-disabled="false" tabindex="0" role="checkbox" aria-label="Click here to select all products"><div class="stardust-checkbox__box"></div></label></div><button class="v5CBXg clear-btn-style">Chọn Tất Cả (19)</button><button class="clear-btn-style GQ7Hga">Xóa</button><div class=""></div><button class="clear-btn-style QmkEaL">Lưu vào mục Đã thích</button><div class="iqpIui"></div><div class="BV92a3" role="region"><div class="DScaTh"><div class="znJ7TE"><div class="CoYXUV">Tổng thanh toán (0 Sản phẩm):</div><div class="mketV9">₫0</div></div></div><div class="unV7eM"></div></div><button class="shopee-button-solid shopee-button-solid--primary"><span class="SHq91i">Mua hàng</span></button></div></section>
+        <se*@<!--ction class="yn6AIc dhqg2H"><h2 class="a11y-hidden">cart_accessibility_footer</h2><div class="CzLyKQ lRHCcS"><h3 class="a11y-hidden">cart_accessibility_footer_voucher_row</h3><svg fill="none" viewBox="0 -2 23 22" class="shopee-svg-icon icon-voucher-line"><g filter="url(#voucher-filter0_d)"><mask id="a" fill="#fff"><path fill-rule="evenodd" clip-rule="evenodd" d="M1 2h18v2.32a1.5 1.5 0 000 2.75v.65a1.5 1.5 0 000 2.75v.65a1.5 1.5 0 000 2.75V16H1v-2.12a1.5 1.5 0 000-2.75v-.65a1.5 1.5 0 000-2.75v-.65a1.5 1.5 0 000-2.75V2z"></path></mask><path d="M19 2h1V1h-1v1zM1 2V1H0v1h1zm18 2.32l.4.92.6-.26v-.66h-1zm0 2.75h1v-.65l-.6-.26-.4.91zm0 .65l.4.92.6-.26v-.66h-1zm0 2.75h1v-.65l-.6-.26-.4.91zm0 .65l.4.92.6-.26v-.66h-1zm0 2.75h1v-.65l-.6-.26-.4.91zM19 16v1h1v-1h-1zM1 16H0v1h1v-1zm0-2.12l-.4-.92-.6.26v.66h1zm0-2.75H0v.65l.6.26.4-.91zm0-.65l-.4-.92-.6.26v.66h1zm0-2.75H0v.65l.6.26.4-.91zm0-.65l-.4-.92-.6.26v.66h1zm0-2.75H0v.65l.6.26.4-.91zM19 1H1v2h18V1zm1 3.32V2h-2v2.32h2zm-.9 1.38c0-.2.12-.38.3-.46l-.8-1.83a2.5 2.5 0 00-1.5 2.29h2zm.3.46a.5.5 0 01-.3-.46h-2c0 1.03.62 1.9 1.5 2.3l.8-1.84zm.6 1.56v-.65h-2v.65h2zm-.9 1.38c0-.2.12-.38.3-.46l-.8-1.83a2.5 2.5 0 00-1.5 2.29h2zm.3.46a.5.5 0 01-.3-.46h-2c0 1.03.62 1.9 1.5 2.3l.8-1.84zm.6 1.56v-.65h-2v.65h2zm-.9 1.38c0-.2.12-.38.3-.46l-.8-1.83a2.5 2.5 0 00-1.5 2.29h2zm.3.46a.5.5 0 01-.3-.46h-2c0 1.03.62 1.9 1.5 2.3l.8-1.84zM20 16v-2.13h-2V16h2zM1 17h18v-2H1v2zm-1-3.12V16h2v-2.12H0zm1.4.91a2.5 2.5 0 001.5-2.29h-2a.5.5 0 01-.3.46l.8 1.83zm1.5-2.29a2.5 2.5 0 00-1.5-2.3l-.8 1.84c.18.08.3.26.3.46h2zM0 10.48v.65h2v-.65H0zM.9 9.1a.5.5 0 01-.3.46l.8 1.83A2.5 2.5 0 002.9 9.1h-2zm-.3-.46c.18.08.3.26.3.46h2a2.5 2.5 0 00-1.5-2.3L.6 8.65zM0 7.08v.65h2v-.65H0zM.9 5.7a.5.5 0 01-.3.46l.8 1.83A2.5 2.5 0 002.9 5.7h-2zm-.3-.46c.18.08.3.26.3.46h2a2.5 2.5 0 00-1.5-2.3L.6 5.25zM0 2v2.33h2V2H0z" mask="url(#a)"></path></g><path clip-rule="evenodd" d="M6.49 14.18h.86v-1.6h-.86v1.6zM6.49 11.18h.86v-1.6h-.86v1.6zM6.49 8.18h.86v-1.6h-.86v1.6zM6.49 5.18h.86v-1.6h-.86v1.6z"></path><defs><filter id="voucher-filter0_d" x="0" y="1" width="20" height="16" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood><feColorMatrix in="SourceAlpha" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"></feColorMatrix><feOffset></feOffset><feGaussianBlur stdDeviation=".5"></feGaussianBlur><feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.09 0"></feColorMatrix><feBlend in2="BackgroundImageFix" result="effect1_dropShadow"></feBlend><feBlend in="SourceGraphic" in2="effect1_dropShadow" result="shape"></feBlend></filter></defs></svg><div class="FGs2jP">Shopee Voucher</div><div class="oI3JPG"></div><button class="nOoMrG">Chọn hoặc nhập mã</button></div><div class="Z6oxZ3 iDgxib"></div><h3 class="a11y-hidden">cart_accessibility_footer_coin_row</h3><div class="WuLbM9 BjTxuU"><label class="stardust-checkbox stardust-checkbox--disabled"><input class="stardust-checkbox__input" type="checkbox" aria-checked="false" aria-disabled="true" tabindex="0" role="checkbox" aria-label="Coins Balance 0"><div class="stardust-checkbox__box"></div></label></div><div class="WuLbM9 ificCM dOZlXw T5n8VV"><svg fill="none" viewBox="0 0 18 18" class="shopee-svg-icon Iz070x icon-coin-line"><path stroke="#FFA600" stroke-width="1.3" d="M17.35 9A8.35 8.35 0 11.65 9a8.35 8.35 0 0116.7 0z"></path><path fill="#FFA600" fill-rule="evenodd" stroke="#FFA600" stroke-width=".2" d="M6.86 4.723c-.683.576-.998 1.627-.75 2.464.215.725.85 1.258 1.522 1.608.37.193.77.355 1.177.463.1.027.2.051.3.08.098.03.196.062.294.096.06.021.121.044.182.067.017.006.107.041.04.014-.07-.028.071.03.087.037.286.124.56.27.82.44.114.076.045.024.151.111a2.942 2.942 0 01.322.303c.087.093.046.042.114.146.18.275.245.478.235.8-.01.328-.14.659-.325.867-.47.53-1.232.73-1.934.696a4.727 4.727 0 01-1.487-.307c-.45-.182-.852-.462-1.242-.737-.25-.176-.643-.04-.788.197-.17.279-.044.574.207.75.753.532 1.539.946 2.474 1.098.885.144 1.731.124 2.563-.224.78-.326 1.416-.966 1.607-1.772.198-.838-.023-1.644-.61-2.29-.683-.753-1.722-1.17-2.706-1.43a4.563 4.563 0 01-.543-.183c.122.048-.044-.02-.078-.035a4.77 4.77 0 01-.422-.212c-.594-.338-.955-.722-.872-1.369.105-.816.757-1.221 1.555-1.28.808-.06 1.648.135 2.297.554.614.398 1.19-.553.58-.947-1.33-.86-3.504-1.074-4.77-.005z" clip-rule="evenodd"></path></svg><div class="BBQR6_">Shopee Xu</div><div class="PkMsif">Bạn chưa chọn sản phẩm</div><div class="stardust-popover Prdzh0" id="stardust-popover0" tabindex="0"><div role="button" class="stardust-popover__target"><div><svg enable-background="new 0 0 15 15" viewBox="0 0 15 15" x="0" y="0" class="shopee-svg-icon eXBxkv icon-help"><g><circle cx="7.5" cy="7.5" fill="none" r="6.5" stroke-miterlimit="10"></circle><path d="m5.3 5.3c.1-.3.3-.6.5-.8s.4-.4.7-.5.6-.2 1-.2c.3 0 .6 0 .9.1s.5.2.7.4.4.4.5.7.2.6.2.9c0 .2 0 .4-.1.6s-.1.3-.2.5c-.1.1-.2.2-.3.3-.1.2-.2.3-.4.4-.1.1-.2.2-.3.3s-.2.2-.3.4c-.1.1-.1.2-.2.4s-.1.3-.1.5v.4h-.9v-.5c0-.3.1-.6.2-.8s.2-.4.3-.5c.2-.2.3-.3.5-.5.1-.1.3-.3.4-.4.1-.2.2-.3.3-.5s.1-.4.1-.7c0-.4-.2-.7-.4-.9s-.5-.3-.9-.3c-.3 0-.5 0-.7.1-.1.1-.3.2-.4.4-.1.1-.2.3-.3.5 0 .2-.1.5-.1.7h-.9c0-.3.1-.7.2-1zm2.8 5.1v1.2h-1.2v-1.2z" stroke="none"></path></g></svg></div></div></div></div><div class="WuLbM9 fDdBqs IR54W9">-₫0</div><div class="Z6oxZ3 MOZmZ1"></div><div class="WhvsrO Kk1Mak"><h3 class="a11y-hidden">cart_accessibility_footer_checkout_row</h3><div class="u4pma8"><label class="stardust-checkbox"><input class="stardust-checkbox__input" type="checkbox" aria-checked="false" aria-disabled="false" tabindex="0" role="checkbox" aria-label="Click here to select all products"><div class="stardust-checkbox__box"></div></label></div><button class="v5CBXg clear-btn-style">Chọn Tất Cả (19)</button><button class="clear-btn-style GQ7Hga">Xóa</button><div class=""></div><button class="clear-btn-style QmkEaL">Lưu vào mục Đã thích</button><div class="iqpIui"></div><div class="BV92a3" role="region"><div class="DScaTh"><div class="znJ7TE"><div class="CoYXUV">Tổng thanh toán (0 Sản phẩm):</div><div class="mketV9">₫0</div></div></div><div class="unV7eM"></div></div><button class="shopee-button-solid shopee-button-solid--primary"><span class="SHq91i">Mua hàng</span></button></div></section>-->
+</div>

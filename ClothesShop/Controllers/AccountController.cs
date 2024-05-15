@@ -89,6 +89,7 @@ namespace ClothesShop.Controllers
             var order = db.Orders.Find(id);
             return View(order);
         }
+
         public async Task<ActionResult> Profile()
         {
             var user = await UserManager.FindByNameAsync(User.Identity.Name);
@@ -103,17 +104,6 @@ namespace ClothesShop.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Profile(CreateAccountViewModel profile)
         {
-            //TempData["TB"] = "1";
-            //var user = await UserManager.FindByEmailAsync(profile.Email);
-            //user.FullName = profile.FullName;
-            //user.Phone = profile.Phone;
-            //var rs = await UserManager.UpdateAsync(user);
-            //if (rs.Succeeded)
-            //{
-            //    return RedirectToAction("Profile");
-            //}
-            //TempData["TB"] = "0";
-            //return View(profile);
             var user = await UserManager.FindByEmailAsync(profile.Email);
             user.FullName = profile.FullName;
             user.Phone = profile.Phone;
@@ -246,7 +236,10 @@ namespace ClothesShop.Controllers
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-
+                    Cart cart = new Cart();
+                    cart.UserId = user.Id;
+                    db.Carts.Add(cart);
+                    db.SaveChanges();
                     //await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
                     UserManager.AddToRole(user.Id, "Customer"); //new
                                                                 // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771

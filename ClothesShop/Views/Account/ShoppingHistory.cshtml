@@ -61,38 +61,39 @@
     ? "<div class='form-group mb-2 col-md-11'><input name='SearchText' value='' id='SearchText' type='text' class='form-control ' placeholder='Tìm kiếm theo mã đơn hàng hoặc tên sản phẩm' style='width: 100%;'></div><div class='form-group' ><button type='submit' class='btn .btn-outline-dark' style='height:40px;background-color:#cc3333;'>Tìm kiếm</button></div>"
     : "<div></div>";
 
-        @*@Html.Raw(strSearch)*@
-        <section class="QmO3Bu" aria-role="tablist">
-            <h2 class="a11y-hidden"></h2>
-            <a href="/Account/ShoppingHistory?Searchtext=&type=all" class="KI5har mRVNLm tab-link active btnOrder" data-id="all" title="Tất cả" aria-role="tab" aria-selected="true" aria-controls="olp_panel_id-0.08896883105868847">
-                <span class="NoH9rC">Tất cả</span>
-            </a>
-            <a href="/Account/ShoppingHistory?Searchtext=&type=isVerified" class="KI5har tab-link btnOrder" data-id="isVerified" title="Đã đi đơn" aria-role="tab" aria-selected="false" aria-controls="olp_panel_id-0.5641504579440175">
-                <span class="NoH9rC">Đã đi đơn</span>
-            </a>
-            <a href="/Account/ShoppingHistory?Searchtext=&type=isPaid" class="KI5har tab-link btnOrder" data-id="isPaid" title="Hoàn thành" aria-role="tab" aria-selected="false" aria-controls="olp_panel_id-0.8466887306709114">
-                <span class="NoH9rC">Hoàn thành</span>
-            </a>
-        </section>
+        @Html.Raw(strSearch)
+
 
     }
+    <section class="QmO3Bu" aria-role="tablist">
+        <h2 class="a11y-hidden"></h2>
+        <a class="KI5har mRVNLm tab-link active btnOrder" data-value="all" aria-role="tab" aria-selected="true" aria-controls="olp_panel_id-0.08896883105868847">
+            <span class="NoH9rC">Tất cả</span>
+        </a>
+        <a class="KI5har tab-link btnOrder" data-value="IsVerified" aria-role="tab" aria-selected="false" aria-controls="olp_panel_id-0.5641504579440175">
+            <span class="NoH9rC">Đã đi đơn</span>
+        </a>
+        <a  class="KI5har tab-link btnOrder" data-value="IsPaid" aria-role="tab" aria-selected="false" aria-controls="olp_panel_id-0.8466887306709114">
+            <span class="NoH9rC">Hoàn thành</span>
+        </a>
+    </section>
     @if (Model != null && Model.Any())
     {
         foreach (var order in Model)
         {
-            <div class="order-card mt-3 p-3 border">
+            <div class="order-card mt-3 p-3 border"  data-is-verified="@order.IsVerified" data-is-paid="@order.IsPaid">
                 <h4><a href="/Account/OrderDetail/@order.Id" style="color: black">Đơn Hàng: @order.Id</a></h4>
                 @foreach (var od in order.OrderDetails)
                 {
                     var money = od.Quantity * od.Price;
                     var imgUrl = od.VariantSize.ProductVariant.ImageLists.FirstOrDefault(x => x.IsDefault)?.ImageUrl;
-                    <div class="media row ">
+                    <div class="media row">
                         <img src="@imgUrl" class="mr-3 col-4" style="width: 100px;">
                         <div class="media-body col-5">
                             <a href="/Product/Detail/@od.VariantSize.ProductVariant.Product.Id"><h5>@od.VariantSize.ProductVariant.Product.Title</h5></a>
                             <p>Màu: @od.VariantSize.ProductVariant.Color.Name</p>
                             <p>Kích cỡ: @od.VariantSize.Size.Name</p>
-                            
+
                         </div>
                         <div class="col-2"><p>Số lượng: @od.Quantity</p></div>
                         <div class="col-2"><p>Số tiền: @money</p></div>
@@ -110,22 +111,42 @@
 @section scripts{
     <script>
         $(document).ready(function () {
-            $('.tab-link').click(function (event) {
-                event.preventDefault();
-                var type = $(this).data("id");
-                var searchText = $('#SearchText').val();
+            const tabs = document.querySelectorAll('.tab-link');
 
-                $.ajax({
-                    url: '/Account/ShoppingHistory',
-                    type: 'GET',
-                    data: { SearchText: searchText, type: type },
-                    success: function (response) {
-                        /*$('#order-content').remove();*/
-                        $('#order-content').html(response);
-                    },
-                    error: function (error) {
-                        console.error("Error:", error);
-                    }
+            // Thêm sự kiện click cho mỗi tab
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function (event) {
+                    // Xóa active class của tất cả các tab
+                    tabs.forEach(t => t.classList.remove('active'));
+                    // Thêm active class cho tab được click
+                    this.classList.add('active');
+
+                    // Lấy giá trị của tab
+                    const value = this.getAttribute('data-value');
+
+                    // Lấy tất cả các order
+                    const orders = document.querySelectorAll('.order-card');
+
+                    // Lọc và hiển thị các order phù hợp
+                    orders.forEach(order => {
+                        let isVerified = order.getAttribute('data-is-verified') === 'True';
+                        let isPaid = order.getAttribute('data-is-paid') === 'True';
+
+                        // Hiển thị tất cả orders
+                        if (value === 'all') {
+                            order.style.display = '';
+                        }
+                        // Hiển thị orders đã được xác minh
+                        else if (value === 'IsVerified' && isVerified) {
+                            order.style.display = '';
+                        }
+                        // Hiển thị orders đã thanh toán
+                        else if (value === 'IsPaid' && isPaid) {
+                            order.style.display = '';
+                        } else {
+                            order.style.display = 'none'; // Ẩn các order không phù hợp
+                        }
+                    });
                 });
             });
         });

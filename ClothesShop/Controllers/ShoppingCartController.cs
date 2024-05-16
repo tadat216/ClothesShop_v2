@@ -15,7 +15,7 @@ using System.Security.Policy;
 
 namespace ClothesShop.Controllers
 {
-    //[Authorize(Roles = "Admin, Customer, Employee")]
+    [Authorize(Roles = "Admin, Customer, Employee")]
     public class ShoppingCartController : Controller
     {
 
@@ -81,7 +81,7 @@ namespace ClothesShop.Controllers
             return View(cartDetails);
         }
         //new  [AllowAnonymous] cho checkout, checkoutsuccess
-        [AllowAnonymous]
+        
         public async Task<ActionResult> CheckOut()
         {
             var user = await UserManager.FindByNameAsync(User.Identity.Name);
@@ -91,17 +91,9 @@ namespace ClothesShop.Controllers
                 ViewBag.Message = "Không tìm thấy giỏ hàng";
                 return View();
             }
-            var orders = db.Orders.Where(x=>x.UserId == user.Id).ToList();
-            HashSet<string> receiverInfs = new HashSet<string>();
-            if (orders != null)
-            {
-                foreach(var o in orders)
-                {
-                    var inf = o.ReceiverName + " " + o.Phone + " " + o.Address;
-                    receiverInfs.Add(inf);
-                }
-            }
-            ViewBag.receiverInfs = receiverInfs.ToList();
+            var addresses = db.Addresses.Where(x=>x.UserId==user.Id).ToList();
+            ViewBag.Addresses = null;
+            if(addresses!=null) ViewBag.Addresses = addresses;
             var cartDetails = db.CartDetails.Where(x => x.CartId == cart.Id).ToList();
             if (cartDetails != null && cartDetails.Any())
             {
@@ -112,7 +104,6 @@ namespace ClothesShop.Controllers
                 }
                
             }
-
             
             return View(); 
         }
@@ -140,9 +131,29 @@ namespace ClothesShop.Controllers
         //    return PartialView();
         //}
         [HttpPost]
-        public ActionResult ChangeAddress()
+        public async Task<ActionResult> ChangeDefaultAddress(string id)
         {
-            return Json(new {});
+            var user = await UserManager.FindByNameAsync(User.Identity.Name);
+            var addresses = db.Addresses.Where(x=>x.UserId == user.Id);
+            var code = new {Success = false, ReceiverName ="", ReceiverPhone = "", ReceiverAddress = ""};
+            foreach(var ad in addresses)
+            {
+                if(ad.Id == id)
+                {
+                    ad.IsDefault = true;
+                    db.Addresses.Attach(ad);
+                    db.Entry(ad).State = EntityState.Modified;
+                    code = new { Success = true, ReceiverName = ad.ReceiverName, ReceiverPhone = ad.ReceiverPhone, ReceiverAddress = ad.ReceiverAddress };
+                }
+                else
+                {
+                    ad.IsDefault = false;
+                    db.Addresses.Attach(ad);
+                    db.Entry(ad).State = EntityState.Modified;
+                }
+            }
+            db.SaveChanges();
+            return Json(code);
         }
         [HttpPost]
         public ActionResult AddAddress()

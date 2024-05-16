@@ -17,7 +17,10 @@ namespace ClothesShop.Models.EF
         public string Id { get; set; }
         public string UserId { get; set; }
         [StringLength(100)]
-        public string Name { get; set; }
+        public string ReceiverName { get; set; }
+        public string ReceiverAddress {  get; set; }
+        public string ReceiverPhone { get; set; }
+        public bool IsDefault { get; set; }
         public virtual ApplicationUser User { get; set; }
     }
 }

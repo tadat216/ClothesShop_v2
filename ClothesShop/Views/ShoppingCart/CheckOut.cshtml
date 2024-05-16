@@ -112,7 +112,8 @@
 
                 }
             }
-            <a class="col-2" id="btnChangeAddress">Thay đổi</a>
+            <a class="col-2" class="btnChangeAddress">Thay đổi</a>
+            
         </div>
         <table class="table">
             <thead>
@@ -145,7 +146,7 @@
 
                     <div class="shopee-alert-popup__message">
                         <h5> Địa chỉ của tôi</h5>
-                        <ul>
+                        <ul id="addressList">
                             @if (ViewBag.Addresses != null && ViewBag.Addresses.Count > 0)
                             {
                                 foreach (var ad in ViewBag.Addresses)
@@ -189,13 +190,13 @@
                                         <div class="col-lg-6 col-md-6">
                                             <div class="input-box mb-20">
                                                 <label>Họ<em>*</em></label>
-                                                <input type="text" name="namm" class="info">
+                                                <input type="text" name="namm" id="fname" class="info">
                                             </div>
                                         </div>
                                         <div class="col-lg-6 col-md-6">
                                             <div class="input-box mb-20">
                                                 <label>Tên<em>*</em></label>
-                                                <input type="text" name="namm" class="info" />
+                                                <input type="text" name="namm"  id="lname" class="info" />
                                             </div>
                                         </div>
 
@@ -204,6 +205,7 @@
                                                 <label>Email<em>*</em></label>
                                                 <input type="email"
                                                        name="email"
+                                                       id="email"
                                                        class="info">
                                             </div>
                                         </div>
@@ -212,6 +214,7 @@
                                                 <label>Số điện thoại<em>*</em></label>
                                                 <input type="text"
                                                        name="phone"
+                                                       id="phone"
                                                        class="info">
                                             </div>
                                         </div>
@@ -232,6 +235,7 @@
                                                 <input type="text"
                                                        name="add2"
                                                        class="info mt-3"
+                                                       id="addDetail"
                                                        placeholder="Nhập thêm thông tin về địa chỉ (số nhà...)">
                                             </div>
                                         </div>
@@ -289,10 +293,41 @@
 
                 }
             });
-            $('#btnChangeAddress').click(function (e) {
+          
+            function checkInputs() {
+                var isValid = true;
+                $('.info').each(function () {
+                    if ($(this).val() === '' || $(this).val() === '0') {
+                        isValid = false;
+                    }
+                });
+                $('.css_select').each(function () {
+                    if ($(this).val() === '0') {
+                        isValid = false;
+                    }
+                });
+
+                return isValid;
+            }
+            $('.info, .css_select').on('change input', function () {
+                if (checkInputs()) {
+                    $('#OKAddAddress').prop('disabled', false);
+                } else {
+                    $('#OKAddAddress').prop('disabled', true); 
+                }
+            });
+
+            $('#OKAddAddress').prop('disabled', true);
+
+           
+            $('.btnChangeAddress').click(function (e) {
                 e.preventDefault();
+                alert(1);
                 $('#modalChangeAddress').show();
             });
+
+           
+
             $('#btnCancelChangeAddress').click(function () {
                 $('#modalChangeAddress').hide();
             });
@@ -301,20 +336,20 @@
                 var selectedId = $('input[type="radio"][name="address"]:checked').val();
                 if (selectedId) {
                     $.ajax({
-                        url: '/ShoppingCart/ChangeDefaultAddress', // Thay đổi theo router của bạn
+                        url: '/ShoppingCart/ChangeDefaultAddress', 
                         type: 'POST',
                         data: { id: selectedId },
                         success: function (rs) {
                             if (rs.Success) {
                                 $('#modalChangeAddress').hide();
-                                var defaultAddress = '<strong>' + rs.ReceiverName + '-' + '(' + rs.ReceiverPhone + ')' + '-' + rs.ReceiverAddress + '</strong>';
+                                var defaultAddress = '<strong>' + rs.ReceiverName + ' - ' + '(' + rs.ReceiverPhone + ')' + ' - ' + rs.ReceiverAddress + '</strong>';
                                 $('#defaultAddress').html(defaultAddress);
                             }
 
                         },
                         error: function (error) {
                             console.log('Có lỗi xảy ra:', error);
-                            // Xử lý lỗi
+                            
                         }
                     });
                 }
@@ -324,19 +359,56 @@
             });
 
 
-
-
-
             $('#btnAddAddress').click(function (e) {
                 e.preventDefault();
                 $('#modalAddAddress').show();
             });
+            $('#btnCancelAddAddress').click(function () {
+                $('#modalAddAddress').hide();
+            });
             $('#OKAddAddress').click(function () {
-                $('#modalAddAddress').hide();
-            });
-            $('#btnCancelAddeAddress').click(function () {
-                $('#modalAddAddress').hide();
-            });
+                e.preventDefault();
+                if ($(this).is(':disabled')) {
+                    alert("Vui lòng nhập đầy đủ các thông tin");
+                }
+                var fname = $('#fname').val().trim();
+                var lname = $('#lname').val().trim();
+                var email = $('#email').val().trim();
+                var phone = $('#phone').val().trim();
+                var tinh = $('#tinh option:selected').text();
+                var quan = $('#quan option:selected').text();
+                var phuong = $('#phuong option:selected').text();
+                var addDetail = $('#addDetail').val().trim();
+
+                var fullAddress = `${tinh}, ${quan}, ${phuong}, ${addDetail}`;
+                if (!fname || !lname || !email || !phone || tinh === "Tỉnh Thành" || quan === "Quận Huyện" || phuong === "Phường Xã" || !addDetail) {
+                    alert("Vui lòng nhập đầy đủ các thông tin ");
+                    return;
+                }
+                var data = {
+                    name: fname + " " + lname,
+                    phone: phone,
+                    address: fullAddress
+                };
+                $.ajax({
+                    url: 'ShoppingCart/AddAddress',
+                    type: 'POST',
+                    data: data,
+                    success: function (rs) {
+                        var liAddress = '<li class="row">';
+                        if (rs.IsDefault) liAddress += '<input type="radio" id="selectedAddress_' + address.Id + '" name="address" value="' + address.Id + '" style="transform: scale(0.5);" class="col-2" checked>';
+                        else liAddress += '<input type="radio" id="selectedAddress_' + address.Id + '" name="address" value="' + address.Id + '" style="transform: scale(0.5);" class="col-2">';
+
+                        liAddress += '<div class="col-8"><strong>' + address.ReceiverName + ' - (' + address.ReceiverPhone + ') - ' + address.ReceiverAddress + ' </strong></div>';
+                        liAddress += '</li>';
+
+                        $('#addressList').append(liAddress);
+
+                    },
+                    error: function () {
+                        alert('Có lỗi xảy ra, không thể thêm địa chỉ.');
+                    }
+                });
 
         });
     </script>

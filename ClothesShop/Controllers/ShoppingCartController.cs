@@ -156,9 +156,17 @@ namespace ClothesShop.Controllers
             return Json(code);
         }
         [HttpPost]
-        public ActionResult AddAddress()
+        public async Task<ActionResult> AddAddress(string name, string phone, string address)
         {
-            return Json(new { });
+            var ad = new Address();
+            ad.UserId = User.Identity.GetUserId();
+            ad.ReceiverName = name;
+            ad.ReceiverAddress = address;
+            ad.ReceiverPhone = phone;
+            ad.IsDefault = false;
+            db.Addresses.Add(ad);
+            db.SaveChanges();
+            return Json(new {address = ad });
         }
 
 

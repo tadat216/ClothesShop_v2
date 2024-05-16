@@ -4,6 +4,90 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "CheckOut";
 }
+<style>
+    a, button, input {
+        outline: medium none;
+        color: #000000;
+    }
+
+    .shopee-popup {
+        bottom: 0;
+        left: 0;
+        position: fixed;
+        right: 0;
+        top: 0;
+        z-index: 1000;
+        display: none; /* Thêm này để ẩn modal khi không sử dụng */
+    }
+
+    .shopee-popup__overlay {
+        background-color: rgba(0, 0, 0, 0.5);
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+    }
+
+    .shopee-popup__container {
+        left: 50%;
+        max-height: 100%;
+        max-width: 90%; /* Giới hạn chiều rộng của modal */
+        overflow: visible;
+        position: absolute;
+        top: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .shopee-alert-popup {
+        background-color: #fff;
+        padding: 20px; /* Thêm padding cho đẹp */
+        border-radius: 8px; /* Bo góc */
+        box-shadow: 0 5px 15px rgba(0,0,0,0.5); /* Thêm bóng đổ */
+    }
+
+    .shopee-alert-popup__message {
+        font-size: 1rem;
+        margin-top: 2.5rem;
+    }
+
+    .shopee-alert-popup__button-horizontal-layout {
+        display: flex;
+        margin-top: 6.25rem;
+    }
+
+        .shopee-alert-popup__button-horizontal-layout .shopee-button-outline, .shopee-alert-popup__button-horizontal-layout .shopee-button-solid {
+            flex: 1;
+            padding: 0.75rem 0;
+            text-transform: capitalize;
+        }
+
+    .shopee-button-solid--primary {
+        outline: 0px;
+        overflow: visible;
+        position: relative;
+    }
+
+    .shopee-button-solid {
+        align-items: center;
+        background: rgba(0, 0, 0, 0.54);
+        border: 0px;
+        border-radius: 2px;
+        box-shadow: rgba(0, 0, 0, 0.09) 0px 1px 1px 0px;
+        color: rgb(255, 255, 255);
+        cursor: pointer;
+        display: flex;
+        font-size: 0.875rem;
+        font-weight: 300;
+        justify-content: center;
+        letter-spacing: 0px;
+        line-height: 1;
+        outline: none;
+        position: relative;
+        transition: opacity 0.2s ease 0s;
+        user-select: none;
+    }
+</style>
 @if (!string.IsNullOrEmpty(ViewBag.Message))
 {
     <div class="alert alert-warning" role="alert">
@@ -13,100 +97,158 @@
 
 @if (Model != null && Model.Any())
 {
-    @*<div class="billing-details m-3">
-            <div class="contact-text right-side">
-                <form action="#">
-                    <div class="row">
-                        <div class="col-lg-6 col-md-6">
-                            <div class="input-box mb-20">
-                                <label>Họ<em>*</em></label>
-                                <input type="text" name="namm" class="info">
-                            </div>
-                        </div>
-                        <div class="col-lg-6 col-md-6">
-                            <div class="input-box mb-20">
-                                <label>Tên<em>*</em></label>
-                                <input type="text" name="namm" class="info" />
-                            </div>
-                        </div>
+    <div class="m-3">
+        <div class="row d-flex justify-content-around" id="inf">
+            <h5 class="col-4">Địa chỉ nhận hàng</h5>
+            @if (ViewBag.Addresses != null && ViewBag.Addresses.Count > 0)
+            {
+                foreach (var ad in ViewBag.Addresses)
+                {
+                    if (ad.IsDefault)
+                    {
+                        <div class="col-4" id="defaultAddress"><strong>@ad.ReceiverName - (@ad.ReceiverPhone) - @ad.ReceiverAddress</strong></div>
+                        break;
+                    }
 
-                        <div class="col-md-6">
-                            <div class="input-box mb-20">
-                                <label>Email<em>*</em></label>
-                                <input type="email"
-                                       name="email"
-                                       class="info">
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="input-box mb-20">
-                                <label>Số điện thoại<em>*</em></label>
-                                <input type="text"
-                                       name="phone"
-                                       class="info">
-                            </div>
-                        </div>
-                        <div class="col-lg-12">
-                            <div class="input-box mb-20">
-                                <label>Địa chỉ<em>*</em></label>
-                                <div class="css_select_div row d-flex justify-content-around">
-                                    <select class="css_select col-3" id="tinh" name="tinh" title="Chọn Tỉnh Thành">
-                                        <option value="0">Tỉnh Thành</option>
-                                    </select>
-                                    <select class="css_select col-3" id="quan" name="quan" title="Chọn Quận Huyện">
-                                        <option value="0">Quận Huyện</option>
-                                    </select>
-                                    <select class="css_select col-3" id="phuong" name="phuong" title="Chọn Phường Xã">
-                                        <option value="0">Phường Xã</option>
-                                    </select>
-                                </div>
-                                <input type="text"
-                                       name="add2"
-                                       class="info mt-3"
-                                       placeholder="Nhập thêm thông tin về địa chỉ (số nhà...)">
+                }
+            }
+            <a class="col-2" id="btnChangeAddress">Thay đổi</a>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Tên sản phẩm</th>
+                    <th>Tiền</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{ var totalMoney = 0;}
+                @foreach (var item in Model)
+                {
+                    var money = item.Quantity * item.VariantSize.ProductVariant.Product.PriceSale;
+                    totalMoney += money;
+                    <tr>
+                        <td>@item.VariantSize.ProductVariant.Product.Title X @item.Quantity</td>
+                        <td>@money</td>
+                    </tr>
+                }
+                <tr>
+                    <td>Tổng cộng</td>
+                    <td>@totalMoney</td>
+                </tr>
+            </tbody>
+        </table>
+        <div id="modalChangeAddress" class="shopee-popup">
+            <div class="shopee-popup__overlay"></div>
+            <div class="shopee-popup__container">
+                <div class="shopee-alert-popup card">
+
+                    <div class="shopee-alert-popup__message">
+                        <h5> Địa chỉ của tôi</h5>
+                        <ul>
+                            @if (ViewBag.Addresses != null && ViewBag.Addresses.Count > 0)
+                            {
+                                foreach (var ad in ViewBag.Addresses)
+                                {
+                                    <li class="row">
+                                        @if (ad.IsDefault)
+                                        {
+                                            <input type="radio" id="selectedAddress_@ad.Id" name="address" value="@ad.Id" style="transform: scale(0.5);" class="col-2" checked>
+                                        }
+                                        else
+                                        {
+                                            <input type="radio" id="selectedAddress_@ad.Id" name="address" value="@ad.Id" style="transform: scale(0.5);" class="col-2">
+                                        }
+
+                                        <div class="col-8"><strong>@ad.ReceiverName - (@ad.ReceiverPhone) - @ad.ReceiverAddress </strong></div>
+                                    </li>
+
+                                }
+                            }
+                        </ul>
+                        <a class="col-2" id="btnAddAddress">Thêm địa chỉ</a>
+                    </div>
+                    <div class="shopee-alert-popup__button-horizontal-layout row d-flex justify-content-around">
+                        <button class="shopee-button-solid shopee-button-solid--primary " id="btnCancelChangeAddress">Hủy</button>
+                        <button class="shopee-button-solid shopee-button-solid--primary " style="background-color: red;" id="OKChangeAddress">OK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="modalAddAddress" class="shopee-popup">
+            <div class="shopee-popup__overlay"></div>
+            <div class="shopee-popup__container">
+                <div class="shopee-alert-popup card">
+
+                    <div class="shopee-alert-popup__message">
+                        <h5> Địa chỉ mới</h5>
+                        <div class="billing-details m-3">
+                            <div class="contact-text right-side">
+                                <form action="#">
+                                    <div class="row">
+                                        <div class="col-lg-6 col-md-6">
+                                            <div class="input-box mb-20">
+                                                <label>Họ<em>*</em></label>
+                                                <input type="text" name="namm" class="info">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6">
+                                            <div class="input-box mb-20">
+                                                <label>Tên<em>*</em></label>
+                                                <input type="text" name="namm" class="info" />
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="input-box mb-20">
+                                                <label>Email<em>*</em></label>
+                                                <input type="email"
+                                                       name="email"
+                                                       class="info">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="input-box mb-20">
+                                                <label>Số điện thoại<em>*</em></label>
+                                                <input type="text"
+                                                       name="phone"
+                                                       class="info">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-12">
+                                            <div class="input-box mb-20">
+                                                <label>Địa chỉ<em>*</em></label>
+                                                <div class="css_select_div row d-flex justify-content-around">
+                                                    <select class="css_select col-3" id="tinh" name="tinh" title="Chọn Tỉnh Thành">
+                                                        <option value="0">Tỉnh Thành</option>
+                                                    </select>
+                                                    <select class="css_select col-3" id="quan" name="quan" title="Chọn Quận Huyện">
+                                                        <option value="0">Quận Huyện</option>
+                                                    </select>
+                                                    <select class="css_select col-3" id="phuong" name="phuong" title="Chọn Phường Xã">
+                                                        <option value="0">Phường Xã</option>
+                                                    </select>
+                                                </div>
+                                                <input type="text"
+                                                       name="add2"
+                                                       class="info mt-3"
+                                                       placeholder="Nhập thêm thông tin về địa chỉ (số nhà...)">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>
-                </form>
+                    <div class="shopee-alert-popup__button-horizontal-layout">
+                        <button class="shopee-button-solid shopee-button-solid--primary " id="btnCancelAddAddress">Hủy</button>
+                        <button class="shopee-button-solid shopee-button-solid--primary" style="background-color: red;" id="OKAddAddress">OK</button>
+                    </div>
+                </div>
             </div>
-        </div>*@
-    <div class="row" id="inf">
-        <h3>Địa chỉ nhận hàng</h3>
-        @if (ViewBag.receiverInfs != null && ViewBag.receiverInfs.Count > 0)
-        {
-            <div><strong>@ViewBag.receiverInfs[0]</strong></div>
-            <div class="btnChange">Thay đổi</div>
-        }
-        else
-        {
-            <div class="btnAdd">Thêm địa chỉ</div>
-        }
+        </div>
 
     </div>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Tên sản phẩm</th>
-                <th>Tiền</th>
-            </tr>
-        </thead>
-        <tbody>
-            @{ var totalMoney = 0;}
-            @foreach (var item in Model)
-            {
-                var money = item.Quantity * item.VariantSize.ProductVariant.Product.PriceSale;
-                totalMoney += money;
-                <tr>
-                    <td>@item.VariantSize.ProductVariant.Product.Title X @item.Quantity</td>
-                    <td>@money</td>
-                </tr>
-            }
-            <tr>
-                <td>Tổng cộng</td>
-                <td>@totalMoney</td>
-            </tr>
-        </tbody>
-    </table>
 }
 
 @section scripts{
@@ -147,6 +289,55 @@
 
                 }
             });
+            $('#btnChangeAddress').click(function (e) {
+                e.preventDefault();
+                $('#modalChangeAddress').show();
+            });
+            $('#btnCancelChangeAddress').click(function () {
+                $('#modalChangeAddress').hide();
+            });
+            $('#OKChangeAddress').click(function () {
+
+                var selectedId = $('input[type="radio"][name="address"]:checked').val();
+                if (selectedId) {
+                    $.ajax({
+                        url: '/ShoppingCart/ChangeDefaultAddress', // Thay đổi theo router của bạn
+                        type: 'POST',
+                        data: { id: selectedId },
+                        success: function (rs) {
+                            if (rs.Success) {
+                                $('#modalChangeAddress').hide();
+                                var defaultAddress = '<strong>' + rs.ReceiverName + '-' + '(' + rs.ReceiverPhone + ')' + '-' + rs.ReceiverAddress + '</strong>';
+                                $('#defaultAddress').html(defaultAddress);
+                            }
+
+                        },
+                        error: function (error) {
+                            console.log('Có lỗi xảy ra:', error);
+                            // Xử lý lỗi
+                        }
+                    });
+                }
+                else {
+                    alert('Vui lòng chọn địa chỉ trước khi nhấn xác nhận!');
+                }
+            });
+
+
+
+
+
+            $('#btnAddAddress').click(function (e) {
+                e.preventDefault();
+                $('#modalAddAddress').show();
+            });
+            $('#OKAddAddress').click(function () {
+                $('#modalAddAddress').hide();
+            });
+            $('#btnCancelAddeAddress').click(function () {
+                $('#modalAddAddress').hide();
+            });
+
         });
     </script>
 }

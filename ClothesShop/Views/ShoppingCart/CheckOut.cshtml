@@ -31,7 +31,8 @@
 
     .shopee-popup__container {
         left: 50%;
-        max-height: 100%;
+        max-height: 500px;
+        /*overflow-y: auto;*/
         max-width: 90%; /* Giới hạn chiều rộng của modal */
         overflow: visible;
         position: absolute;
@@ -43,17 +44,24 @@
         background-color: #fff;
         padding: 20px; /* Thêm padding cho đẹp */
         border-radius: 8px; /* Bo góc */
+        height: 500px;
         box-shadow: 0 5px 15px rgba(0,0,0,0.5); /* Thêm bóng đổ */
     }
 
     .shopee-alert-popup__message {
         font-size: 1rem;
         margin-top: 2.5rem;
+        max-height: 300px;
+        overflow-y: auto;
+    }
+
+    .card{
+        height: 300px;
     }
 
     .shopee-alert-popup__button-horizontal-layout {
         display: flex;
-        margin-top: 6.25rem;
+        margin-top: 1.0rem;
     }
 
         .shopee-alert-popup__button-horizontal-layout .shopee-button-outline, .shopee-alert-popup__button-horizontal-layout .shopee-button-solid {
@@ -112,7 +120,8 @@
 
                 }
             }
-            <a class="col-2" class="btnChangeAddress">Thay đổi</a>
+            @*<a href="H8KLCAAAAAAAAAN9VsOJcsOjOAzDvRfCnX3CkMK8RMKOf2XCqsKLRcKTwpDDjQ4pwqrCuTjDtnTDpcOfB8OgIsOJw67DtMOkEhEAwrE9w6DDkcK">aaaaaaaaaaaa</a>*@
+            <button class="col-2 btnChangeAddress btn btn-link">Thay đổi</button>
             
         </div>
         <table class="table">
@@ -142,7 +151,7 @@
         <div id="modalChangeAddress" class="shopee-popup">
             <div class="shopee-popup__overlay"></div>
             <div class="shopee-popup__container">
-                <div class="shopee-alert-popup card">
+                <div class="shopee-alert-popup">
 
                     <div class="shopee-alert-popup__message">
                         <h5> Địa chỉ của tôi</h5>
@@ -178,7 +187,7 @@
         </div>
         <div id="modalAddAddress" class="shopee-popup">
             <div class="shopee-popup__overlay"></div>
-            <div class="shopee-popup__container">
+            <div class="shopee-popup__container modal-dialog-scrollable">
                 <div class="shopee-alert-popup card">
 
                     <div class="shopee-alert-popup__message">
@@ -253,164 +262,165 @@
         </div>
 
     </div>
+    <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Magni explicabo natus odio eveniet iure quas vero temporibus asperiores architecto accusantium quasi, omnis quibusdam amet earum qui doloremque, ullam reiciendis perferendis? Molestiae, error? Accusantium laudantium vero voluptatum aspernatur perspiciatis ullam soluta magni, eaque labore quas cum voluptas aliquam a consequatur quis laborum repudiandae praesentium officia! Minima quis molestias qui voluptate quidem modi laboriosam a quae, aspernatur voluptatibus dignissimos vero error aperiam possimus quo magnam consequatur! Nobis cupiditate in aliquid iusto delectus laboriosam quaerat suscipit ipsa sapiente vel eaque officia, quidem, illum molestias. Eaque explicabo atque tenetur temporibus non et libero quasi eligendi quis fugit, dolorum, sit illum a possimus esse maiores amet dignissimos soluta! Nemo necessitatibus, suscipit, aliquid esse expedita, autem dolore porro adipisci veritatis beatae nobis laborum ea atque. Ea vero nulla ex dignissimos nobis alias, consequuntur omnis cum officia earum exercitationem, nihil illo, perspiciatis veritatis eaque qui rerum suscipit sit minima corporis facilis! Repellat, sit quos maiores suscipit impedit adipisci et aut recusandae, laudantium, unde in minima consectetur quia illum quo veniam sed illo ratione rem iusto quam blanditiis. Maiores explicabo consequuntur ut quam obcaecati architecto quos error aliquid eaque. Fuga, nemo impedit voluptate sit facilis dolor unde nihil illum veritatis rerum placeat perferendis qui quod aliquam voluptatum doloribus animi rem? Iste quod nesciunt quia nobis. Animi voluptas laudantium laborum beatae, iusto quas sapiente! Magni, ipsum veritatis! Consequuntur, nam non quidem aliquid doloribus perferendis, animi magnam impedit maxime ipsum rerum reiciendis laboriosam laudantium illo dolore odit veritatis consequatur in natus minima. Aspernatur voluptatibus voluptatem asperiores dolore veniam, doloremque exercitationem. Necessitatibus molestias omnis soluta maxime dolorum quibusdam nihil aperiam ipsa fuga fugit ullam amet, delectus nulla. Molestias libero quas numquam incidunt cupiditate nam ex maiores dicta. Laborum quo corporis, eveniet esse possimus commodi. In pariatur sit dolore dolor odio sapiente ex est praesentium, exercitationem quae a soluta error. Sed ab eos est? Odio, omnis, error veritatis reiciendis animi exercitationem temporibus, expedita ratione at cumque dolorum asperiores consectetur quae unde quasi saepe numquam vitae provident. Deserunt dolores, voluptates iusto molestias quas ut doloremque vel repudiandae exercitationem sit. Soluta, architecto quam corrupti quasi rerum hic dicta optio necessitatibus quas consectetur sit similique maxime incidunt, ut excepturi dolorum sequi et deserunt delectus, dolores laborum fugit adipisci. Aspernatur quisquam, doloribus minus cumque labore ratione veritatis ipsa praesentium tenetur, laborum nihil odio fugiat nemo explicabo iure incidunt! Sit cum fuga in, dolore labore a illum totam, maiores placeat error consectetur odio adipisci rem esse accusantium reprehenderit harum excepturi doloremque, voluptatem architecto ex ducimus ea quia ut. Veritatis qui reiciendis aut sint amet suscipit. Id non assumenda omnis ullam, rerum fugit cum amet itaque maxime voluptatum sapiente, recusandae consequuntur dolorum voluptate vitae blanditiis ducimus error reprehenderit culpa tenetur. Voluptatum, dignissimos sunt, suscipit rerum neque placeat exercitationem minus quae, voluptates qui voluptatem. Laudantium tempora, error commodi ullam id optio accusamus repudiandae vero consequuntur aspernatur soluta est sequi consequatur quae pariatur, ad ipsam earum, quis ut porro. Labore, magnam ducimus iure saepe reprehenderit exercitationem? Totam exercitationem suscipit quibusdam?</p>
 }
 
-@section scripts{
-    <script>
-        $(document).ready(function () {
 
-            $.getJSON('https://esgoo.net/api-tinhthanh/1/0.htm', function (data_tinh) {
-                if (data_tinh.error == 0) {
-                    $.each(data_tinh.data, function (key_tinh, val_tinh) {
-                        $("#tinh").append('<option value="' + val_tinh.id + '">' + val_tinh.full_name + '</option>');
-                    });
-                    $("#tinh").change(function (e) {
-                        var idtinh = $(this).val();
-                        //Lấy quận huyện
-                        $.getJSON('https://esgoo.net/api-tinhthanh/2/' + idtinh + '.htm', function (data_quan) {
-                            if (data_quan.error == 0) {
-                                $("#quan").html('<option value="0">Quận Huyện</option>');
-                                $("#phuong").html('<option value="0">Phường Xã</option>');
-                                $.each(data_quan.data, function (key_quan, val_quan) {
-                                    $("#quan").append('<option value="' + val_quan.id + '">' + val_quan.full_name + '</option>');
-                                });
-                                //Lấy phường xã
-                                $("#quan").change(function (e) {
-                                    var idquan = $(this).val();
-                                    $.getJSON('https://esgoo.net/api-tinhthanh/3/' + idquan + '.htm', function (data_phuong) {
-                                        if (data_phuong.error == 0) {
-                                            $("#phuong").html('<option value="0">Phường Xã</option>');
-                                            $.each(data_phuong.data, function (key_phuong, val_phuong) {
-                                                $("#phuong").append('<option value="' + val_phuong.id + '">' + val_phuong.full_name + '</option>');
-                                            });
-                                        }
-                                    });
-                                });
+<script>
+    $(document).ready(function () {
 
-                            }
-                        });
-                    });
-
-                }
-            });
-          
-            function checkInputs() {
-                var isValid = true;
-                $('.info').each(function () {
-                    if ($(this).val() === '' || $(this).val() === '0') {
-                        isValid = false;
-                    }
+        $.getJSON('https://esgoo.net/api-tinhthanh/1/0.htm', function (data_tinh) {
+            if (data_tinh.error == 0) {
+                $.each(data_tinh.data, function (key_tinh, val_tinh) {
+                    $("#tinh").append('<option value="' + val_tinh.id + '">' + val_tinh.full_name + '</option>');
                 });
-                $('.css_select').each(function () {
-                    if ($(this).val() === '0') {
-                        isValid = false;
-                    }
-                });
+                $("#tinh").change(function (e) {
+                    var idtinh = $(this).val();
+                    //Lấy quận huyện
+                    $.getJSON('https://esgoo.net/api-tinhthanh/2/' + idtinh + '.htm', function (data_quan) {
+                        if (data_quan.error == 0) {
+                            $("#quan").html('<option value="0">Quận Huyện</option>');
+                            $("#phuong").html('<option value="0">Phường Xã</option>');
+                            $.each(data_quan.data, function (key_quan, val_quan) {
+                                $("#quan").append('<option value="' + val_quan.id + '">' + val_quan.full_name + '</option>');
+                            });
+                            //Lấy phường xã
+                            $("#quan").change(function (e) {
+                                var idquan = $(this).val();
+                                $.getJSON('https://esgoo.net/api-tinhthanh/3/' + idquan + '.htm', function (data_phuong) {
+                                    if (data_phuong.error == 0) {
+                                        $("#phuong").html('<option value="0">Phường Xã</option>');
+                                        $.each(data_phuong.data, function (key_phuong, val_phuong) {
+                                            $("#phuong").append('<option value="' + val_phuong.id + '">' + val_phuong.full_name + '</option>');
+                                        });
+                                    }
+                                });
+                            });
 
-                return isValid;
-            }
-            $('.info, .css_select').on('change input', function () {
-                if (checkInputs()) {
-                    $('#OKAddAddress').prop('disabled', false);
-                } else {
-                    $('#OKAddAddress').prop('disabled', true); 
-                }
-            });
-
-            $('#OKAddAddress').prop('disabled', true);
-
-           
-            $('.btnChangeAddress').click(function (e) {
-                e.preventDefault();
-                alert(1);
-                $('#modalChangeAddress').show();
-            });
-
-           
-
-            $('#btnCancelChangeAddress').click(function () {
-                $('#modalChangeAddress').hide();
-            });
-            $('#OKChangeAddress').click(function () {
-
-                var selectedId = $('input[type="radio"][name="address"]:checked').val();
-                if (selectedId) {
-                    $.ajax({
-                        url: '/ShoppingCart/ChangeDefaultAddress', 
-                        type: 'POST',
-                        data: { id: selectedId },
-                        success: function (rs) {
-                            if (rs.Success) {
-                                $('#modalChangeAddress').hide();
-                                var defaultAddress = '<strong>' + rs.ReceiverName + ' - ' + '(' + rs.ReceiverPhone + ')' + ' - ' + rs.ReceiverAddress + '</strong>';
-                                $('#defaultAddress').html(defaultAddress);
-                            }
-
-                        },
-                        error: function (error) {
-                            console.log('Có lỗi xảy ra:', error);
-                            
                         }
                     });
-                }
-                else {
-                    alert('Vui lòng chọn địa chỉ trước khi nhấn xác nhận!');
-                }
-            });
-
-
-            $('#btnAddAddress').click(function (e) {
-                e.preventDefault();
-                $('#modalAddAddress').show();
-            });
-            $('#btnCancelAddAddress').click(function () {
-                $('#modalAddAddress').hide();
-            });
-            $('#OKAddAddress').click(function () {
-                e.preventDefault();
-                if ($(this).is(':disabled')) {
-                    alert("Vui lòng nhập đầy đủ các thông tin");
-                }
-                var fname = $('#fname').val().trim();
-                var lname = $('#lname').val().trim();
-                var email = $('#email').val().trim();
-                var phone = $('#phone').val().trim();
-                var tinh = $('#tinh option:selected').text();
-                var quan = $('#quan option:selected').text();
-                var phuong = $('#phuong option:selected').text();
-                var addDetail = $('#addDetail').val().trim();
-
-                var fullAddress = `${tinh}, ${quan}, ${phuong}, ${addDetail}`;
-                if (!fname || !lname || !email || !phone || tinh === "Tỉnh Thành" || quan === "Quận Huyện" || phuong === "Phường Xã" || !addDetail) {
-                    alert("Vui lòng nhập đầy đủ các thông tin ");
-                    return;
-                }
-                var data = {
-                    name: fname + " " + lname,
-                    phone: phone,
-                    address: fullAddress
-                };
-                $.ajax({
-                    url: 'ShoppingCart/AddAddress',
-                    type: 'POST',
-                    data: data,
-                    success: function (rs) {
-                        var liAddress = '<li class="row">';
-                        if (rs.IsDefault) liAddress += '<input type="radio" id="selectedAddress_' + address.Id + '" name="address" value="' + address.Id + '" style="transform: scale(0.5);" class="col-2" checked>';
-                        else liAddress += '<input type="radio" id="selectedAddress_' + address.Id + '" name="address" value="' + address.Id + '" style="transform: scale(0.5);" class="col-2">';
-
-                        liAddress += '<div class="col-8"><strong>' + address.ReceiverName + ' - (' + address.ReceiverPhone + ') - ' + address.ReceiverAddress + ' </strong></div>';
-                        liAddress += '</li>';
-
-                        $('#addressList').append(liAddress);
-
-                    },
-                    error: function () {
-                        alert('Có lỗi xảy ra, không thể thêm địa chỉ.');
-                    }
                 });
 
+            }
         });
-    </script>
-}
+
+        function checkInputs() {
+            var isValid = true;
+            $('.info').each(function () {
+                if ($(this).val() === '' || $(this).val() === '0') {
+                    isValid = false;
+                }
+            });
+            $('.css_select').each(function () {
+                if ($(this).val() === '0') {
+                    isValid = false;
+                }
+            });
+
+            return isValid;
+        }
+        //$('.info, .css_select').on('change input', function () {
+        //    if (checkInputs()) {
+        //        $('#OKAddAddress').prop('disabled', false);
+        //    } else {
+        //        $('#OKAddAddress').prop('disabled', true);
+        //    }
+        //});
+
+        //$('#OKAddAddress').prop('disabled', true);
+
+
+        $('.btnChangeAddress').click(function () {
+            $('#modalChangeAddress').show();
+        });
+
+
+
+        $('#btnCancelChangeAddress').click(function () {
+            $('#modalChangeAddress').hide();
+        });
+        $('#OKChangeAddress').click(function () {
+            
+            var selectedId = $('input[type="radio"][name="address"]:checked').val();
+            if (selectedId) {
+                $.ajax({
+                    url: '/ShoppingCart/ChangeDefaultAddress',
+                    type: 'POST',
+                    data: { id: selectedId },
+                    success: function (rs) {
+                        if (rs.Success) {
+                            $('#modalChangeAddress').hide();
+                            var defaultAddress = '<strong>' + rs.ReceiverName + ' - ' + '(' + rs.ReceiverPhone + ')' + ' - ' + rs.ReceiverAddress + '</strong>';
+                            $('#defaultAddress').html(defaultAddress);
+                        }
+
+                    },
+                    error: function (error) {
+                        console.log('Có lỗi xảy ra:', error);
+
+                    }
+                });
+            }
+            else {
+                alert('Vui lòng chọn địa chỉ trước khi nhấn xác nhận!');
+            }
+        });
+
+
+        $('#btnAddAddress').click(function (e) {
+
+            e.preventDefault();
+            $('#modalAddAddress').show();
+        });
+        $('#btnCancelAddAddress').click(function () {
+            $('#modalAddAddress').hide();
+        });
+        $('#OKAddAddress').click(function (e) {
+            console.log("okadaddress");
+            e.preventDefault();
+            //if ($(this).is(':disabled')) {
+            //    alert("Vui lòng nhập đầy đủ các thông tin");
+            //}
+            var fname = $('#fname').val().trim();
+            var lname = $('#lname').val().trim();
+            var email = $('#email').val().trim();
+            var phone = $('#phone').val().trim();
+            var tinh = $('#tinh option:selected').text();
+            var quan = $('#quan option:selected').text();
+            var phuong = $('#phuong option:selected').text();
+            var addDetail = $('#addDetail').val().trim();
+
+            var fullAddress = `${tinh}, ${quan}, ${phuong}, ${addDetail}`;
+            if (!fname || !lname || !email || !phone || tinh === "Tỉnh Thành" || quan === "Quận Huyện" || phuong === "Phường Xã" || !addDetail) {
+                alert("Vui lòng nhập đầy đủ các thông tin ");
+                return;
+            }
+            var data = {
+                name: fname + " " + lname,
+                phone: phone,
+                address: fullAddress
+            };
+            console.log(data);
+            $.ajax({
+                url: 'AddAddress',
+                type: 'POST',
+                data: data,
+                success: function (rs) {
+                    var liAddress = '<li class="row">';
+                    if (rs.IsDefault) liAddress += '<input type="radio" id="selectedAddress_' + rs.Id + '" name="address" value="' + rs.Id + '" style="transform: scale(0.5);" class="col-2" checked>';
+                    else liAddress += '<input type="radio" id="selectedAddress_' + rs.Id + '" name="address" value="' + rs.Id + '" style="transform: scale(0.5);" class="col-2">';
+
+                    liAddress += '<div class="col-8"><strong>' + rs.ReceiverName + ' - (' + rs.ReceiverPhone + ') - ' + rs.ReceiverAddress + ' </strong></div>';
+                    liAddress += '</li>';
+
+                    $('#addressList').append(liAddress);
+                    $('#modalAddAddress').hide();
+                },
+                error: function () {
+                    alert('Có lỗi xảy ra, không thể thêm địa chỉ.');
+                }
+            });
+        });
+    });
+</script>
 

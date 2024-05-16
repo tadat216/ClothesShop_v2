@@ -156,7 +156,7 @@ namespace ClothesShop.Controllers
             return Json(code);
         }
         [HttpPost]
-        public async Task<ActionResult> AddAddress(string name, string phone, string address)
+        public ActionResult AddAddress(string name, string phone, string address)
         {
             var ad = new Address();
             ad.UserId = User.Identity.GetUserId();
@@ -166,7 +166,14 @@ namespace ClothesShop.Controllers
             ad.IsDefault = false;
             db.Addresses.Add(ad);
             db.SaveChanges();
-            return Json(new {address = ad });
+            return Json(new
+            {
+                IsDefault = ad.IsDefault,
+                Id = ad.Id,
+                ReceiverName = ad.ReceiverName,
+                ReceiverPhone = ad.ReceiverPhone,
+                ReceiverAddress = ad.ReceiverAddress
+            });
         }
 
 

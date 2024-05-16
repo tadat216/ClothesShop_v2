@@ -4,6 +4,20 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<style>
+    .selected {
+        transform: scale(1.1);
+        border-width: 2px !important; /* Đảm bảo viền to hơn */
+        border-color: #000 !important; /* Đổi màu viền khi được chọn, thay đổi nếu cần */
+    }
+
+    .size-button.selected {
+        border-width: 2px !important;
+        transform: scale(1.1);
+        background-color: #f0f0f0; /* Thay đổi màu nền khi được chọn */
+    }
+</style>
+
 <div class="breadcumb-area overlay pos-rltv">
     <div class="bread-main">
         <div class="bred-hading text-center">
@@ -17,11 +31,13 @@
 </div>
 
 <!--single-protfolio-area are start-->
+<input type="hidden" id="selectedSizeId" value="@Model.ProductVariants.FirstOrDefault().VariantSizes.FirstOrDefault().Id" />
+<input type="hidden" id="selectedQuantity" value="1" /> <!-- Default quantity -->
 <div class="single-protfolio-area ptb-70">
     <div class="container">
         <div class="row">
             <div class="col-lg-7">
-                <div class="portfolio-thumbnil-area"  id="img_list-@Model.Id">
+                <div class="portfolio-thumbnil-area" id="img_list-@Model.Id">
                     @foreach (var variant in Model.ProductVariants)
                     {
                         var productId = Model.Id;
@@ -108,13 +124,13 @@
                             </div>
                             <div class="sort product-type" id="img_list-@Model.Id">
                                 <label>Size: </label>
-                                
-                                @foreach(var variant in Model.ProductVariants)
+
+                                @foreach (var variant in Model.ProductVariants)
                                 {
                                     <div class="@(variant.IsDefault ? "" : "d-none") product-image d-flex" id="image-@Model.Id-@variant.Id">
                                         @foreach (var vs in variant.VariantSizes.OrderBy(vs => vs.Size.Order))
                                         {
-                                            <button class="btn btn-light d-inline-block m-1 text-center" style="color: black; border: 1px solid black;">
+                                            <button class="btn btn-light d-inline-block m-1 text-center size-button" style="color: black; border: 1px solid black;" data-size-id="@vs.Id">
                                                 <span class="d-inline-block align-middle">@vs.Size.Name</span>
                                             </button>
                                         }
@@ -131,7 +147,7 @@
                                         <div class="cart-quantity">
                                             <div class="cart-plus-minus">
                                                 <div class="dec qtybutton">-</div>
-                                                <input type="text" value="02" name="qtybutton" class="cart-plus-minus-box">
+                                                <input type="text" value="1" name="qtybutton" class="cart-plus-minus-box">
                                                 <div class="inc qtybutton">+</div>
                                             </div>
                                         </div>
@@ -141,7 +157,7 @@
                         </div>
                         <div class="social-icon socile-icon-style-1">
                             <ul>
-                                <li><a href="#" data-tooltip="Add To Cart" class="add-cart add-cart-text" data-placement="left" tabindex="0">Add To Cart<i class="fa fa-cart-plus"></i></a></li>
+                                <li><a data-tooltip="Add To Cart" class="add-cart add-cart-text" data-placement="left" tabindex="0">Add To Cart<i class="fa fa-cart-plus"></i></a></li>
                                 <li><a href="#" data-tooltip="Wishlist" class="w-list" tabindex="0"><i class="fa fa-heart-o"></i></a></li>
                                 <li><a href="#" data-tooltip="Compare" class="cpare" tabindex="0"><i class="fa fa-refresh"></i></a></li>
                                 <li><a href="#" data-tooltip="Quick View" class="q-view" data-bs-toggle="modal" data-bs-target=".modal" tabindex="0"><i class="fa fa-eye"></i></a></li>
@@ -216,4 +232,55 @@
         </div>
     </div>
 </div>
-<!--descripton-area end-->
+<script>
+$(document).ready(function () {
+    var sizeButtons = document.querySelectorAll('.size-button');
+    for (var i = 0; i < sizeButtons.length; i++) {
+        sizeButtons[i].addEventListener('click', function () {
+            document.getElementById('selectedSizeId').value = this.getAttribute('data-size-id');
+            // Thêm phản hồi người dùng tại đây nếu cần
+        });
+    }
+
+    // Xử lý khi số lượng thay đổi
+    var quantityInput = document.querySelector('input[name="qtybutton"]');
+    quantityInput.addEventListener('click', function () {
+        document.getElementById('selectedQuantity').value = this.value;
+    });
+
+    // Xử lý khi nút "Thêm vào giỏ hàng" được nhấn
+    var addToCartButton = document.querySelector('.add-cart');
+    addToCartButton.addEventListener('click', function () {
+        var sizeId = document.getElementById('selectedSizeId').value;
+        var quantity = $('.cart-plus-minus-box').val();
+        console.log(sizeId + ' ' + quantity);
+        //alert(sizeId + " " + quantity)
+        
+        $.ajax({
+            url: '/ShoppingCart/AddToCart',
+            type: 'POST',
+            data: { variantSizeId: sizeId, quantity: quantity },
+            function(rs) {
+                if (rs.success) {
+                    alert("Thêm vào giỏ hàng thành công!");
+                }
+            },
+        });
+    });
+
+    $('.color-variant').click(function () {
+        // Bỏ chọn tất cả các nút màu
+        $('.color-variant').removeClass('selected');
+        // Chọn nút đã click
+        $(this).addClass('selected');
+    });
+
+    // Xử lý sự kiện click cho các nút kích thước
+    $('.size-button').click(function () {
+        // Bỏ chọn tất cả các nút kích thước
+        $('.size-button').removeClass('selected');
+        // Chọn nút đã click
+        $(this).addClass('selected');
+    });
+});
+</script>

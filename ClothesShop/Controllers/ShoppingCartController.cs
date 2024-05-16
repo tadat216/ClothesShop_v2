@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Data.Entity;
 using System.Data.SqlTypes;
 using System.Security.Policy;
+using System.Drawing;
 
 namespace ClothesShop.Controllers
 {
@@ -81,6 +82,42 @@ namespace ClothesShop.Controllers
             return View(cartDetails);
         }
         //new  [AllowAnonymous] cho checkout, checkoutsuccess
+        [Authorize]
+        [HttpPost]
+        public async Task<ActionResult> AddToCart(string variantSizeId, int quantity)
+        {
+            var user = await UserManager.FindByNameAsync(User.Identity.Name);
+            VariantSize variantSize = db.VariantSizes.Find(variantSizeId);
+            var cart = db.Carts.FirstOrDefault(x => x.UserId == user.Id);
+            if(cart == null)
+            {
+                cart = new Cart();
+                cart.UserId = user.Id;
+                //cart.User = user;
+                db.Carts.Add(cart);
+                db.SaveChanges();
+            }
+            CartDetail cartDetail = db.CartDetails.FirstOrDefault(x => x.CartId == cart.Id && x.VariantSizeId == variantSizeId);
+            if(cartDetail != null)
+            {
+                cartDetail.Quantity += quantity;
+                db.Entry(cartDetail).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+            else
+            {
+                cartDetail = new CartDetail();
+                cartDetail.Quantity = quantity;
+                cartDetail.VariantSizeId = variantSizeId;
+                cartDetail.CartId = cart.Id;
+                cartDetail.Cart = cart;
+                cartDetail.VariantSize = variantSize;
+                db.CartDetails.Add(cartDetail);
+                db.SaveChanges();
+            }
+            return Json(new { success = true, message = "Sản phẩm đã được thêm vào giỏ hàng." });
+        }
+        
         
         public async Task<ActionResult> CheckOut()
         {

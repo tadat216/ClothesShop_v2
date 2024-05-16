@@ -65,37 +65,92 @@ namespace ClothesShop.Controllers
             var user = await UserManager.FindByNameAsync(User.Identity.Name);
             var cart = db.Carts.FirstOrDefault(x => x.UserId == user.Id);
             var cartDetails = db.CartDetails.Where(x => x.CartId == cart.Id).ToList();
+            var totalMoney = 0;
+            int count = 0;
+            foreach (var p in cart.CartDetails)
+            {
+                if (p.Selected)
+                {
+                    totalMoney += p.Quantity * p.VariantSize.ProductVariant.Product.PriceSale;
+                    count++;
+                }
+            }
+            ViewBag.totalMoney = totalMoney;
+            if (count == cart.CartDetails.Count) ViewBag.selectAll = true;
+            else ViewBag.selectAll = false;
             return View(cartDetails);
         }
         //new  [AllowAnonymous] cho checkout, checkoutsuccess
-        //    [AllowAnonymous]
+        [AllowAnonymous]
+        public async Task<ActionResult> CheckOut()
+        {
+            var user = await UserManager.FindByNameAsync(User.Identity.Name);
+            var cart = db.Carts.FirstOrDefault(x => x.UserId == user.Id);
+            if (cart == null)
+            {
+                ViewBag.Message = "Không tìm thấy giỏ hàng";
+                return View();
+            }
+            var orders = db.Orders.Where(x=>x.UserId == user.Id).ToList();
+            HashSet<string> receiverInfs = new HashSet<string>();
+            if (orders != null)
+            {
+                foreach(var o in orders)
+                {
+                    var inf = o.ReceiverName + " " + o.Phone + " " + o.Address;
+                    receiverInfs.Add(inf);
+                }
+            }
+            ViewBag.receiverInfs = receiverInfs.ToList();
+            var cartDetails = db.CartDetails.Where(x => x.CartId == cart.Id).ToList();
+            if (cartDetails != null && cartDetails.Any())
+            {
+                cartDetails = cartDetails.Where(x => x.Selected).ToList();
+                if (cartDetails.Count > 0)
+                {
+                    return View(cartDetails); 
+                }
+               
+            }
 
-        //    public ActionResult CheckOut()
-        //    {
+            
+            return View(); 
+        }
+        public async Task<ActionResult> GoToCheckOut()
+        {
+            var user = await UserManager.FindByNameAsync(User.Identity.Name);
+            var cart = db.Carts.FirstOrDefault(x => x.UserId == user.Id);
+            bool hasSelectedItems = cart.CartDetails.Any(x => x.Selected);
+            return Json(new { HasSelectedItems = hasSelectedItems }, JsonRequestBehavior.AllowGet);
+        }
+        [AllowAnonymous]
 
-        //        ShoppingCart cart = (ShoppingCart)Session["Cart"];
-        //        if (cart != null && cart.Items.Any())
-        //        {
-        //            ViewBag.CheckCart = cart;
-        //        }
-        //        return View();
+        //public ActionResult CheckOutSuccess()
+        //{
+        //    return View();
+        //}
+        //[AllowAnonymous]
+        //public ActionResult Partial_Item_ThanhToan()
+        //{
+        //    ShoppingCart cart = (ShoppingCart)Session["Cart"];
+        //    if (cart != null && cart.Items.Any())
+        //    {
+        //        return PartialView(cart.Items);
         //    }
-        //    [AllowAnonymous]
+        //    return PartialView();
+        //}
+        [HttpPost]
+        public ActionResult ChangeAddress()
+        {
+            return Json(new {});
+        }
+        [HttpPost]
+        public ActionResult AddAddress()
+        {
+            return Json(new { });
+        }
 
-        //    public ActionResult CheckOutSuccess()
-        //    {
-        //        return View();
-        //    }
-        //    [AllowAnonymous]
-        //    public ActionResult Partial_Item_ThanhToan()
-        //    {
-        //        ShoppingCart cart = (ShoppingCart)Session["Cart"];
-        //        if (cart != null && cart.Items.Any())
-        //        {
-        //            return PartialView(cart.Items);
-        //        }
-        //        return PartialView();
-        //    }
+
         //    [AllowAnonymous]
         //    public ActionResult PartialItemCartCheckOut()
         //    {
@@ -292,10 +347,60 @@ namespace ClothesShop.Controllers
                     var totalMoney = 0;
                     foreach(var p in cart.CartDetails)
                     {
-                        totalMoney+=p.Quantity*p.VariantSize.ProductVariant.Product.PriceSale;
+                        if(p.Selected) totalMoney += p.Quantity * p.VariantSize.ProductVariant.Product.PriceSale;
                     }
                     code = new { Success = true, money = money, totalMoney = totalMoney };
                 }
+                return Json(code);
+            }
+            return Json(code);
+        }
+        [HttpPost]
+        public async Task<ActionResult> UpdateSelect(string id, bool selected)
+        {
+            var user = await UserManager.FindByNameAsync(User.Identity.Name);
+            var cart = db.Carts.FirstOrDefault(x => x.UserId == user.Id);
+            var code = new { Success = false, totalMoney = 0 };
+            if (cart != null)
+            {
+                var product = cart.CartDetails.FirstOrDefault(x => x.Id == id);
+                if (product != null)
+                {
+                    product.Selected = selected;
+                    db.CartDetails.Attach(product);
+                    db.Entry(product).State = EntityState.Modified;
+                    db.SaveChanges();
+                    var totalMoney = 0;
+                    foreach (var p in cart.CartDetails)
+                    {
+                        if(p.Selected) totalMoney += p.Quantity * p.VariantSize.ProductVariant.Product.PriceSale;
+                    }
+                    code = new { Success = true, totalMoney = totalMoney };
+                }
+                return Json(code);
+            }
+            return Json(code);
+        }
+        [HttpPost]
+        public async Task<ActionResult> UpdateSelectAll(bool selectAll)
+        {
+            var user = await UserManager.FindByNameAsync(User.Identity.Name);
+            var cart = db.Carts.FirstOrDefault(x => x.UserId == user.Id);
+            var totalMoney = 0;
+            var code = new { Success = false, totalMoney = 0 };
+            if (cart != null)
+            {
+                foreach(var p in cart.CartDetails)
+                {
+                    p.Selected = selectAll;
+                    db.CartDetails.Attach(p);
+                    db.Entry(p).State = EntityState.Modified;
+                    totalMoney += p.Quantity * p.VariantSize.ProductVariant.Product.PriceSale;
+                }
+                db.SaveChanges();
+                if(selectAll) code = new { Success = true, totalMoney = totalMoney };
+                else code = new { Success = true, totalMoney = 0 };
+
                 return Json(code);
             }
             return Json(code);

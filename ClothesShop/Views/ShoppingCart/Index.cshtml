@@ -4,7 +4,88 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 
 
+
 }
+<style>
+    .shopee-popup {
+        bottom: 0;
+        left: 0;
+        position: fixed;
+        right: 0;
+        top: 0;
+        z-index: 600;
+        display: none; /* Thêm này để ẩn modal khi không sử dụng */
+    }
+
+    .shopee-popup__overlay {
+        background-color: rgba(0, 0, 0, 0.5);
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+    }
+
+    .shopee-popup__container {
+        left: 50%;
+        max-height: 100%;
+        max-width: 90%; /* Giới hạn chiều rộng của modal */
+        overflow: visible;
+        position: absolute;
+        top: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .shopee-alert-popup {
+        background-color: #fff;
+        padding: 20px; /* Thêm padding cho đẹp */
+        border-radius: 8px; /* Bo góc */
+        box-shadow: 0 5px 15px rgba(0,0,0,0.5); /* Thêm bóng đổ */
+    }
+
+    .shopee-alert-popup__message {
+        font-size: 1rem;
+        margin-top: 2.5rem;
+    }
+
+    .shopee-alert-popup__button-horizontal-layout {
+        display: flex;
+        margin-top: 6.25rem;
+    }
+
+        .shopee-alert-popup__button-horizontal-layout .shopee-button-outline, .shopee-alert-popup__button-horizontal-layout .shopee-button-solid {
+            flex: 1;
+            padding: 0.75rem 0;
+            text-transform: capitalize;
+        }
+
+    .shopee-button-solid--primary {
+        background: rgb(238, 77, 45);
+        outline: 0px;
+        overflow: visible;
+        position: relative;
+    }
+
+    .shopee-button-solid {
+        align-items: center;
+        background: rgba(0, 0, 0, 0.54);
+        border: 0px;
+        border-radius: 2px;
+        box-shadow: rgba(0, 0, 0, 0.09) 0px 1px 1px 0px;
+        color: rgb(255, 255, 255);
+        cursor: pointer;
+        display: flex;
+        font-size: 0.875rem;
+        font-weight: 300;
+        justify-content: center;
+        letter-spacing: 0px;
+        line-height: 1;
+        outline: none;
+        position: relative;
+        transition: opacity 0.2s ease 0s;
+        user-select: none;
+    }
+</style>
 <div class="wrapper cart">
 
 
@@ -33,6 +114,16 @@
                                                     <table class="shop_table-2 cart table">
                                                         <thead>
                                                             <tr>
+                                                                <th>
+                                                                    @if (ViewBag.selectAll)
+                                                                    {
+                                                                        <input type="checkbox" style="width:15px" id="selectAll" checked />
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <input type="checkbox" style="width:15px" id="selectAll" />
+                                                                    }
+                                                                </th>
                                                                 <th class="product-thumbnail "></th>
                                                                 <th class="product-name ">Tên sản phẩm</th>
                                                                 <th class="product-price ">Giá mua</th>
@@ -49,8 +140,18 @@
                                                                 {
                                                                     var imgUrl = p.VariantSize.ProductVariant.ImageLists.FirstOrDefault(x => x.IsDefault).ImageUrl;
                                                                     var money = p.Quantity * p.VariantSize.ProductVariant.Product.PriceSale;
-                                                                    totalMoney += money;
+
                                                                     <tr class="cart_item" id="trow_@p.Id">
+                                                                        <td>
+                                                                            @if (p.Selected)
+                                                                            {
+                                                                                <input type="checkbox" data-id="@p.Id" class="select" checked />
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <input type="checkbox" data-id="@p.Id" class="select" />
+                                                                            }
+                                                                        </td>
                                                                         <td class="item-img">
                                                                             <a href="/Product/Detail/@p.VariantSize.ProductVariant.Product.Id">
                                                                                 <img src="@imgUrl"
@@ -121,12 +222,11 @@
                                                         <div class="col-lg-4 col-md-5">
                                                             <div class="cart-total-area">
                                                                 <div class="sub-shipping" id="totalMoney">
-                                                                    <p>Tổng tiền <span>@totalMoney</span></p>
+                                                                    <p>Tổng tiền <span>@ViewBag.totalMoney</span></p>
                                                                 </div>
                                                                 <div class="process-checkout-btn text-end">
-                                                                    <a class="btn-def btn2" href="#">
-                                                                        Process To
-                                                                        Checkout
+                                                                    <a class="btn-def " id="btnGoToCheckOut" href="#">
+                                                                        Mua hàng
                                                                     </a>
                                                                 </div>
                                                             </div>
@@ -137,7 +237,7 @@
                                         </div>
                                         <!-- cart are end-->
                                     </div>
-                                   
+
                                 </div>
                             </div>
                         </div>
@@ -149,11 +249,22 @@
     <!--cart-checkout-area end-->
 
 </div>
+<div id="modal" class="shopee-popup">
+    <div class="shopee-popup__overlay"></div>
+    <div class="shopee-popup__container">
+        <div class="shopee-alert-popup card">
+            <div class="shopee-alert-popup__message">Bạn vẫn chưa chọn sản phẩm nào để mua.</div>
+            <div class="shopee-alert-popup__button-horizontal-layout">
+                <button class="shopee-button-solid shopee-button-solid--primary" id="OK1">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
 @section scripts{
     <script>
         $(document).ready(function () {
 
-                $('.btnDelete').click(function () {
+            $('.btnDelete').click(function () {
                 var id = $(this).data("id");
                 var conf = confirm('Bạn có muốn xóa sản phẩm này không?');
                 if (conf === true) {
@@ -186,7 +297,69 @@
                     }
                 });
             });
+            $('body').on('click', '#selectAll', function () {
+                var checkbox = document.getElementById('selectAll');
+                var selectAll = checkbox.checked ? true : false;
+                var checkboxes = document.querySelectorAll('.select');
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = selectAll;
+                });
 
+                $.ajax({
+                    url: '/ShoppingCart/UpdateSelectAll',
+                    type: 'POST',
+                    data: { selectAll: selectAll },
+                    success: function (rs) {
+                        if (rs.Success) {
+
+                            var totalMoney = '<p>Tổng tiền <span>' + rs.totalMoney + '</span></p>';
+                            $('#totalMoney').html(totalMoney);
+                        }
+                    }
+                });
+            });
+            $('body').on('click', '.select', function () {
+                var checkboxAll = $('#selectAll'); 
+                var selected = $(this).is(':checked'); 
+
+                if (!selected) {
+                    checkboxAll.prop('checked', false);
+                } else {
+                    var allSelected = $('.select').length === $('.select:checked').length;
+                    checkboxAll.prop('checked', allSelected);
+                }
+
+                var id = $(this).data("id");
+                $.ajax({
+                    url: '/ShoppingCart/UpdateSelect',
+                    type: 'POST',
+                    data: { id: id, selected: selected },
+                    success: function (rs) {
+                        if (rs.Success) {
+                            var totalMoney = '<p>Tổng tiền <span>' + rs.totalMoney + '</span></p>';
+                            $('#totalMoney').html(totalMoney);
+                        }
+                    }
+                });
+            });
+            
+            $('#OK1').click(function () {
+                $('#modal').hide();
+            });
+            $('#btnGoToCheckOut').click(function (e) {
+                e.preventDefault();
+                $.ajax({
+                    url: '/ShoppingCart/GoToCheckOut',
+                    type: 'GET',
+                    success: function (response) {
+                        if (response.HasSelectedItems) {
+                            window.location.href = 'CheckOut';
+                        } else {
+                            $('#modal').show(); 
+                        }
+                    }
+                });
+            });
 
         });
     </script>

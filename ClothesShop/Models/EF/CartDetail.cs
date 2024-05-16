@@ -21,6 +21,7 @@ namespace ClothesShop.Models.EF
         public string CartId { get; set; }
         public string VariantSizeId { get; set; }
         public int Quantity { get; set; }
+        public bool Selected { get; set; }
         public virtual Cart Cart { get; set; }
         public virtual VariantSize VariantSize { get; set; }
     }

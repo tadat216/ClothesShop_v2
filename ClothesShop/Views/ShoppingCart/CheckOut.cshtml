@@ -1,0 +1,153 @@
+﻿@model IEnumerable<ClothesShop.Models.EF.CartDetail>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "CheckOut";
+}
+@if (!string.IsNullOrEmpty(ViewBag.Message))
+{
+    <div class="alert alert-warning" role="alert">
+        @ViewBag.Message
+    </div>
+}
+
+@if (Model != null && Model.Any())
+{
+    @*<div class="billing-details m-3">
+            <div class="contact-text right-side">
+                <form action="#">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6">
+                            <div class="input-box mb-20">
+                                <label>Họ<em>*</em></label>
+                                <input type="text" name="namm" class="info">
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6">
+                            <div class="input-box mb-20">
+                                <label>Tên<em>*</em></label>
+                                <input type="text" name="namm" class="info" />
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="input-box mb-20">
+                                <label>Email<em>*</em></label>
+                                <input type="email"
+                                       name="email"
+                                       class="info">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="input-box mb-20">
+                                <label>Số điện thoại<em>*</em></label>
+                                <input type="text"
+                                       name="phone"
+                                       class="info">
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="input-box mb-20">
+                                <label>Địa chỉ<em>*</em></label>
+                                <div class="css_select_div row d-flex justify-content-around">
+                                    <select class="css_select col-3" id="tinh" name="tinh" title="Chọn Tỉnh Thành">
+                                        <option value="0">Tỉnh Thành</option>
+                                    </select>
+                                    <select class="css_select col-3" id="quan" name="quan" title="Chọn Quận Huyện">
+                                        <option value="0">Quận Huyện</option>
+                                    </select>
+                                    <select class="css_select col-3" id="phuong" name="phuong" title="Chọn Phường Xã">
+                                        <option value="0">Phường Xã</option>
+                                    </select>
+                                </div>
+                                <input type="text"
+                                       name="add2"
+                                       class="info mt-3"
+                                       placeholder="Nhập thêm thông tin về địa chỉ (số nhà...)">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>*@
+    <div class="row" id="inf">
+        <h3>Địa chỉ nhận hàng</h3>
+        @if (ViewBag.receiverInfs != null && ViewBag.receiverInfs.Count > 0)
+        {
+            <div><strong>@ViewBag.receiverInfs[0]</strong></div>
+            <div class="btnChange">Thay đổi</div>
+        }
+        else
+        {
+            <div class="btnAdd">Thêm địa chỉ</div>
+        }
+
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Tên sản phẩm</th>
+                <th>Tiền</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{ var totalMoney = 0;}
+            @foreach (var item in Model)
+            {
+                var money = item.Quantity * item.VariantSize.ProductVariant.Product.PriceSale;
+                totalMoney += money;
+                <tr>
+                    <td>@item.VariantSize.ProductVariant.Product.Title X @item.Quantity</td>
+                    <td>@money</td>
+                </tr>
+            }
+            <tr>
+                <td>Tổng cộng</td>
+                <td>@totalMoney</td>
+            </tr>
+        </tbody>
+    </table>
+}
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+
+            $.getJSON('https://esgoo.net/api-tinhthanh/1/0.htm', function (data_tinh) {
+                if (data_tinh.error == 0) {
+                    $.each(data_tinh.data, function (key_tinh, val_tinh) {
+                        $("#tinh").append('<option value="' + val_tinh.id + '">' + val_tinh.full_name + '</option>');
+                    });
+                    $("#tinh").change(function (e) {
+                        var idtinh = $(this).val();
+                        //Lấy quận huyện
+                        $.getJSON('https://esgoo.net/api-tinhthanh/2/' + idtinh + '.htm', function (data_quan) {
+                            if (data_quan.error == 0) {
+                                $("#quan").html('<option value="0">Quận Huyện</option>');
+                                $("#phuong").html('<option value="0">Phường Xã</option>');
+                                $.each(data_quan.data, function (key_quan, val_quan) {
+                                    $("#quan").append('<option value="' + val_quan.id + '">' + val_quan.full_name + '</option>');
+                                });
+                                //Lấy phường xã
+                                $("#quan").change(function (e) {
+                                    var idquan = $(this).val();
+                                    $.getJSON('https://esgoo.net/api-tinhthanh/3/' + idquan + '.htm', function (data_phuong) {
+                                        if (data_phuong.error == 0) {
+                                            $("#phuong").html('<option value="0">Phường Xã</option>');
+                                            $.each(data_phuong.data, function (key_phuong, val_phuong) {
+                                                $("#phuong").append('<option value="' + val_phuong.id + '">' + val_phuong.full_name + '</option>');
+                                            });
+                                        }
+                                    });
+                                });
+
+                            }
+                        });
+                    });
+
+                }
+            });
+        });
+    </script>
+}
+

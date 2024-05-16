@@ -86,6 +86,11 @@ namespace ClothesShop.Controllers
         {
             var user = await UserManager.FindByNameAsync(User.Identity.Name);
             var cart = db.Carts.FirstOrDefault(x => x.UserId == user.Id);
+            if (cart == null)
+            {
+                ViewBag.Message = "Không tìm thấy giỏ hàng";
+                return View();
+            }
             var orders = db.Orders.Where(x=>x.UserId == user.Id).ToList();
             HashSet<string> receiverInfs = new HashSet<string>();
             if (orders != null)
@@ -97,14 +102,7 @@ namespace ClothesShop.Controllers
                 }
             }
             ViewBag.receiverInfs = receiverInfs.ToList();
-            if (cart == null)
-            {
-                ViewBag.Message = "Không tìm thấy giỏ hàng";
-                return View();  
-            }
-
             var cartDetails = db.CartDetails.Where(x => x.CartId == cart.Id).ToList();
-
             if (cartDetails != null && cartDetails.Any())
             {
                 cartDetails = cartDetails.Where(x => x.Selected).ToList();
@@ -112,15 +110,18 @@ namespace ClothesShop.Controllers
                 {
                     return View(cartDetails); 
                 }
-                else
-                {
-                    ViewBag.Message = "Hãy chọn sản phẩm trong giỏ hàng để đặt hàng";
-                    return View(); 
-                }
+               
             }
 
             
             return View(); 
+        }
+        public async Task<ActionResult> GoToCheckOut()
+        {
+            var user = await UserManager.FindByNameAsync(User.Identity.Name);
+            var cart = db.Carts.FirstOrDefault(x => x.UserId == user.Id);
+            bool hasSelectedItems = cart.CartDetails.Any(x => x.Selected);
+            return Json(new { HasSelectedItems = hasSelectedItems }, JsonRequestBehavior.AllowGet);
         }
         [AllowAnonymous]
 

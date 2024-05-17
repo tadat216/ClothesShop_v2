@@ -9,23 +9,52 @@
 <style>
 
     .m-df {
-        margin-top: 0px;
-        margin-left: 300px;
+        
+        padding: 20px;
+        margin: 20px;
+        /*margin-left: 300px;*/
         border: groove 2px #dee2e6;
         border-radius: 10px;
+        width: 60%
     }
+    a, input {
+        outline: medium none;
+        color: #000000;
+    }
+   /* .button-account {
+        padding: 7px 42px;
+        background: transparent;
+        border-color: #fff;
+        color: black;
+    }*/
+
+    .button {
+        background: transparent;
+        
+        display: inline-block;
+        border: 1px solid #fff;
+        text-decoration: none !important;
+        color: black;
+        transition: all .4s ease;
+    }
+
+        .button:hover {
+            border: none;
+            background-color: black;
+            color: white;
+        }
 </style>
-<div style="height:150px;" class="remove"></div>
+
 <div class="container ">
 
-    <div class="row">
+    <div >
         @using (Html.BeginForm("Profile", "Account", FormMethod.Post, new { id = "profileForm" }))
         {
             @Html.ValidationSummary(false)
             @Html.AntiForgeryToken()
-            <div>
-                <a href="/Account/ShoppingHistory">Xem Chi tiết đơn đặt hàng</a>
-                <div class="col-md-12 d-flex justify-content-center align-items-center flex-column m-df">
+            <a href="/Account/ShoppingHistory">Xem Chi tiết đơn đặt hàng</a>
+            <div class="d-flex justify-content-center align-items-center">
+                <div class=" d-flex justify-content-center align-items-center flex-column m-df">
                     <div class="form-group mt-2 col-8">
                         <label for="exampleInputEmail1">Họ và tên</label>
                         <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="FullName" value="@Model.FullName">
@@ -42,11 +71,10 @@
                         <label for="exampleInputEmail1">Email</label>
                         <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="Email" value="@Model.Email" readonly>
                     </div>
-                    <div class="form-group">
-                        <button type="submit" class="btn btn-primary">Cập nhật</button>
+                    <div class="form-group mt-2">
+                        <button type="submit" class="btn button ">Cập nhật</button>
                     </div>
                 </div>
-
             </div>
         }
 

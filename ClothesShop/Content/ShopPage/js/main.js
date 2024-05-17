@@ -285,6 +285,7 @@ Version: 1.0
             } else {
                 newVal = 0;
             }
+
         }
         $button.parent().find("input").val(newVal);
     });

@@ -29,12 +29,14 @@
         left: 0;
     }
 
+
     .shopee-popup__container {
         left: 50%;
         max-height: 500px;
         /*overflow-y: auto;*/
         max-width: 90%; /* Giới hạn chiều rộng của modal */
-        overflow: visible;
+        /*overflow: visible;*/
+        overflow-y: auto;
         position: absolute;
         top: 50%;
         transform: translate(-50%, -50%);
@@ -54,10 +56,7 @@
         max-height: 300px;
         overflow-y: auto;
     }
-
-    .card{
-        height: 300px;
-    }
+   
 
     .shopee-alert-popup__button-horizontal-layout {
         display: flex;
@@ -95,6 +94,15 @@
         transition: opacity 0.2s ease 0s;
         user-select: none;
     }
+    /* Ẩn thanh trượt */
+    .shopee-alert-popup__message::-webkit-scrollbar {
+        display: none; /* Ẩn thanh trượt cho WebKit browsers */
+    }
+
+    .shopee-alert-popup__message {
+        -ms-overflow-style: none; /* IE and Edge */
+        scrollbar-width: none; /* Firefox */
+    }
 </style>
 @if (!string.IsNullOrEmpty(ViewBag.Message))
 {
@@ -124,37 +132,46 @@
             <button class="col-2 btnChangeAddress btn btn-link">Thay đổi</button>
             
         </div>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Tên sản phẩm</th>
-                    <th>Tiền</th>
-                </tr>
-            </thead>
-            <tbody>
-                @{ var totalMoney = 0;}
-                @foreach (var item in Model)
-                {
-                    var money = item.Quantity * item.VariantSize.ProductVariant.Product.PriceSale;
-                    totalMoney += money;
+        <div>
+            <table class="table">
+                <thead>
                     <tr>
-                        <td>@item.VariantSize.ProductVariant.Product.Title X @item.Quantity</td>
-                        <td>@money</td>
+                        <th>Tên sản phẩm</th>
+                        <th>Tiền</th>
                     </tr>
-                }
-                <tr>
-                    <td>Tổng cộng</td>
-                    <td>@totalMoney</td>
-                </tr>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @{ var totalMoney = 0;}
+                    @foreach (var item in Model)
+                    {
+                        var money = item.Quantity * item.VariantSize.ProductVariant.Product.PriceSale;
+                        totalMoney += money;
+                        <tr>
+                            <td>@item.VariantSize.ProductVariant.Product.Title X @item.Quantity</td>
+                            <td>@money</td>
+                        </tr>
+                    }
+                    <tr>
+                        <td>Tổng cộng</td>
+                        <td>@totalMoney</td>
+                    </tr>
+                </tbody>
+
+            </table>
+            <div class="row m-3 ">
+                <div class="offset-md-5 col-md-2">
+                    <input type="submit" value="Đặt hàng" class="btn btn-outline-dark" id="btnOrder" />
+                </div>
+            </div>
+        </div>
+
         <div id="modalChangeAddress" class="shopee-popup">
             <div class="shopee-popup__overlay"></div>
             <div class="shopee-popup__container">
                 <div class="shopee-alert-popup">
-
+                    <h5> Địa chỉ của tôi</h5>
                     <div class="shopee-alert-popup__message">
-                        <h5> Địa chỉ của tôi</h5>
+
                         <ul id="addressList">
                             @if (ViewBag.Addresses != null && ViewBag.Addresses.Count > 0)
                             {
@@ -176,22 +193,29 @@
                                 }
                             }
                         </ul>
-                        <a class="col-2" id="btnAddAddress">Thêm địa chỉ</a>
+
                     </div>
+                    <a class="col-2" id="btnAddAddress">Thêm địa chỉ</a>
                     <div class="shopee-alert-popup__button-horizontal-layout row d-flex justify-content-around">
-                        <button class="shopee-button-solid shopee-button-solid--primary " id="btnCancelChangeAddress">Hủy</button>
-                        <button class="shopee-button-solid shopee-button-solid--primary " style="background-color: red;" id="OKChangeAddress">OK</button>
+                        <div class="offset-md-1 col-md-5">
+                            <input type="submit" value="Hủy" class="btn btn-outline-dark" id="btnCancelChangeAddress" />
+                        </div>
+                        <div class="offset-md-1 col-md-5">
+                            <input type="submit" value="OK" class="btn btn-outline-dark" style="background-color: black; color: white" id="OKChangeAddress" />
+                        </div>
+                        @*<button class="shopee-button-solid shopee-button-solid--primary " id="btnCancelChangeAddress">Hủy</button>
+        <button class="shopee-button-solid shopee-button-solid--primary " style="background-color: red;" id="OKChangeAddress">OK</button>*@
                     </div>
                 </div>
             </div>
         </div>
-        <div id="modalAddAddress" class="shopee-popup">
+        <div id="modalAddAddress" class="shopee-popup" style="min-height: 0px;">
             <div class="shopee-popup__overlay"></div>
             <div class="shopee-popup__container modal-dialog-scrollable">
                 <div class="shopee-alert-popup card">
-
+                    <h5> Địa chỉ mới</h5>
                     <div class="shopee-alert-popup__message">
-                        <h5> Địa chỉ mới</h5>
+
                         <div class="billing-details m-3">
                             <div class="contact-text right-side">
                                 <form action="#">
@@ -205,7 +229,7 @@
                                         <div class="col-lg-6 col-md-6">
                                             <div class="input-box mb-20">
                                                 <label>Tên<em>*</em></label>
-                                                <input type="text" name="namm"  id="lname" class="info" />
+                                                <input type="text" name="namm" id="lname" class="info" />
                                             </div>
                                         </div>
 
@@ -254,15 +278,20 @@
                         </div>
                     </div>
                     <div class="shopee-alert-popup__button-horizontal-layout">
-                        <button class="shopee-button-solid shopee-button-solid--primary " id="btnCancelAddAddress">Hủy</button>
-                        <button class="shopee-button-solid shopee-button-solid--primary" style="background-color: red;" id="OKAddAddress">OK</button>
+                        <div class="offset-md-1 col-md-5">
+                            <input type="submit" value="Hủy" class="btn btn-outline-dark" id="btnCancelAddAddress" />
+                        </div>
+                        <div class="offset-md-1 col-md-5">
+                            <input type="submit" value="OK" class="btn btn-outline-dark" style="background-color: black; color: white" id="OKAddAddress" />
+                        </div>
+                        @*<button class="shopee-button-solid shopee-button-solid--primary " id="btnCancelAddAddress">Hủy</button>
+                        <button class="shopee-button-solid shopee-button-solid--primary" style="background-color: red;" id="OKAddAddress">OK</button>*@
                     </div>
                 </div>
             </div>
         </div>
 
     </div>
-    <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Magni explicabo natus odio eveniet iure quas vero temporibus asperiores architecto accusantium quasi, omnis quibusdam amet earum qui doloremque, ullam reiciendis perferendis? Molestiae, error? Accusantium laudantium vero voluptatum aspernatur perspiciatis ullam soluta magni, eaque labore quas cum voluptas aliquam a consequatur quis laborum repudiandae praesentium officia! Minima quis molestias qui voluptate quidem modi laboriosam a quae, aspernatur voluptatibus dignissimos vero error aperiam possimus quo magnam consequatur! Nobis cupiditate in aliquid iusto delectus laboriosam quaerat suscipit ipsa sapiente vel eaque officia, quidem, illum molestias. Eaque explicabo atque tenetur temporibus non et libero quasi eligendi quis fugit, dolorum, sit illum a possimus esse maiores amet dignissimos soluta! Nemo necessitatibus, suscipit, aliquid esse expedita, autem dolore porro adipisci veritatis beatae nobis laborum ea atque. Ea vero nulla ex dignissimos nobis alias, consequuntur omnis cum officia earum exercitationem, nihil illo, perspiciatis veritatis eaque qui rerum suscipit sit minima corporis facilis! Repellat, sit quos maiores suscipit impedit adipisci et aut recusandae, laudantium, unde in minima consectetur quia illum quo veniam sed illo ratione rem iusto quam blanditiis. Maiores explicabo consequuntur ut quam obcaecati architecto quos error aliquid eaque. Fuga, nemo impedit voluptate sit facilis dolor unde nihil illum veritatis rerum placeat perferendis qui quod aliquam voluptatum doloribus animi rem? Iste quod nesciunt quia nobis. Animi voluptas laudantium laborum beatae, iusto quas sapiente! Magni, ipsum veritatis! Consequuntur, nam non quidem aliquid doloribus perferendis, animi magnam impedit maxime ipsum rerum reiciendis laboriosam laudantium illo dolore odit veritatis consequatur in natus minima. Aspernatur voluptatibus voluptatem asperiores dolore veniam, doloremque exercitationem. Necessitatibus molestias omnis soluta maxime dolorum quibusdam nihil aperiam ipsa fuga fugit ullam amet, delectus nulla. Molestias libero quas numquam incidunt cupiditate nam ex maiores dicta. Laborum quo corporis, eveniet esse possimus commodi. In pariatur sit dolore dolor odio sapiente ex est praesentium, exercitationem quae a soluta error. Sed ab eos est? Odio, omnis, error veritatis reiciendis animi exercitationem temporibus, expedita ratione at cumque dolorum asperiores consectetur quae unde quasi saepe numquam vitae provident. Deserunt dolores, voluptates iusto molestias quas ut doloremque vel repudiandae exercitationem sit. Soluta, architecto quam corrupti quasi rerum hic dicta optio necessitatibus quas consectetur sit similique maxime incidunt, ut excepturi dolorum sequi et deserunt delectus, dolores laborum fugit adipisci. Aspernatur quisquam, doloribus minus cumque labore ratione veritatis ipsa praesentium tenetur, laborum nihil odio fugiat nemo explicabo iure incidunt! Sit cum fuga in, dolore labore a illum totam, maiores placeat error consectetur odio adipisci rem esse accusantium reprehenderit harum excepturi doloremque, voluptatem architecto ex ducimus ea quia ut. Veritatis qui reiciendis aut sint amet suscipit. Id non assumenda omnis ullam, rerum fugit cum amet itaque maxime voluptatum sapiente, recusandae consequuntur dolorum voluptate vitae blanditiis ducimus error reprehenderit culpa tenetur. Voluptatum, dignissimos sunt, suscipit rerum neque placeat exercitationem minus quae, voluptates qui voluptatem. Laudantium tempora, error commodi ullam id optio accusamus repudiandae vero consequuntur aspernatur soluta est sequi consequatur quae pariatur, ad ipsam earum, quis ut porro. Labore, magnam ducimus iure saepe reprehenderit exercitationem? Totam exercitationem suscipit quibusdam?</p>
 }
 
 
@@ -366,7 +395,6 @@
             }
         });
 
-
         $('#btnAddAddress').click(function (e) {
 
             e.preventDefault();
@@ -421,6 +449,29 @@
                 }
             });
         });
+        $('#btnOrder').click(function (e) {
+            e.preventDefault();
+            var content = $('#defaultAddress').text();
+            var parts = content.split(' - ');
+            var receiverName = parts[0].trim();
+            var receiverPhone = parts[1].replace('(', '').replace(')', '').trim();
+            var receiverAddress = parts[2].trim();
+            $.ajax({
+                url: '/ShoppingCart/OrderProcess',
+                type: 'POST',
+                data: { receiverName: receiverName, receiverPhone: receiverPhone, receiverAddress: receiverAddress  },
+                success: function (rs) {
+                    alert(rs.tb);
+                    window.location.href = '/';
+
+                },
+                error: function (error) {
+                    console.log('Có lỗi xảy ra:', error);
+                    console.log(error.responseText);
+
+                }
+            });
+        })
     });
 </script>
 

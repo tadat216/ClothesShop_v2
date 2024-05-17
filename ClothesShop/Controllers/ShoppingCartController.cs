@@ -70,6 +70,12 @@ namespace ClothesShop.Controllers
             int count = 0;
             foreach (var p in cart.CartDetails)
             {
+                if(p.Quantity > p.VariantSize.Amount)
+                {
+                    p.Quantity = p.VariantSize.Amount;
+                    db.Entry(p).State = EntityState.Modified;
+                    db.SaveChanges();
+                }
                 if (p.Selected)
                 {
                     totalMoney += p.Quantity * p.VariantSize.ProductVariant.Product.PriceSale;
@@ -144,6 +150,7 @@ namespace ClothesShop.Controllers
             
             return View(); 
         }
+   
         public async Task<ActionResult> GoToCheckOut()
         {
             var user = await UserManager.FindByNameAsync(User.Identity.Name);
@@ -151,13 +158,37 @@ namespace ClothesShop.Controllers
             bool hasSelectedItems = cart.CartDetails.Any(x => x.Selected);
             return Json(new { HasSelectedItems = hasSelectedItems }, JsonRequestBehavior.AllowGet);
         }
-        [AllowAnonymous]
 
-        //public ActionResult CheckOutSuccess()
-        //{
-        //    return View();
-        //}
-        //[AllowAnonymous]
+        [AllowAnonymous]
+        [HttpPost]
+        public async Task<ActionResult> OrderProcess(string receiverName, string receiverPhone, string receiverAddress)
+        {
+            var user = await UserManager.FindByNameAsync(User.Identity.Name);
+            var cart = db.Carts.FirstOrDefault(x => x.UserId == user.Id);
+            var cartDetails = db.CartDetails.Where(x => x.CartId == cart.Id).ToList();
+            Order order = new Order();
+            order.UserId = user.Id;
+            order.Address = receiverAddress;
+            order.Phone = receiverPhone;
+            order.ReceiverName = receiverName;
+            order.OrderedDate = DateTime.Now;
+            db.Orders.Add(order);
+            db.SaveChanges();
+            foreach(var item in cartDetails)
+            {
+                OrderDetail od = new OrderDetail();
+                od.OrderId = order.Id;
+                od.VariantSizeId = item.VariantSizeId;
+                od.Price = item.VariantSize.ProductVariant.Product.PriceSale;
+                od.Quantity = item.Quantity;
+                db.OrderDetails.Add(od);
+                
+            }
+            db.SaveChanges();
+
+            return Json(new {tb="Đặt hàng thành công."});
+        }
+        [AllowAnonymous]
         //public ActionResult Partial_Item_ThanhToan()
         //{
         //    ShoppingCart cart = (ShoppingCart)Session["Cart"];
@@ -396,7 +427,7 @@ namespace ClothesShop.Controllers
         {
             var user = await UserManager.FindByNameAsync(User.Identity.Name);
             var cart = db.Carts.FirstOrDefault(x => x.UserId == user.Id);
-            var code = new { Success = false, money = 0, totalMoney = 0 };
+            var code = new { Success = false, money = 0, totalMoney = 0, amount = db.CartDetails.FirstOrDefault(x=>x.Id==id).VariantSize.Amount};
             if (cart != null)
             {
                 var product = cart.CartDetails.FirstOrDefault(x => x.Id == id);
@@ -412,7 +443,7 @@ namespace ClothesShop.Controllers
                     {
                         if(p.Selected) totalMoney += p.Quantity * p.VariantSize.ProductVariant.Product.PriceSale;
                     }
-                    code = new { Success = true, money = money, totalMoney = totalMoney };
+                    code = new { Success = true, money = money, totalMoney = totalMoney, amount = product.VariantSize.Amount };
                 }
                 return Json(code);
             }
@@ -475,7 +506,7 @@ namespace ClothesShop.Controllers
         {
             var user = await UserManager.FindByNameAsync(User.Identity.Name);
             var cart = db.Carts.FirstOrDefault(x => x.UserId == user.Id);
-            var code = new { Success = false, msg = "", code = -1, Count = 0 };
+            var code = new { Success = false, msg = "", totalMoney = 0, Count = 0 };
             
             if (cart != null)
             {
@@ -484,7 +515,12 @@ namespace ClothesShop.Controllers
                 {
                     db.CartDetails.Remove(product);
                     db.SaveChanges();
-                    code = new { Success = true, msg = "Xóa sản phẩm thành công", code = 1, Count = cart.CartDetails.Count };
+                    var totalMoney = 0;
+                    foreach(var cd in cart.CartDetails)
+                    {
+                        if (cd.Selected) totalMoney += cd.Quantity * cd.VariantSize.ProductVariant.Product.PriceSale;
+                    }
+                    code = new { Success = true, msg = "Xóa sản phẩm thành công", totalMoney = totalMoney, Count = cart.CartDetails.Count };
                 }
             }
             return Json(code);

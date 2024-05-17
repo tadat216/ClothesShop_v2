@@ -91,7 +91,6 @@
 
     <!--cart-checkout-area start -->
     @{
-        var totalMoney = 0;
         <div class="cart-checkout-area  pt-30">
             <div class="container">
                 <div class="row">
@@ -115,18 +114,11 @@
                                                         <thead>
                                                             <tr>
                                                                 <th>
-                                                                    @if (ViewBag.selectAll)
-                                                                    {
-                                                                        <input type="checkbox" style="width:15px" id="selectAll" checked />
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        <input type="checkbox" style="width:15px" id="selectAll" />
-                                                                    }
+                                                                    <input type="checkbox" style="width:15px" id="selectAll" @(ViewBag.selectAll ? "checked" : "") />
                                                                 </th>
                                                                 <th class="product-thumbnail "></th>
                                                                 <th class="product-name">Tên sản phẩm</th>
-                                                                <th class="product-name " style="width: 100px;">Size</th>
+                                                                <th class="" style="width:150px;">Size</th>
                                                                 <th class="product-price ">Giá mua</th>
                                                                 <th class="product-quantity">Số lượng</th>
                                                                 <th class="product-subtotal ">Tổng tiền</th>
@@ -144,14 +136,7 @@
 
                                                                     <tr class="cart_item" id="trow_@p.Id">
                                                                         <td>
-                                                                            @if (p.Selected)
-                                                                            {
-                                                                                <input type="checkbox" data-id="@p.Id" class="select" checked />
-                                                                            }
-                                                                            else
-                                                                            {
-                                                                                <input type="checkbox" data-id="@p.Id" class="select" />
-                                                                            }
+                                                                            <input type="checkbox" data-id="@p.Id" class="select" @(p.Selected ? "checked" : "") />
                                                                         </td>
                                                                         <td class="item-img">
                                                                             <a href="/Product/Detail/@p.VariantSize.ProductVariant.Product.Id">
@@ -164,8 +149,8 @@
                                                                                 @p.VariantSize.ProductVariant.Product.Title
                                                                             </a>
                                                                         </td>
-                                                                        <td style="width: 100px;">@p.VariantSize.Size.Name</td>
-                                                                    
+                                                                        <td style="width: 100px;" class="m-1">@p.VariantSize.Size.Name</td>
+
                                                                         <td class="item-price">
                                                                             @if (p.VariantSize.ProductVariant.Product.IsSale)
                                                                             {
@@ -177,20 +162,22 @@
                                                                                 <p>@Common.FormatNumber(p.VariantSize.ProductVariant.Product.Price)</p>
                                                                             }
                                                                         </td>
-                                                                        
+
                                                                         <td class="item-qty">
                                                                             <div class="cart-quantity">
                                                                                 <div class="product-qty">
                                                                                     <div class="cart-quantity">
                                                                                         <div class="cart-plus-minus">
-                                                                                            <div class="dec qtybutton" data-id="@p.Id">-</div>
+                                                                                            @*button ko cho biết type thì mặc định là submit*@
+
+                                                                                            <button type="button" class="dec qtybutton" data-id="@p.Id" @(p.Quantity <= 1 ? "disabled" : "") > -</button>
                                                                                             <input value="@p.Quantity"
                                                                                                    name="qtybutton"
                                                                                                    class="cart-plus-minus-box "
                                                                                                    type="text"
                                                                                                    id="qtyInput_@p.Id"
                                                                                                    data-id="@p.Id">
-                                                                                            <div class="inc qtybutton" data-id="@p.Id">+</div>
+                                                                                            <button type="button" class="inc qtybutton" data-id="@p.Id" @(p.Quantity >= p.VariantSize.Amount ? "disabled" : "")>+</button>
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>
@@ -233,7 +220,7 @@
                                                         <div class="col-lg-4 col-md-5">
                                                             <div class="cart-total-area">
                                                                 <div class="sub-shipping" id="totalMoney">
-                                                                    <p>Tổng tiền <span>@Common.FormatNumber((int)ViewBag.totalMoney)</span></p>
+                                                                    <p>Tổng tiền: <span>@Common.FormatNumber((int)ViewBag.totalMoney)</span></p>
                                                                 </div>
                                                                 <div class="process-checkout-btn text-end">
                                                                     <a class="btn-def " id="btnGoToCheckOut" href="#">
@@ -286,21 +273,38 @@
                         success: function (rs) {
                             if (rs.Success) {
                                 $('#trow_' + id).remove();
+                                var totalMoney = '<p>Tổng tiền <span>' + rs.totalMoney + '</span></p>';
+                                $('#totalMoney').html(totalMoney);
                             }
                         }
                     });
                 }
             });
+
             $('body').on('click', '.qtybutton', function () {
                 var id = $(this).data("id");
-                var quantity = document.getElementById('qtyInput_' + id).value;
+                var input = $('#qtyInput_' + id);
+                var quantity = parseInt(input.val());
+                console.log(quantity);
+
                 $.ajax({
                     url: '/ShoppingCart/UpdateQuantity',
                     type: 'POST',
                     data: { id: id, quantity: quantity },
                     success: function (rs) {
                         if (rs.Success) {
-                            var money = '<strong id="money_' + id + '"' + '>' + rs.money + '</strong>';
+                            console.log(rs.amount);
+                            if (quantity <= 1) {
+                                $('.dec[data-id="' + id + '"]').prop('disabled', true);
+                            } else {
+                                $('.dec[data-id="' + id + '"]').prop('disabled', false);
+                            }
+                            if (quantity >= rs.amount) {
+                                $('.inc[data-id="' + id + '"]').prop('disabled', true);
+                            } else {
+                                $('.inc[data-id="' + id + '"]').prop('disabled', false);
+                            }
+                            var money = '<strong id="money_' + id + '">' + rs.money + '</strong>';
                             $('#money_' + id).html(money);
                             var totalMoney = '<p>Tổng tiền <span>' + rs.totalMoney + '</span></p>';
                             $('#totalMoney').html(totalMoney);
@@ -330,8 +334,8 @@
                 });
             });
             $('body').on('click', '.select', function () {
-                var checkboxAll = $('#selectAll'); 
-                var selected = $(this).is(':checked'); 
+                var checkboxAll = $('#selectAll');
+                var selected = $(this).is(':checked');
 
                 if (!selected) {
                     checkboxAll.prop('checked', false);
@@ -353,7 +357,7 @@
                     }
                 });
             });
-            
+
             $('#OK1').click(function () {
                 $('#modal').hide();
             });
@@ -366,7 +370,7 @@
                         if (response.HasSelectedItems) {
                             window.location.href = 'CheckOut';
                         } else {
-                            $('#modal').show(); 
+                            $('#modal').show();
                         }
                     }
                 });

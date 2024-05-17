@@ -338,7 +338,7 @@ jQuery(document).ready(function($)
     	map = new google.maps.Map(document.getElementById('map'), mapOptions);
 
     	// Use an image for a marker
-		var image = 'Content/ShopPage/Content/ShopPage/images/map_marker.png';
+		var image = 'Content/ShopPage/Content/ShopPage//Content/ShopPage/images/map_marker.png';
 		var marker = new google.maps.Marker(
 		{
 			position: new google.maps.LatLng(42.373122,-71.112387),

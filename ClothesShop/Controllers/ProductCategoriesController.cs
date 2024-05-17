@@ -1,6 +1,9 @@
 ﻿using ClothesShop.Models;
+using ClothesShop.Models.ViewModel;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -13,13 +16,23 @@ namespace ClothesShop.Controllers
         // GET: ProductCategories
         public ActionResult Index()
         {
-            return View();
+            CategoryPageViewModel item = new CategoryPageViewModel();
+            item.size = db.Sizes.ToList();
+            item.productCategory = db.ProductCategories.ToList();
+            item.color = db.Colors.ToList();
+            return View(item);
         }
 
         public ActionResult NavBarProductCategory()
         {
             var items = db.ProductCategories.ToList();
             return PartialView("_NavBarProductCategory", items);
+        }
+
+        public ActionResult ProductByCategory(string cateId, List<string> ColorId, List<string> sizeId)
+        {
+            var items = db.Products.ToList(); 
+            return PartialView("_ProductByCategory", items);
         }
     }
 }

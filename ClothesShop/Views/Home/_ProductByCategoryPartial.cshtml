@@ -24,7 +24,7 @@
                                                 <div class="new">New</div>
                                             </div>
                                             <div class="single-prodcut-img  product-overlay pos-rltv">
-                                                <a href="Products/Index/@item.Id" id="img_list-@item.Id">
+                                                <a href="/Products/Index/@item.Id" id="img_list-@item.Id">
                                                     @foreach (var variant in item.ProductVariants)
                                                     {
                                                         <img id="image-@item.Id-@variant.Id" src="@variant.ImageLists.FirstOrDefault().ImageUrl" width="100" class="product-image @(variant.IsDefault ? "" : "d-none")" />
@@ -73,7 +73,7 @@
                                         </div>
                                         <div class="product-text d-flex flex-column justify-content-between" style="height: 150px;">
                                             <div class="prodcut-name">
-                                                <a href="Products/Index/@item.Id">@item.Title</a>
+                                                <a href="/Products/Index/@item.Id">@item.Title</a>
                                             </div>
                                             @if (item.IsSale)
                                                 {

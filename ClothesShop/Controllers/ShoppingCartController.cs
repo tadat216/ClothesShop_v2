@@ -175,7 +175,8 @@ namespace ClothesShop.Controllers
             db.Orders.Add(order);
             db.SaveChanges();
             var strSanPham = "";
-            var thanhtien = decimal.Zero;
+            var thanhtien = 0;
+            var tongTien = 0;
             foreach (var item in cartDetails)
             {
                 OrderDetail od = new OrderDetail();
@@ -196,13 +197,18 @@ namespace ClothesShop.Controllers
                         + "Số lượng còn lại trong kho là: " +  productVarientSize.Amount 
                         + ". Vui lòng cập nhật thêm sản phẩm", ConfigurationManager.AppSettings["EmailAdmin"]);
                 }
+                var moneySaleItem = item.Quantity * item.VariantSize.ProductVariant.Product.PriceSale;
+                var moneyItem = item.Quantity * item.VariantSize.ProductVariant.Product.Price;
                 strSanPham += "<tr>";
-                strSanPham += "<td>" + item.VariantSize.ProductVariant.Product.Title + "(" + productVarientSize.ProductVariant.Color.Name + productVarientSize.Size.Name + ")</td>";
+                strSanPham += "<td>" + item.VariantSize.ProductVariant.Product.Title + "(" + productVarientSize.ProductVariant.Color.Name + " - " + productVarientSize.Size.Name + ")</td>";
                 strSanPham += "<td>" + item.Quantity + "</td>";
-                strSanPham += "<td>" + ClothesShop.Common.FormatNumber(item.Quantity*item.VariantSize.Amount) + "</td>";
+                strSanPham += "<td>" + item.VariantSize.ProductVariant.Product.Price + "</td>";
+                strSanPham += "<td>" + item.VariantSize.ProductVariant.Product.PriceSale + "</td>";
+                //strSanPham += "<td>" + ClothesShop.Common.FormatNumber(moneySaleItem) + "</td>";
                 strSanPham += "<tr>";
 
-                thanhtien += item.Quantity * item.VariantSize.Amount;
+                thanhtien += moneySaleItem;
+                tongTien += moneyItem;
 
             }
             db.SaveChanges();
@@ -215,6 +221,7 @@ namespace ClothesShop.Controllers
             contentCustomer = contentCustomer.Replace("{{NgayDat}}", order.OrderedDate.ToString());
             contentCustomer = contentCustomer.Replace("{{TenKhachHang}}", order.ReceiverName);
             contentCustomer = contentCustomer.Replace("{{ThanhTien}}", thanhtien.ToString());
+            contentCustomer = contentCustomer.Replace("{{TongTien}}", tongTien.ToString());
             ClothesShop.Common.SendMail("ShopOnline", "Đơn hàng #" + order.Id, contentCustomer.ToString(), user.Email);
 
             string contentAdmin = System.IO.File.ReadAllText(Server.MapPath("~/Content/templates/send1.html"));
@@ -225,6 +232,7 @@ namespace ClothesShop.Controllers
             contentAdmin = contentAdmin.Replace("{{TenKhachHang}}", order.ReceiverName);
             contentAdmin = contentAdmin.Replace("{{NgayDat}}", order.OrderedDate.ToString());
             contentAdmin = contentAdmin.Replace("{{ThanhTien}}", thanhtien.ToString());
+            contentAdmin = contentAdmin.Replace("{{TongTien}}", tongTien.ToString());
             ClothesShop.Common.SendMail("ShopOnline", "Đơn hàng #" + order.Id, contentAdmin.ToString(), ConfigurationManager.AppSettings["EmailAdmin"]);
 
             return Json(new { tb = "Đặt hàng thành công." });

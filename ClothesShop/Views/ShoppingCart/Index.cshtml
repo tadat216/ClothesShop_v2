@@ -170,7 +170,7 @@
                                                                                         <div class="cart-plus-minus">
                                                                                             @*button ko cho biết type thì mặc định là submit*@
 
-                                                                                            <button type="button" class="dec qtybutton" data-id="@p.Id" @(p.Quantity <= 1 ? "disabled" : "") > -</button>
+                                                                                            <button type="button" class="dec qtybutton" data-id="@p.Id" @(p.Quantity <= 1 ? "disabled" : "") >-</button>
                                                                                             <input value="@p.Quantity"
                                                                                                    name="qtybutton"
                                                                                                    class="cart-plus-minus-box "

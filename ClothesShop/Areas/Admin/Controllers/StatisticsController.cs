@@ -1,131 +1,81 @@
-﻿//using ClothesShop.Models;
-//using ClothesShop.Models.EF;
-//using ClothesShop.Models.ViewModel;
-//using PagedList;
-//using System;
-//using System.Collections.Generic;
-//using System.Data.Entity;
-//using System.Linq;
-//using System.Web;
-//using System.Web.Mvc;
+﻿using ClothesShop.Models;
+using ClothesShop.Models.EF;
+using ClothesShop.Models.ViewModel;
+using OfficeOpenXml;
+using PagedList;
+using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.IO;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+using System.Data;
+namespace ClothesShop.Areas.Admin.Controllers
+{
+    public class MonthlyMoneyStatistics
+    {
+        public int Month { get; set; }
+        public int TotalMoney { get; set; }
+    }
+    public class StatisticsController : Controller
+    {
+        private ApplicationDbContext db = new ApplicationDbContext();
+        [HttpGet]               
+      
+        
+        public ActionResult IncomeStatisticsIndex()
+        { 
+            int year = DateTime.Now.Year;
+            ViewBag.years = Enumerable.Range(2000, DateTime.Now.Year - 2000 + 1).OrderByDescending(y => y).ToList();
+            ViewBag.DefaultYear = year;
+            return View();
+        }
+        public ActionResult GetIncomeStatistics(int year)
+        {
+            var months = Enumerable.Range(1, 12).Select(m => new { Month = m }).ToList();
 
-//namespace ClothesShop.Areas.Admin.Controllers
-//{
-//    public class StatisticsController : Controller
-//    {
-//        private ApplicationDbContext db = new ApplicationDbContext();
-//        // GET: Admin/Statistics
-//        public ActionResult Index()
-//        {
-//            return View();
-//        }
-//        public ActionResult ShowSoldQuantity(DateTime? fromDate, DateTime? toDate)
-//        {
-//            var items = db.Products.ToList();
-//            List<ProductTKViewModel> ptk = new List<ProductTKViewModel>();
-//            ViewBag.ValueFromDate = fromDate?.ToString("yyyy-MM-dd");
-//            ViewBag.ValueToDate = toDate?.ToString("yyyy-MM-dd");
-//            foreach (var item in items)
-//            {
-//                int q = GetQuantity(item.Id, fromDate, toDate);
-//                if (q > 0)
-//                {
-//                    ptk.Add(new ProductTKViewModel
-//                    {
-//                        ProductId = item.Id,
-//                        Title = item.Title,
-//                        Alias = item.Alias,
-//                        ProductImage = item.Image,
-//                        SoldQuantity = q
-//                    });
-//                }
-//            }
+            var monthlyMoneys = months.GroupJoin(
+                    db.Orders.Where(o => o.OrderedDate.Year == year).SelectMany(o => o.OrderDetails).Select(d => new { Month = d.Order.OrderedDate.Month, Money = d.Price * d.Quantity }),
+                    m => m.Month,
+                    d => d.Month,
+                    (month, sales) => new { Month = month.Month, TotalMoney = sales.Sum(s => s.Money) }
+                ).OrderBy(m => m.Month).ToList();
 
-//            ptk = ptk.OrderByDescending(p => p.SoldQuantity).ToList();
-//            return View(ptk);
-//        }
-//        public int GetQuantity(int id, DateTime? fromDate, DateTime? toDate)
-//        {
-//            var items = db.OrderDetails.Where(x => x.ProductId == id);
-//            if (fromDate != null) items = items.Where(x => x.Order.CreatedDate >= fromDate);
-//            if (toDate != null) items = items.Where(x => x.Order.CreatedDate <= toDate);
-//            return items.Any() ? items.Sum(x => x.Quantity) : 0;
-//        }
-//        public ActionResult SaleReport(DateTime? fromDate, DateTime? toDate, int? page)
-//        {
+            return Json(new {data = monthlyMoneys }, JsonRequestBehavior.AllowGet);
+        }
 
-//            ViewBag.ValueFromDate = fromDate?.ToString("yyyy-MM-dd");
-//            ViewBag.ValueToDate = toDate?.ToString("yyyy-MM-dd");
+        public ActionResult ExportExcel(string year)
+        {
+            using (ExcelPackage pck = new ExcelPackage())
+            {
+                ExcelWorksheet worksheet = pck.Workbook.Worksheets.Add("Thống kê doanh thu năm " + year);
+                worksheet.Cells["A1"].Value = "Tháng";
+                worksheet.Cells["B1"].Value = "Doanh thu";
+                int rowStart = 2;
+                var months = Enumerable.Range(1, 12).Select(m => new { Month = m }).ToList();
+                int yearValue = int.Parse(year);
+                var monthlyMoneys = months.GroupJoin(
+                        db.Orders.Where(o => o.OrderedDate.Year == yearValue).SelectMany(o => o.OrderDetails).Select(d => new { Month = d.Order.OrderedDate.Month, Money = d.Price * d.Quantity }),
+                        m => m.Month,
+                        d => d.Month,
+                        (month, sales) => new { Month = month.Month, TotalMoney = sales.Sum(s => s.Money) }
+                    ).OrderBy(m => m.Month).ToList();
+                foreach (var item in monthlyMoneys)
+                {
+                    worksheet.Cells[string.Format("A{0}", rowStart)].Value = item.Month;
+                    worksheet.Cells[string.Format("B{0}", rowStart)].Value = item.TotalMoney;
+                    rowStart++;
+                }
+                string fileName = "ThongKeDoanhThuNam" + year + ".xlsx";
+                string path = Path.Combine(Server.MapPath("~/ReportData"),fileName);
 
-//            IEnumerable<Order> items = db.Orders.OrderByDescending(x => x.CreatedDate);
-//            if (fromDate != null)
-//            {
-//                items = items.Where(x => x.CreatedDate >= fromDate);
-//            }
-//            if (toDate != null)
-//            {
-//                items = items.Where(x => x.CreatedDate <= toDate);
-//            }
-//            if (page == null)
-//            {
-//                page = 1;
-//            }
-//            var pageNumber = page ?? 1;
-//            var pageSize = 10;
-//            ViewBag.PageSize = pageSize;
-//            ViewBag.PageNumber = pageNumber;
-//            ViewBag.ToltalQuantity = items.Sum(x => x.Quantity);
-//            ViewBag.TotalAmount = items.Sum(x => x.TotalAmount);
-//            return View(items.ToPagedList(pageNumber, pageSize));
-//        }
-//        public ActionResult Index(DateTime? fromDate, DateTime? toDate)
-//        {
-//            ViewBag.ValueFromDate = fromDate;
-//            ViewBag.ValueToDate = toDate;
-//            return View();
-//        }
+                pck.SaveAs(new FileInfo(path));
+                byte[] fileBytes = System.IO.File.ReadAllBytes(path);
+                return File(fileBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
+            }
+            
+        }
 
-//        [HttpGet]
-//        public ActionResult GetStatistical()
-//        {
-//            DateTime? fromDate = ViewBag.ValueFromDate;
-//            DateTime? toDate = ViewBag.ValueToDate;
-//            var query = from o in db.Orders
-//                        join od in db.OrderDetails
-//                        on o.Id equals od.OrderId
-//                        join p in db.Products
-//                        on od.ProductId equals p.Id
-//                        select new
-//                        {
-//                            CreatedDate = o.CreatedDate,
-//                            Quantity = od.Quantity,
-//                            Price = od.Price,
-//                            OriginalPrice = p.OriginalPrice,
-//                            Paid = o.Paid
-//                        };
-//            query = query.Where(x => x.Paid == true);
-//            if (fromDate != null)
-//            {
-//                query = query.Where(x => x.CreatedDate >= fromDate);
-//            }
-//            if (toDate != null)
-//            {
-//                query = query.Where(x => x.CreatedDate <= toDate);
-//            }
-
-//            var result = query.GroupBy(x => DbFunctions.TruncateTime(x.CreatedDate)).Select(x => new
-//            {
-//                Date = x.Key.Value,
-//                TotalBuy = x.Sum(y => y.Quantity * y.OriginalPrice),
-//                TotalSell = x.Sum(y => y.Quantity * y.Price)
-//            }).Select(x => new
-//            {
-//                Date = x.Date,
-//                DoanhThu = x.TotalSell,
-//                LoiNhuan = x.TotalSell - x.TotalBuy
-//            });
-
-//            return Json(new { Data = result }, JsonRequestBehavior.AllowGet);
-//        }
-//    }
-//}
+    }
+}

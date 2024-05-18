@@ -137,11 +137,10 @@
                         <th>Màu sắc</th>
                         <th>Giá</th>
                         <th>Giá Sale</th>
-                        <th>IsHome</th>
-                        <th>IsSale</th>
-                        <th>IsHot</th>
-                        <th>IsActive</th>
-                        <th>IsFeature</th>
+                        <th>Hiển thị</th>
+                        <th>Trang chủ</th>
+                        <th>Sale</th>
+                        <th>Hot</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -149,6 +148,10 @@
 
                     @foreach (var item in Model)
                     {
+                        var strCheckActive = item.IsActive ? "<i class='fa fa-check text-success'></i>" : "<i class='fa fa-times text-danger'></i>";
+                        var strCheckHome = item.IsHome ? "<i class='fa fa-check text-success'></i>" : "<i class='fa fa-times text-danger'></i>";
+                        var strCheckSale = item.IsSale ? "<i class='fa fa-check text-success'></i>" : "<i class='fa fa-times text-danger'></i>";
+                        var strCheckHot = item.IsHot ? "<i class='fa fa-check text-success'></i>" : "<i class='fa fa-times text-danger'></i>";
                         <tr>
                             <td>@i</td>
                             <td>@Html.DisplayFor(modelItem => item.Title)</td>
@@ -167,11 +170,18 @@
                             </td>
                             <td>@Html.DisplayFor(modelItem => item.Price)</td>
                             <td>@Html.DisplayFor(modelItem => item.PriceSale)</td>
-                            <td>@Html.DisplayFor(modelItem => item.IsHome)</td>
-                            <td>@Html.DisplayFor(modelItem => item.IsSale)</td>
-                            <td>@Html.DisplayFor(modelItem => item.IsHot)</td>
-                            <td>@Html.DisplayFor(modelItem => item.IsActive)</td>
-                            <td>@Html.DisplayFor(modelItem => item.IsFeature)</td>
+                            <td>
+                                <a href="#" data-id="@item.Id" class="btnActive">@Html.Raw(strCheckActive)</a>
+                            </td>
+                            <td>
+                                <a href="#" data-id="@item.Id" class="btnHome">@Html.Raw(strCheckHome)</a>
+                            </td>
+                            <td>
+                                <a href="#" data-id="@item.Id" class="btnSale">@Html.Raw(strCheckSale)</a>
+                            </td>
+                            <td>
+                                <a href="#" data-id="@item.Id" class="btnHot">@Html.Raw(strCheckHot)</a>
+                            </td>
                         </tr>
                         ++i;
                     }
@@ -184,7 +194,10 @@
                                 var colorIdsParam = colorIds != null ? string.Join(",", colorIds) : "";
                             }
                             @Html.PagedListPager(Model, page => Url.Action("Index",
-                                new { page, categoryId = ViewBag.SelectedCategoryId,
+                                new
+                                {
+                                    page,
+                                    categoryId = ViewBag.SelectedCategoryId,
                                     colorIds = colorIdsParam,
                                     title = ViewBag.PTitle,
                                     id = ViewBag.Id
@@ -204,3 +217,92 @@
 
 </section>
 <!-- /.content -->
+@section scripts{
+    <script>
+        $(document).ready(function () {
+
+            $('body').on('click', '.btnActive', function (e) {
+                e.preventDefault();
+                var btn = $(this);
+                var id = btn.data("id");
+                console.log(id)
+                $.ajax({
+                    url: '/Admin/Products/IsActive',
+                    type: 'POST',
+                    data: { id: id },
+                    success: function (rs) {
+                        if (rs.success) {
+                            if (rs.isAcive) {
+                                btn.html("<i class='fa fa-check text-success'></i>");
+                            } else {
+                                btn.html("<i class='fas fa-times text-danger'></i>");
+                            }
+                        }
+                    }
+                });
+            });
+
+            $('body').on('click', '.btnHome', function (e) {
+                e.preventDefault();
+                var btn = $(this);
+                var id = btn.data("id");
+                $.ajax({
+                    url: '/Admin/Products/IsHome',
+                    type: 'POST',
+                    data: { id: id },
+                    success: function (rs) {
+                        if (rs.success) {
+                            if (rs.isHome) {
+                                btn.html("<i class='fa fa-check text-success'></i>");
+                            } else {
+                                btn.html("<i class='fas fa-times text-danger'></i>");
+                            }
+                        }
+                    }
+                });
+            });
+
+            $('body').on('click', '.btnSale', function (e) {
+                e.preventDefault();
+                var _btnSale = $(this);
+                var id = _btnSale.data("id");
+                $.ajax({
+                    url: '/Admin/Products/IsSale',
+                    type: 'POST',
+                    data: { id: id },
+                    success: function (rs) {
+                        if (rs.success) {
+                            if (rs.isSale) {
+                                _btnSale.html("<i class='fa fa-check text-success'></i>");
+                            } else {
+                                _btnSale.html("<i class='fas fa-times text-danger'></i>");
+                            }
+                        }
+                    }
+                });
+            });
+
+            $('body').on('click', '.btnHot', function (e) {
+                e.preventDefault();
+                var btn = $(this);
+                var id = btn.data("id");
+                $.ajax({
+                    url: '/Admin/Products/IsHot',
+                    type: 'POST',
+                    data: { id: id },
+                    success: function (rs) {
+                        if (rs.success) {
+                            if (rs.isHot) {
+                                btn.html("<i class='fa fa-check text-success'></i>");
+                            } else {
+                                btn.html("<i class='fas fa-times text-danger'></i>");
+                            }
+                        }
+                    }
+                });
+            });
+        });
+
+
+    </script>
+}

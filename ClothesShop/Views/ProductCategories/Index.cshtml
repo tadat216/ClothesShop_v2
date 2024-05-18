@@ -133,13 +133,13 @@
                                     if (cate.Level == 0)
                                     {
                                         <li class="closed">
-                                            <a href="#">@cate.Title</a>
+                                            <a href="/ProductCategories/Index/@cate.Id">@cate.Title</a>
                                             <ul>
                                                 @foreach (var cateChild in Model.productCategory)
                                                 {
                                                     if (cateChild.IdParent == cate.Id)
                                                     {
-                                                        <li><a href="#">@cateChild.Title</a></li>
+                                                        <li><a href="/ProductCategories/Index/@cate.Id">@cateChild.Title</a></li>
                                                     }
                                                 }
                                             </ul>
@@ -192,7 +192,7 @@
                         <ul class="tag-filter mt-30">
                             @foreach (var size in Model.size)
                             {
-                                <li><a href="#">@size.Name</a></li>
+                                <li><a class="selectedSizes" href="#">@size.Name</a></li>
                             }
                         </ul>
                     </aside>

@@ -14,11 +14,14 @@ namespace ClothesShop.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
         // GET: ProductCategories
-        public ActionResult Index()
+        public ActionResult Index(string categoryId, string colorIds, string sizeIds)
         {
             CategoryPageViewModel item = new CategoryPageViewModel();
             item.size = db.Sizes.ToList();
-            item.productCategory = db.ProductCategories.ToList();
+            if (String.IsNullOrEmpty(categoryId))
+            {
+                item.productCategory = db.ProductCategories.ToList();
+            }
             item.color = db.Colors.ToList();
             return View(item);
         }

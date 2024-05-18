@@ -1,6 +1,6 @@
-﻿@model IEnumerable<ClothesShop.Areas.Admin.Controllers.MonthlyMoneyStatistics>
+﻿
 @{
-    ViewBag.Title = "Doanh thu";
+    ViewBag.Title = "Thống kê doanh thu trong khoảng ngày";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
@@ -22,22 +22,15 @@
 </section>
 <section class="content">
     <div class="card-header">
-        <h3 class="card-title">Thống kê doanh thu</h3>
+        <h3 class="card-title">Thống kê doanh thu theo ngày</h3>
     </div>
     <div class="card-body">
-        <div class="col-2">
-            <label class="focus-label">Năm</label>
-            <div>
-                <select id="yearSelect" name="year" class="col-12" style="height: 37px; border: 1px solid #ced4da; border-radius: .25rem; box-shadow: inset 0 0 0 transparent;">
-                    <option value="-1">--Năm--</option>
-                    @foreach (var year in ViewBag.years)
-                    {
-                        <option value="@year">@year</option>
-
-                    }
-
-                </select>
-            </div>
+        <div class="row d-flex">
+            <label class="">Từ</label>
+            <input type="date" id="from" class="ml-3" />
+            <label class="ml-5">Đến</label>
+            <input type="date" id="to" class="ml-3" />
+            <button type="button" id="statistics" class="btn btn-default col-2 ml-5">Thống kê</button>
         </div>
         <div class="row">
             <div class="col-md-8">
@@ -54,32 +47,46 @@
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0/dist/chartjs-plugin-datalabels.min.js"></script>
     <script>
         $(document).ready(function () {
-            $('#yearSelect').change(function () {
-                var selectedYear = parseInt($(this).val());
+            var today = new Date();
+            var firstDayOfThisMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+            $('#statistics').click(function () {
+                console.log("Chào");
+                var f = $('#from').val();
+                var t = $('#to').val();
+                var from = (f == null || f === "") ? firstDayOfThisMonth : new Date(f);
+                var to = (t == null || t === "") ? today : new Date(t);
+                console.log(f);
+                console.log(t);
+                console.log(from);
+                console.log(to);
                 var arrDoanhThu = [];
-                var arrMonth = [];
-                var strHtml = '<a href="/Statistics/ExportExcel?year=' + selectedYear.toString() + '">Xuất file</a><table class="table table-bordered" id="myTable"><thead><tr><th>Tháng</th><th>Doanh Thu</th></tr></thead><tbody>';
-                console.log(strHtml);
-                if (selectedYear > -1) {
-                    $.ajax({
-                        url: '/Statistics/GetIncomeStatistics',
-                        type: 'POST',
-                        data: { year: selectedYear },
-                        success: function (rs) {
+                var arrDate = [];
+                var strHtml = '<a href="FromToExportExcel?from='+from.toISOString().split("T")[0]+'&to='+to.toISOString().split("T")[0] + '">Xuất file</a><table class="table table-bordered" id="myTable"><thead><tr><th>Ngày</th><th>Doanh Thu</th></tr></thead><tbody>';
+                $.ajax({
+                    url: '/Statistics/GetFromToIncomeStatistics',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        from: from ? from.toISOString().split('T')[0] : null,
+                        to: to ? to.toISOString().split('T')[0] : null
+                    }),
+                    success: function (rs) {
+                        if (rs.error) alert(rs.error);
+                        else {
                             $.each(rs.data, function (i, item) {
-                                arrMonth.push(item.Month.toString());
+                                arrDate.push(item.Date.toString());
                                 arrDoanhThu.push(item.TotalMoney);
                                 strHtml += "<tr>";
                                 /*strHtml += "<td>" + (i + 1) + "</td>";*/
-                                strHtml += "<td>" + item.Month.toString() + "</td>";
+                                strHtml += "<td>" + item.Date.toString() + "</td>";
                                 strHtml += "<td>" + item.TotalMoney + "</td>";
                                 strHtml += "</tr>";
                             });
                             strHtml += '</tbody></table>';
                             var config = {
-                                type: 'bar',
+                                type: 'line',
                                 data: {
-                                    labels: arrMonth,
+                                    labels: arrDate,
                                     datasets: [{
                                         label: 'Doanh thu',
                                         data: arrDoanhThu,
@@ -95,14 +102,14 @@
                                         },
                                         title: {
                                             display: true,
-                                            text: 'Doanh thu năm ' + selectedYear,
+                                            text: 'Doanh thu từ ' + from.getDate().toString() + '/' + (from.getMonth() + 1).toString() + '/' + from.getFullYear().toString() + ' đến ' + to.getDate().toString() + '/' + (to.getMonth() + 1).toString() + '/' + to.getFullYear().toString(),
                                         }
                                     },
                                     scales: {
                                         x: {
                                             title: {
                                                 display: true,
-                                                text: 'Tháng'
+                                                text: 'Ngày'
                                             }
                                         },
                                         y: {
@@ -114,19 +121,21 @@
                                     }
                                 },
                             };
-                            if (window.myChart) {//myChart là biến toàn cục
+                            if (window.myChart) { //myChart là biến toàn cục
                                 window.myChart.destroy();
                             }
                             window.myChart = new Chart(document.getElementById('barChart'), config);
                             $('#load_data').html(strHtml);
-                        },
-                        error: function (e) {
-                            console.error(e);
                         }
-                    })
-                }
+                       
+                    },
+                    error: function (e) {
+                        console.error(e);
+                    }
+                })
             });
         });
     </script>
 }
+
 

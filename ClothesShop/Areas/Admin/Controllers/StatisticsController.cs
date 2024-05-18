@@ -45,37 +45,37 @@ namespace ClothesShop.Areas.Admin.Controllers
             return Json(new {data = monthlyMoneys }, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult ExportExcel(string year)
-        {
-            using (ExcelPackage pck = new ExcelPackage())
-            {
-                ExcelWorksheet worksheet = pck.Workbook.Worksheets.Add("Thống kê doanh thu năm " + year);
-                worksheet.Cells["A1"].Value = "Tháng";
-                worksheet.Cells["B1"].Value = "Doanh thu";
-                int rowStart = 2;
-                var months = Enumerable.Range(1, 12).Select(m => new { Month = m }).ToList();
-                int yearValue = int.Parse(year);
-                var monthlyMoneys = months.GroupJoin(
-                        db.Orders.Where(o => o.OrderedDate.Year == yearValue).SelectMany(o => o.OrderDetails).Select(d => new { Month = d.Order.OrderedDate.Month, Money = d.Price * d.Quantity }),
-                        m => m.Month,
-                        d => d.Month,
-                        (month, sales) => new { Month = month.Month, TotalMoney = sales.Sum(s => s.Money) }
-                    ).OrderBy(m => m.Month).ToList();
-                foreach (var item in monthlyMoneys)
-                {
-                    worksheet.Cells[string.Format("A{0}", rowStart)].Value = item.Month;
-                    worksheet.Cells[string.Format("B{0}", rowStart)].Value = item.TotalMoney;
-                    rowStart++;
-                }
-                string fileName = "ThongKeDoanhThuNam" + year + ".xlsx";
-                string path = Path.Combine(Server.MapPath("~/ReportData"),fileName);
+        //public ActionResult ExportExcel(string year)
+        //{
+        //    using (ExcelPackage pck = new ExcelPackage())
+        //    {
+        //        ExcelWorksheet worksheet = pck.Workbook.Worksheets.Add("Thống kê doanh thu năm " + year);
+        //        worksheet.Cells["A1"].Value = "Tháng";
+        //        worksheet.Cells["B1"].Value = "Doanh thu";
+        //        int rowStart = 2;
+        //        var months = Enumerable.Range(1, 12).Select(m => new { Month = m }).ToList();
+        //        int yearValue = int.Parse(year);
+        //        var monthlyMoneys = months.GroupJoin(
+        //                db.Orders.Where(o => o.OrderedDate.Year == yearValue).SelectMany(o => o.OrderDetails).Select(d => new { Month = d.Order.OrderedDate.Month, Money = d.Price * d.Quantity }),
+        //                m => m.Month,
+        //                d => d.Month,
+        //                (month, sales) => new { Month = month.Month, TotalMoney = sales.Sum(s => s.Money) }
+        //            ).OrderBy(m => m.Month).ToList();
+        //        foreach (var item in monthlyMoneys)
+        //        {
+        //            worksheet.Cells[string.Format("A{0}", rowStart)].Value = item.Month;
+        //            worksheet.Cells[string.Format("B{0}", rowStart)].Value = item.TotalMoney;
+        //            rowStart++;
+        //        }
+        //        string fileName = "ThongKeDoanhThuNam" + year + ".xlsx";
+        //        string path = Path.Combine(Server.MapPath("~/ReportData"),fileName);
 
-                pck.SaveAs(new FileInfo(path));
-                byte[] fileBytes = System.IO.File.ReadAllBytes(path);
-                return File(fileBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
-            }
+        //        pck.SaveAs(new FileInfo(path));
+        //        byte[] fileBytes = System.IO.File.ReadAllBytes(path);
+        //        return File(fileBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
+        //    }
             
-        }
+        //}
 
     }
 }

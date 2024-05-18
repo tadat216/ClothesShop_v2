@@ -77,7 +77,9 @@ namespace ClothesShop.Areas.Admin.Controllers
         {
             var model = new ProductCreateViewModel
             {
-                Categories = db.ProductCategories.Select(c => new SelectListItem
+                Categories = db.ProductCategories
+                    .Where(c => c.Level == 1)
+                    .Select(c => new SelectListItem
                 {
                     Value = c.Id.ToString(),
                     Text = c.Title

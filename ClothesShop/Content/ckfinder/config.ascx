@@ -1,4 +1,4 @@
-<%@ Control Language="C#" EnableViewState="false" AutoEventWireup="false" Inherits="CKFinder.Settings.ConfigFile" %>
+	<%@ Control Language="C#" EnableViewState="false" AutoEventWireup="false" Inherits="CKFinder.Settings.ConfigFile" %>
 <%@ Import Namespace="CKFinder.Settings" %>
 <script runat="server">
 
@@ -171,8 +171,8 @@
 		type.DeniedExtensions = new string[] { };
 
 		type = ResourceType.Add( "Images" );
-		type.Url = BaseUrl + "Content/ShopPage/Content/ShopPage//Content/ShopPage/images/";
-		type.Dir = BaseDir == "" ? "" : BaseDir + "Content/ShopPage/Content/ShopPage//Content/ShopPage/images/";
+		type.Url = BaseUrl + "images/";
+		type.Dir = BaseDir == "" ? "" : BaseDir + "images/";
 		type.MaxSize = 0;
 		type.AllowedExtensions = new string[] { "bmp", "gif", "jpeg", "jpg", "png" };
 		type.DeniedExtensions = new string[] { };

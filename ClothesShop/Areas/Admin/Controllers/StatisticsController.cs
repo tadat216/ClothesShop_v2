@@ -412,10 +412,8 @@ namespace ClothesShop.Areas.Admin.Controllers
                 worksheet.Column(4).Width = 10;
                 worksheet.Column(5).Width = 10;
                 worksheet.Column(6).Width = 10;
-
                 string fileName = "ThongKeSanPhamTonKhoNgay" + date.ToString("dd - MM - yyyy") + ".xlsx";
                 string path = Path.Combine(Server.MapPath("~/ReportData"), fileName);
-
                 pck.SaveAs(new FileInfo(path));
                 byte[] fileBytes = System.IO.File.ReadAllBytes(path);
                 return File(fileBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);

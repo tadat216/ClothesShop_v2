@@ -1,0 +1,118 @@
+﻿
+@model PagedList.PagedList<ClothesShop.Models.EF.VariantSize>
+@using PagedList;
+@using PagedList.Mvc;
+@{
+    ViewBag.Title = "Thống kê sản phẩm tồn kho";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+@section naviheader{
+    <ul class="navbar-nav">
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="~/Admin/Home" class="nav-link">Trang chủ</a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="~/Admin/Statistics" class="nav-link">@ViewBag.Title</a>
+        </li>
+    </ul>
+}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>@ViewBag.Title</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active">@ViewBag.Title</li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+@Html.Partial("_PartialMessage")
+
+<!-- Main content -->
+<section class="content">
+
+    <!-- Default box -->
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Thống kê hàng tồn kho</h3>
+
+        </div>
+        <div class="card-body">
+            @using (Html.BeginForm("InstockProductStatistics", "Statistics", FormMethod.Get, new { enctype = "multipart/form-data" }))
+            {
+                
+                   <div class="row ">
+                       <div class="col-3">
+                           <label class="focus-label">Số dòng mỗi trang</label>
+                           @Html.TextBox("size", "", new { @class = "form-control", @placeholder = "" })
+                       </div>
+                       <div class="col-3">
+                           <div style="height:32px;"></div>
+                           <button type="submit" class="btn btn-default col-5 btn-sm" style="height:37px;">
+                               <i class="fa fa-search"></i>
+                           </button>
+                       </div>
+                       <div class="col-2 offset-4 p-4 "><a href="InStockProductExportExcel">Xuất file</a></div>
+                   </div>
+                
+
+            }
+
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Mã</th>
+                        <th>Tên sản phẩm </th>
+                        <th>Màu sắc</th>
+                        <th>Kích cỡ</th>
+                        <th>Số lượng</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        var i = 1;
+                        foreach (var item in Model)
+                        {
+                            var stt = (ViewBag.pageIndex - 1) * ViewBag.pageSize + i;
+                            <tr id="trow_@item.Id">
+                                <td>@stt</td>
+                                <td>@item.Id</td>
+                                <td>@item.ProductVariant.Product.Title</td>
+                                <td>@item.Size.Name</td>
+                                <td>@item.ProductVariant.Color.Name</td>
+                                <td>@item.Amount</td>
+                            </tr>
+                            ++i;
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="5">Không có bản ghi nào!!!</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            @Html.PagedListPager(Model, page => Url.Action("InstockProductStatistics", new { page }))
+        </div>
+        <!-- /.card-body -->
+        <div class="card-footer">
+
+        </div>
+        <!-- /.card-footer-->
+    </div>
+    <!-- /.card -->
+
+</section>
+<!-- /.content -->

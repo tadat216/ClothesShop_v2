@@ -56,20 +56,20 @@ namespace ClothesShop
             );
             routes.MapRoute(
                 name: "ProductCategory",
-                url: "danh-muc-san-pham/{alias}-{id}",
-                defaults: new { controller = "Product", action = "ProductCategory", id = UrlParameter.Optional },
+                url: "danh-muc-san-pham/{cateAlias}-{cateId}",
+                defaults: new { controller = "ProductCategories", action = "Index", id = UrlParameter.Optional },
                 namespaces: new[] { "ClothesShop.Controllers" }
             );
             routes.MapRoute(
-                name: "ProductDetail",
-                url: "chi-tiet/{alias}-p{id}",
-                defaults: new { controller = "Product", action = "Detail", alias = UrlParameter.Optional },
+                name: "Product",
+                url: "san-pham/{alias}-p{Id}",
+                defaults: new { controller = "Products", action = "Index", alias = UrlParameter.Optional },
                 namespaces: new[] { "ClothesShop.Controllers" }
             );
             routes.MapRoute(
                 name: "Products",
-                url: "san-pham",
-                defaults: new { controller = "Product", action = "Index", alias = UrlParameter.Optional },
+                url: "danh-muc-san-pham",
+                defaults: new { controller = "ProductCategories", action = "Index", alias = UrlParameter.Optional },
                 namespaces: new[] { "ClothesShop.Controllers" }
             );
             routes.MapRoute(

@@ -392,7 +392,7 @@ CKFinder.addPlugin( 'imageresize', {
 												'{' +
 													'float: right;' +
 													'background-position: 0 -32px;' +
-													'background-image: url("' + CKFinder.getPluginPath( 'imageresize' ) + 'Content/ShopPage/Content/ShopPage//Content/ShopPage/images/mini.gif");' +
+													'background-image: url("' + CKFinder.getPluginPath( 'imageresize' ) + 'Content/ShopPage/Content/ShopPage/images/mini.gif");' +
 													'width: 16px;' +
 													'height: 16px;' +
 													'background-repeat: no-repeat;' +
@@ -405,7 +405,7 @@ CKFinder.addPlugin( 'imageresize', {
 												'{' +
 													'float: left;' +
 													'background-position: 0 0;' +
-													'background-image: url("' + CKFinder.getPluginPath( 'imageresize' ) + 'Content/ShopPage/Content/ShopPage//Content/ShopPage/images/mini.gif");' +
+													'background-image: url("' + CKFinder.getPluginPath( 'imageresize' ) + 'Content/ShopPage/Content/ShopPage/images/mini.gif");' +
 													'width: 16px;' +
 													'height: 16px;' +
 													'background-repeat: no-repeat;' +
@@ -416,7 +416,7 @@ CKFinder.addPlugin( 'imageresize', {
 												'a.ckf_btn_unlocked' +
 												'{' +
 													'background-position: 0 -16px;' +
-													'background-image: url("' + CKFinder.getPluginPath( 'imageresize' ) + '/Content/ShopPage/Content/ShopPage//Content/ShopPage/images/mini.gif");' +
+													'background-image: url("' + CKFinder.getPluginPath( 'imageresize' ) + '/Content/ShopPage/Content/ShopPage/images/mini.gif");' +
 												'}' +
 
 												'.ckf_btn_over' +

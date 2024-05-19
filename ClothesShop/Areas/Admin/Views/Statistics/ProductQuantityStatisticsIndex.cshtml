@@ -1,0 +1,148 @@
+﻿
+@{
+    ViewBag.Title = "Thống kê sản phẩm bán được";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Thống kê</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active"><a href="#">Thống kê</a></li>
+
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="content">
+    <div class="card-header">
+        <h3 class="card-title">Thống kê sản phẩm bán được</h3>
+    </div>
+    <div class="card-body">
+        <div class="row d-flex">
+            <label class="">Từ</label>
+            <input type="date" id="from" class="ml-3" />
+            <label class="ml-5">Đến</label>
+            <input type="date" id="to" class="ml-3" />
+            @*<label class="focus-label ml-5">Số lượng</label>*@
+            @*<div class="ml-3">
+                <select id="quantity" name="quantity" class="col-12" style="height: 37px; border: 1px solid #ced4da; border-radius: .25rem; box-shadow: inset 0 0 0 transparent;">
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                </select>
+            </div>*@
+            <button type="button" id="statistics" class="btn btn-default col-2 ml-5">Thống kê</button>
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+                <div class="chart " style="width: 500px; height: 500px;">
+                    <canvas id="barChart" ></canvas>
+                </div>
+            </div>
+            <div class="col-md-4" id="load_data"></div>
+        </div>
+    </div>
+</section>
+@section scripts{
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0/dist/chartjs-plugin-datalabels.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var today = new Date();
+            var firstDayOfThisMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+            $('#statistics').click(function () {
+                console.log("Chào");
+                var f = $('#from').val();
+                var t = $('#to').val();
+                var from = (f == null || f === "") ? firstDayOfThisMonth : new Date(f);
+                var to = (t == null || t === "") ? today : new Date(t);
+                //var quantity = parseInt($('#quantity').val());
+                var arrPercentage = [];
+                var arrProduct = [];
+                var strHtml = '<a href="ProductQuantityExportExcel?from=' + from.toISOString().split("T")[0] + '&to=' + to.toISOString().split("T")[0] + '">Xuất file</a><table class="table table - bordered" id="myTable"><thead><tr><th>STT</th><th>Mã sản phẩm</th><th>Tên sản phẩm</th><th>Số lượng</th><th>Phần trăm</th></tr></thead><tbody>';
+                console.log(strHtml);
+                $.ajax({
+                    url: '/Statistics/GetProductQuantityStatistics',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        from: from ? from.toISOString().split('T')[0] : null,
+                        to: to ? to.toISOString().split('T')[0] : null,
+                        
+                    }),
+                    success: function (rs) {
+                        if (rs.error) alert(rs.error);
+                        else {
+                            var count = rs.productQuantities.length;
+                            console.log(rs.productQuantities);
+                            for (var i = 0; i < count; i++){
+                                arrProduct.push(rs.productQuantities[i].ProductId);
+                                arrPercentage.push(rs.percentageList[i]);
+                                strHtml += "<tr>";
+                                strHtml += "<td>" + (i + 1) + "</td>";
+                                strHtml += "<td>" + rs.productQuantities[i].ProductId + "</td>";
+                                strHtml += "<td>" + rs.productQuantities[i].ProductName + "</td>";
+                                strHtml += "<td>" + rs.productQuantities[i].TotalQuantity + "</td>";
+                                strHtml += "<td>" + rs.percentageList[i] + "</td>";
+                            }
+                            strHtml += '</tbody></table>';
+                            var randomColors = generateRandomColors(count);
+                            var config = {
+                                type: 'pie',
+                                data: {
+                                    labels: arrProduct,//arrProduct.slice(0, quantity)
+                                    datasets: [{
+                                        label: 'Tỉ lệ sản phẩm bán được',
+                                        data: arrPercentage,
+                                        borderColor: 'rgb(255, 255, 255)',
+                                        backgroundColor: randomColors,
+                                    }]
+                                },
+                                options: {
+                                    responsive: true,
+                                    plugins: {
+                                        legend: {
+                                            position: 'top',
+                                        },
+                                        title: {
+                                            display: true,
+                                            text: 'Tỉ lệ sản phẩm bán được từ ' + from.getDate().toString() + '/' + (from.getMonth() + 1).toString() + '/' + from.getFullYear().toString() + ' đến ' + to.getDate().toString() + '/' + (to.getMonth() + 1).toString() + '/' + to.getFullYear().toString(),
+                                        }
+                                    },
+                                },
+                            };
+                            if (window.myChart) { //myChart là biến toàn cục
+                                window.myChart.destroy();
+                            }
+                            window.myChart = new Chart(document.getElementById('barChart'), config);
+                            $('#load_data').html(strHtml);
+                        }
+
+                    },
+                    error: function (e) {
+                        console.error(e);
+                    }
+                })
+            });
+            function generateRandomColors(numColors) {
+                var colors = [];
+                for (var i = 0; i < numColors; i++) {
+                    var r = Math.floor(Math.random() * 256); // Tạo thành phần màu đỏ
+                    var g = Math.floor(Math.random() * 256); // Tạo thành phần màu xanh lá
+                    var b = Math.floor(Math.random() * 256); // Tạo thành phần màu xanh dương
+                    colors.push(`rgba(${r}, ${g}, ${b}, 0.8)`); // Thêm màu vào mảng với độ trong suốt 0.5
+                }
+                return colors;
+            }
+        });
+    </script>
+}
+

@@ -177,6 +177,7 @@ namespace ClothesShop.Controllers
             var strSanPham = "";
             var thanhtien = 0;
             var tongTien = 0;
+            int i = 1;
             foreach (var item in cartDetails)
             {
                 OrderDetail od = new OrderDetail();
@@ -200,16 +201,18 @@ namespace ClothesShop.Controllers
                 var moneySaleItem = item.Quantity * item.VariantSize.ProductVariant.Product.PriceSale;
                 var moneyItem = item.Quantity * item.VariantSize.ProductVariant.Product.Price;
                 strSanPham += "<tr>";
+                strSanPham += "<tr>" + i + "</td>";
                 strSanPham += "<td>" + item.VariantSize.ProductVariant.Product.Title + "(" + productVarientSize.ProductVariant.Color.Name + " - " + productVarientSize.Size.Name + ")</td>";
                 strSanPham += "<td>" + item.Quantity + "</td>";
                 strSanPham += "<td>" + item.VariantSize.ProductVariant.Product.Price + "</td>";
                 strSanPham += "<td>" + item.VariantSize.ProductVariant.Product.PriceSale + "</td>";
+                strSanPham += "<td>" + item.VariantSize.ProductVariant.Product.PriceSale * item.Quantity + "</td>";
                 //strSanPham += "<td>" + ClothesShop.Common.FormatNumber(moneySaleItem) + "</td>";
                 strSanPham += "<tr>";
 
                 thanhtien += moneySaleItem;
-                tongTien += moneyItem;
-
+                //tongTien += moneyItem;
+                i++;
             }
             db.SaveChanges();
 
@@ -221,7 +224,12 @@ namespace ClothesShop.Controllers
             contentCustomer = contentCustomer.Replace("{{NgayDat}}", order.OrderedDate.ToString());
             contentCustomer = contentCustomer.Replace("{{TenKhachHang}}", order.ReceiverName);
             contentCustomer = contentCustomer.Replace("{{ThanhTien}}", thanhtien.ToString());
-            contentCustomer = contentCustomer.Replace("{{TongTien}}", tongTien.ToString());
+            //contentCustomer = contentCustomer.Replace("{{TongTien}}", tongTien.ToString());
+            contentCustomer = contentCustomer.Replace("{{TienBangChu}}", NumberToText(thanhtien));
+            contentCustomer = contentCustomer.Replace("{{Ngay}}", order.OrderedDate.Day.ToString());
+            contentCustomer = contentCustomer.Replace("{{Thang}}", order.OrderedDate.Month.ToString());
+            contentCustomer = contentCustomer.Replace("{{Nam}}", order.OrderedDate.Year.ToString());
+
             ClothesShop.Common.SendMail("ShopOnline", "Đơn hàng #" + order.Id, contentCustomer.ToString(), user.Email);
 
             string contentAdmin = System.IO.File.ReadAllText(Server.MapPath("~/Content/templates/send1.html"));
@@ -232,7 +240,11 @@ namespace ClothesShop.Controllers
             contentAdmin = contentAdmin.Replace("{{TenKhachHang}}", order.ReceiverName);
             contentAdmin = contentAdmin.Replace("{{NgayDat}}", order.OrderedDate.ToString());
             contentAdmin = contentAdmin.Replace("{{ThanhTien}}", thanhtien.ToString());
-            contentAdmin = contentAdmin.Replace("{{TongTien}}", tongTien.ToString());
+            contentAdmin = contentAdmin.Replace("{{TienBangChu}}", NumberToText(thanhtien));
+            contentAdmin = contentAdmin.Replace("{{Ngay}}", order.OrderedDate.Day.ToString());
+            contentAdmin = contentAdmin.Replace("{{Thang}}", order.OrderedDate.Month.ToString());
+            contentAdmin = contentAdmin.Replace("{{Nam}}", order.OrderedDate.Year.ToString());
+            //contentAdmin = contentAdmin.Replace("{{TongTien}}", tongTien.ToString());
             ClothesShop.Common.SendMail("ShopOnline", "Đơn hàng #" + order.Id, contentAdmin.ToString(), ConfigurationManager.AppSettings["EmailAdmin"]);
 
             return Json(new { tb = "Đặt hàng thành công." });
@@ -387,7 +399,47 @@ namespace ClothesShop.Controllers
             }
             return Json(code);
         }
+        public static string NumberToText(long number)
+        {
+            if (number == 0) return "không";
+            if (number < 0) return "âm " + NumberToText(Math.Abs(number));
 
+            string[] unitsMap = new string[] { "không", "một", "hai", "ba", "bốn", "năm", "sáu", "bảy", "tám", "chín" };
+            string[] tensMap = new string[] { "", "mười", "hai mươi", "ba mươi", "bốn mươi", "năm mươi", "sáu mươi", "bảy mươi", "tám mươi", "chín mươi" };
+
+            string words = "";
+            // Hàng tỷ
+            if ((number / 1000000000) > 0)
+            {
+                words += NumberToText(number / 1000000000) + " tỷ ";
+                number %= 1000000000;
+            }
+            // Hàng triệu
+            if ((number / 1000000) > 0)
+            {
+                words += NumberToText(number / 1000000) + " triệu ";
+                number %= 1000000;
+            }
+            // Hàng nghìn
+            if ((number / 1000) > 0)
+            {
+                words += NumberToText(number / 1000) + " nghìn ";
+                number %= 1000;
+            }
+            // Hàng trăm
+            if ((number / 100) > 0)
+            {
+                words += NumberToText(number / 100) + " trăm ";
+                number %= 100;
+            }
+            // Hàng chục
+            if (number > 0)
+            {
+                if (number < 20) words += tensMap[number / 10] + (number % 10 > 0 ? " " + unitsMap[number % 10] : "");
+                else words += tensMap[number / 10] + (number % 10 > 0 ? " " + unitsMap[number % 10] : "");
+            }
+            return words.Trim();
+        }
 
         //[HttpPost]
         //public ActionResult DeleteAll(int id)

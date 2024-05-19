@@ -33,7 +33,7 @@
             @if (this.User.IsInRole("Admin"))
             {
                 <li class="nav-item">
-                    <a href="~/Admin/Category" class="nav-link">
+                    <a href="~/Admin/Categories" class="nav-link">
                         <i class="nav-icon fas fa-th"></i>
                         <p>
                             Danh mục
@@ -50,12 +50,21 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a href="~/Admin/Order" class="nav-link">
+                <a href="~/Admin/Orders" class="nav-link">
                     <i class="nav-icon fas fa-th"></i>
                     <p>
                         Quản lý đơn hàng
                     </p>
                 </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="~/Admin/InsertProduct/Index" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Thêm sản phẩm từ file Excel</p>
+                        </a>
+                    </li>
+                    
+                </ul>
             </li>
             @*<li class="nav-item">
                     <a href="~/Admin/Order/SaleReport" class="nav-link">
@@ -75,7 +84,7 @@
                 </a>
                 <ul class="nav nav-treeview">
                     <li class="nav-item">
-                        <a href="~/Admin/Stati/SaleReport" class="nav-link">
+                        <a href="~/Admin/Statistics/InstockProductStatistics" class="nav-link">
                             <i class="far fa-circle nav-icon"></i>
                             <p>Thống kê đơn hàng</p>
                         </a>
@@ -87,13 +96,13 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="~/Admin/Statistical/Index" class="nav-link">
+                        <a href="~/Admin/Statistics/FromToIncomeStatisticsIndex" class="nav-link">
                             <i class="far fa-circle nav-icon"></i>
                             <p>Thống kê doanh thu theo ngày</p>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="~/Admin/Products/ShowSoldQuantity" class="nav-link">
+                        <a href="~/Admin/Statistics/ProductQuantityStatisticsIndex" class="nav-link">
                             <i class="far fa-circle nav-icon"></i>
                             <p>Sản phẩm bán được</p>
                         </a>

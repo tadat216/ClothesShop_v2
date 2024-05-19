@@ -1,0 +1,87 @@
+﻿@model IEnumerable<ClothesShop.Models.EF.CartDetail>
+
+<div class="cart-currency-area login-register-area text-end">
+    <ul>
+        <li>
+            <div class="header-cart">
+                <div class="cart-icon">
+                    <a href="/gio-hang">
+                        <i class="fa fa-shopping-cart" style="font-size: 25px;"></i>
+                    </a> 
+                    <span>@(Model != null ? Model.Count() : 0)</span>
+                </div>
+                <div class="cart-content-wraper">
+                    @if (Model != null && Model.Any())
+                    {
+                        <div style="max-height: 400px; overflow-y: auto; overflow-x: hidden;">
+                            @foreach (var item in Model)
+                            {
+                            var product = item.VariantSize.ProductVariant.Product;
+                            var variant = item.VariantSize.ProductVariant;
+                            var price = product.IsSale ? product.PriceSale : product.Price;
+                            var size = item.VariantSize.Size.Name;
+                            <div class="cart-single-wraper">
+                                <div class="cart-img">
+                                    <a href="#"><img src="@variant.ImageLists.FirstOrDefault().ImageUrl" alt=""></a>
+                                </div>
+                                <div class="cart-content">
+                                    <div class="cart-name">
+                                        <a href="#">@product.Title - @variant.Color.Name</a>
+                                    </div>
+                                    <div class="cart-price">@Common.FormatNumber(price)</div>
+                                    <div class="cart-qty"> Size: <span>@size</span> </div>
+                                    <div class="cart-qty"> S.Lượng: <span>@item.Quantity</span> </div>
+                                </div>
+                                <div class="remove btnDelete" data-id="@item.Id">
+                                    <a href="#"><i class="zmdi zmdi-close"></i></a>
+                                </div>
+                            </div>
+                            }
+                        </div>
+                        <div class="cart-check-btn">
+                            <div class="view-cart">
+                                <a class="btn-def" href="/gio-hang">Xem giỏ hàng</a>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="d-flex flex-column" style="height: 200px; text-align: center;">
+                            <h4 class="m-auto">Chưa có sản phẩm trong giỏ hàng</h4>
+                            <a href="/danh-muc-san-pham" style="color: #000000">Mua hàng</a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        $('.btnDelete').click(function () {
+            var id = $(this).data("id");
+            var conf = confirm('Bạn có muốn xóa sản phẩm này không?');
+            if (conf === true) {
+                $.ajax({
+                    url: '/ShoppingCart/delete',
+                    type: 'POST',
+                    data: { id: id },
+                    success: function (rs) {
+                        if (rs.Success) {
+                            $('#trow_' + id).remove();
+                            var totalMoney = '<p>Tổng tiền <span>' + rs.totalMoney + '</span></p>';
+                            $('#totalMoney').html(totalMoney);
+                            $('.cart-container').empty();
+                            $.get('/ShoppingCart/CartHeaderPartial', function (data) {
+                                $('.cart-container').html(data);
+                            });
+                        }
+                    }
+                });
+            }
+        });
+    });
+</script>
+

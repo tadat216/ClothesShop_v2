@@ -180,6 +180,11 @@ namespace ClothesShop.Controllers
             int i = 1;
             foreach (var item in cartDetails)
             {
+                //Rate userRate = new Rate();
+                //userRate.UserId = user.Id;
+                //userRate.ProductVariantId = item.VariantSize.ProductVariantId;
+                //db.Rates.Add(userRate);
+
                 OrderDetail od = new OrderDetail();
                 od.OrderId = order.Id;
                 od.VariantSizeId = item.VariantSizeId;
@@ -219,6 +224,7 @@ namespace ClothesShop.Controllers
             {
                 db.CartDetails.Remove(item);
             }
+
             db.SaveChanges();
 
             string contentCustomer = System.IO.File.ReadAllText(Server.MapPath("~/Content/templates/send2.html"));
@@ -254,6 +260,32 @@ namespace ClothesShop.Controllers
 
             return Json(new { tb = "Đặt hàng thành công." });
         }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public ActionResult CartHeaderPartial()
+        {
+            if (User.Identity.Name == "")
+            {
+                return PartialView("_CartHeaderPartial", null);
+            }
+
+            var user = UserManager.FindByName(User.Identity.Name); // synchronous method
+            if (user == null)
+            {
+                return PartialView("_CartHeaderPartial", null);
+            }
+
+            Cart cart = db.Carts.FirstOrDefault(x => user.Id.ToString() == x.UserId);
+            if (cart == null)
+            {
+                return PartialView("_CartHeaderPartial", null);
+            }
+
+            IEnumerable<CartDetail> items = db.CartDetails.Where(x => x.CartId == cart.Id).ToList();
+            return PartialView("_CartHeaderPartial", items);
+        }
+
         [AllowAnonymous]
         [HttpPost]
         public async Task<ActionResult> ChangeDefaultAddress(string id)
@@ -379,8 +411,6 @@ namespace ClothesShop.Controllers
             return Json(code);
         }
 
-
-        [HttpPost]
         public async Task<ActionResult> Delete(string id)
         {
             var user = await UserManager.FindByNameAsync(User.Identity.Name);

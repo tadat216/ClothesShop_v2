@@ -21,6 +21,8 @@ namespace ClothesShop.Models.EF
         public float RateValue { get; set; }
         [StringLength (1000)]
         public string Comment { get; set; }
+        public bool Rated { get; set; } = false;
+        public bool CanRate { get; set; } = false;
         public DateTime RatedDate { get; set; }
         public virtual ApplicationUser User { get; set; }
         public virtual ProductVariant ProductVariant { get; set; }

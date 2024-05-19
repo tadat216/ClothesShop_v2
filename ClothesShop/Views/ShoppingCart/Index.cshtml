@@ -133,33 +133,34 @@
                                                                 {
                                                                     var imgUrl = p.VariantSize.ProductVariant.ImageLists.FirstOrDefault(x => x.IsDefault).ImageUrl;
                                                                     var money = p.Quantity * p.VariantSize.ProductVariant.Product.PriceSale;
-
+                                                                    var product = p.VariantSize.ProductVariant.Product;
+                                                                    var variant = p.VariantSize.ProductVariant;
                                                                     <tr class="cart_item" id="trow_@p.Id">
                                                                         <td>
                                                                             <input type="checkbox" data-id="@p.Id" class="select" @(p.Selected ? "checked" : "") />
                                                                         </td>
                                                                         <td class="item-img">
-                                                                            <a href="/Product/Detail/@p.VariantSize.ProductVariant.Product.Id">
+                                                                            <a href="/san-pham/@product.Alias-p@{@product.Id}">
                                                                                 <img src="@imgUrl"
                                                                                      alt="">
                                                                             </a>
                                                                         </td>
                                                                         <td class="item-title">
-                                                                            <a href="/Product/Detail/@p.VariantSize.ProductVariant.Product.Id">
-                                                                                @p.VariantSize.ProductVariant.Product.Title
+                                                                            <a href="/san-pham/@product.Alias-p@{@product.Id}">
+                                                                                @product.Title - @variant.Color.Name
                                                                             </a>
                                                                         </td>
                                                                         <td style="width: 100px;" class="m-1">@p.VariantSize.Size.Name</td>
 
                                                                         <td class="item-price">
-                                                                            @if (p.VariantSize.ProductVariant.Product.IsSale)
+                                                                            @if (product.IsSale)
                                                                             {
-                                                                                <p style="text-decoration: line-through;">@Common.FormatNumber(p.VariantSize.ProductVariant.Product.Price)</p>
-                                                                                <p>@Common.FormatNumber(p.VariantSize.ProductVariant.Product.PriceSale)</p>
+                                                                                <p style="text-decoration: line-through;">@Common.FormatNumber(product.Price)</p>
+                                                                                <p>@Common.FormatNumber(product.PriceSale)</p>
                                                                             }
                                                                             else
                                                                             {
-                                                                                <p>@Common.FormatNumber(p.VariantSize.ProductVariant.Product.Price)</p>
+                                                                                <p>@Common.FormatNumber(product.Price)</p>
                                                                             }
                                                                         </td>
 
@@ -220,7 +221,7 @@
                                                         <div class="col-lg-4 col-md-5">
                                                             <div class="cart-total-area">
                                                                 <div class="sub-shipping" id="totalMoney">
-                                                                    <p>Tổng tiền: <span>@Common.FormatNumber((int)ViewBag.totalMoney)</span></p>
+                                                                    <p>Tổng tiền: <span>@Common.FormatNumber((int)(ViewBag.totalMoney))</span></p>
                                                                 </div>
                                                                 <div class="process-checkout-btn text-end">
                                                                     <a class="btn-def " id="btnGoToCheckOut" href="#">
@@ -262,7 +263,8 @@
     <script>
         $(document).ready(function () {
 
-            $('.btnDelete').click(function () {
+            $('.btnDelete').off('click').on('click', function (e) {
+                e.preventDefault();
                 var id = $(this).data("id");
                 var conf = confirm('Bạn có muốn xóa sản phẩm này không?');
                 if (conf === true) {

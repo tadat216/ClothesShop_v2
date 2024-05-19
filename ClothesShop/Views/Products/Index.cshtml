@@ -253,7 +253,7 @@ $(document).ready(function () {
     addToCartButton.addEventListener('click', function () {
         var sizeId = document.getElementById('selectedSizeId').value;
         var quantity = $('.cart-plus-minus-box').val();
-        console.log(sizeId + ' ' + quantity);
+        //console.log(sizeId + ' ' + quantity);
         //alert(sizeId + " " + quantity)
         
         $.ajax({
@@ -262,6 +262,10 @@ $(document).ready(function () {
             data: { variantSizeId: sizeId, quantity: quantity },
             success: function (rs) {
                 alert(rs.message);
+                $('.cart-container').empty();
+                $.get('/ShoppingCart/CartHeaderPartial', function (data) {
+                    $('.cart-container').html(data);
+                });
             },
         });
     });

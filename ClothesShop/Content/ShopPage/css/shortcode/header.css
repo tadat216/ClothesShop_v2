@@ -151,7 +151,7 @@ Version: 1.0
 
  /*Header Transprent */
  .transparent-header{
- 	position: absolute;
+ 	position: static;
  	width: 100%;
  	margin: auto;
  	background: rgba(255,255,255,0.3);
@@ -458,11 +458,3 @@ Version: 1.0
 .login-register-area li a {
     display: block;
 }
-
-
-
-
-
-
-
-

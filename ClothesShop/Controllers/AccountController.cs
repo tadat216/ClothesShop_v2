@@ -12,6 +12,7 @@ using ClothesShop.Models;
 using System.Data.Entity.ModelConfiguration.Configuration;
 using ClothesShop.Models.EF;
 using System.Data.Entity;
+using System.Web.DynamicData;
 
 
 namespace ClothesShop.Controllers
@@ -157,18 +158,28 @@ namespace ClothesShop.Controllers
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
             var result = await SignInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, shouldLockout: false);
-            switch (result)
+            if (result == SignInStatus.Success)
             {
-                case SignInStatus.Success:
+                if (returnUrl != "Account/Login")
+                {
                     return RedirectToLocal(returnUrl);
-                case SignInStatus.LockedOut:
-                    return View("Lockout");
-                case SignInStatus.RequiresVerification:
-                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
-                case SignInStatus.Failure:
-                default:
-                    ModelState.AddModelError("", "Invalid login attempt.");
-                    return View(model);
+                }
+                else
+                {
+                    return RedirectToAction("trang-chu");
+                }    
+            }
+            else if (result == SignInStatus.LockedOut)
+            {
+                return View("Lockout");
+            }
+            else if (result == SignInStatus.RequiresVerification)
+            {
+                return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
+            }
+            else { 
+                ModelState.AddModelError("", "Invalid login attempt.");
+                return View(model);
             }
         }
 

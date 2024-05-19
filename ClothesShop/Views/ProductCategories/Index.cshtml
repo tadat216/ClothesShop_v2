@@ -5,6 +5,37 @@
 }
 
 <style>
+
+    .size-checkbox {
+        position: relative;
+        cursor: pointer;
+        display: block;
+    }
+
+        .size-checkbox input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+
+    .size-mark {
+        display: block;
+        background-color: #fff;
+        border: 2px solid #ccc;
+        padding: 5px 10px;
+        text-align: center;
+    }
+
+    .size-checkbox:hover .size-mark {
+        border-color: #888;
+    }
+
+    .size-checkbox input:checked + .size-mark {
+        border-color: #333; /* Đậm hơn khi được chọn */
+    }
+
     .custom-checkbox {
         position: relative;
         padding-left: 10px;
@@ -192,7 +223,12 @@
                         <ul class="tag-filter mt-30">
                             @foreach (var size in Model.size)
                             {
-                                <li><a class="selectedSizes" href="#">@size.Name</a></li>
+                                <li>
+                                    <label class="size-checkbox">
+                                        <input type="checkbox" name="selectedSizes" value="@size.Id">
+                                        <span class="size-mark">@size.Name</span>
+                                    </label>
+                                </li>
                             }
                         </ul>
                     </aside>
@@ -202,4 +238,38 @@
         </div>
     </div>
 </div>
+
+<script>
+    $(document).ready(function () {
+        $('.size-option').click(function () {
+            $(this).toggleClass('active');
+            var selectedSizes = $('.size-option.active').map(function () {
+                return $(this).data('value');
+            }).get();
+
+            // Bạn có thể gửi selectedSizes đến server hoặc làm gì đó tùy ý bạn
+            console.log(selectedSizes);
+        });
+        $('input[type="checkbox"]').change(function() {
+            var selectedColors = $('input[name="selectedColors"]:checked').map(function() {
+                return this.value;
+            }).get();
+            var selectedSizes = $('input[name="selectedSizes"]:checked').map(function() {
+                return this.value;
+            }).get();
+            $('.shop-total-product-area').empty();
+
+            $.ajax({
+              url: '@Url.Action("ProductByCategory", "ProductCategories")',
+                type: 'POST',
+                data: { cateId: '', colorIds: selectedColors, sizeIds: selectedSizes },
+                success: function (data) {
+                    console.log("ColorList: " + selectedColors);
+                    console.log("SizeList: " + selectedSizes);
+                    $('.shop-total-product-area').html(data);
+                }
+            });
+        });
+    });
+</script>
 

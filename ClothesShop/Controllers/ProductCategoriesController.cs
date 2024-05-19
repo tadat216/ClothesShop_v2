@@ -31,11 +31,27 @@ namespace ClothesShop.Controllers
             var items = db.ProductCategories.ToList();
             return PartialView("_NavBarProductCategory", items);
         }
-
-        public ActionResult ProductByCategory(string cateId, List<string> ColorId, List<string> sizeId)
+        //[HttpGet]
+        public ActionResult ProductByCategory(string cateId, string[] colorIds, string[] sizeIds)
         {
-            var items = db.Products.ToList(); 
-            return PartialView("_ProductByCategory", items);
+            var pd = db.Products.AsQueryable();
+
+            if (!string.IsNullOrEmpty(cateId))
+            {
+                pd = pd.Where(p => p.ProductCategoryId == cateId);
+            }
+            var variant = db.ProductVariants.AsQueryable();
+            if (colorIds != null && colorIds.Any())
+            {
+                variant = variant.Where(p => colorIds.Contains(p.ColorId));
+            }
+            if (sizeIds != null && sizeIds.Any())
+            {
+                var size = db.VariantSizes.Where(p => sizeIds.Contains(p.SizeId)).AsQueryable();
+                variant = variant.Where(p => size.Any(v => v.SizeId == p.Id));
+            }
+            pd = pd.Where(p => variant.Any(v => v.ProductId == p.Id));
+            return PartialView("_ProductByCategory", pd);
         }
     }
 }

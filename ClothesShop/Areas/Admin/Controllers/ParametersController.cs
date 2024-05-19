@@ -40,7 +40,8 @@ namespace ClothesShop.Areas.Admin.Controllers
         // GET: Admin/Parameters/Create
         public ActionResult Create()
         {
-            return View();
+            Parameter p = new Parameter();
+            return View(p);
         }
 
         // POST: Admin/Parameters/Create
@@ -76,6 +77,8 @@ namespace ClothesShop.Areas.Admin.Controllers
             return View(parameter);
         }
 
+
+
         // POST: Admin/Parameters/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -90,6 +93,18 @@ namespace ClothesShop.Areas.Admin.Controllers
             return View(parameter);
         }
 
-        
+        [HttpPost]
+        public ActionResult IsApply(string id)
+        {
+            var item = db.Parameters.Find(id);
+            if (item != null)
+            {
+                item.Apply = !item.Apply;
+                db.Entry(item).State = System.Data.Entity.EntityState.Modified;
+                db.SaveChanges();
+                return Json(new { success = true, isAcive = item.Apply });
+            }
+            return Json(new { success = false });
+        }
     }
 }

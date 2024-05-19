@@ -17,6 +17,9 @@ namespace ClothesShop.Models.EF
         public string Id { get; set; }
         [StringLength(100)]
         public string Name { get; set; }
-        public string Value { get; set; }
+        public string Description { get; set; } 
+        public string Value { get; set; } //Giá trị
+        public string Unit { get; set; } //Đơn vị tính (cái, đồng, ngày, tháng, năm
+        public bool Apply { get; set; } = true;
     }
 }

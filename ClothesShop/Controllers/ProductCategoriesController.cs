@@ -32,14 +32,16 @@ namespace ClothesShop.Controllers
             return PartialView("_NavBarProductCategory", items);
         }
         //[HttpGet]
-        public ActionResult ProductByCategory(string cateId, string[] colorIds, string[] sizeIds)
+        public ActionResult ProductByCategory(string cateId, string[] colorIds, string[] sizeIds, int priceMin=0, int priceMax=1000000000)
         {
             var pd = db.Products.AsQueryable();
 
             if (!string.IsNullOrEmpty(cateId))
             {
-                pd = pd.Where(p => p.ProductCategoryId == cateId);
+                pd = pd.Where(p => p.ProductCategoryId == cateId || p.ProductCategory.IdParent == cateId);
             }
+            pd = pd.Where(p => (p.IsSale ? p.PriceSale : p.Price) >= priceMin);
+            pd = pd.Where(p => (p.IsSale ? p.PriceSale : p.Price) <= priceMax);
             var variant = db.ProductVariants.AsQueryable();
             if (colorIds != null && colorIds.Any())
             {
@@ -47,8 +49,7 @@ namespace ClothesShop.Controllers
             }
             if (sizeIds != null && sizeIds.Any())
             {
-                var size = db.VariantSizes.Where(p => sizeIds.Contains(p.SizeId)).AsQueryable();
-                variant = variant.Where(p => size.Any(v => v.SizeId == p.Id));
+                variant = variant.Where(p => p.VariantSizes.Any(v => sizeIds.Contains(v.SizeId)));
             }
             pd = pd.Where(p => variant.Any(v => v.ProductId == p.Id));
             return PartialView("_ProductByCategory", pd);

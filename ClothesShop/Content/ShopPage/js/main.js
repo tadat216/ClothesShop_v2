@@ -220,17 +220,20 @@ Version: 1.0
 	/*----------------------------
 	 price-slider active
 	------------------------------ */  
-	  $( "#slider-range" ).slider({
-	   range: true,
-	   min: 40,
-	   max: 600,
-	   values: [ 40, 600 ],
-	   slide: function( event, ui ) {
-		$( "#amount" ).val( "$" + ui.values[ 0 ] + " - $" + ui.values[ 1 ] );
-	   }
-	  });
-	  $( "#amount" ).val( "$" + $( "#slider-range" ).slider( "values", 0 ) +
-	   " - $" + $( "#slider-range" ).slider( "values", 1 ) );
+	$("#slider-range").slider(
+		{
+			range: true,
+			step: 1000,
+			min: 0,
+			max: 1000000,
+			values: [0, 1000000],
+			slide: function (event, ui) {
+				$("#amount").val(ui.values[0] + " ₫ - " + ui.values[1] + " ₫");
+				$('#FromAmount').val(ui.values[0]);
+				$('#ToAmount').val(ui.values[1]);
+			}
+		});
+	$("#amount").val($("#slider-range").slider("values", 0) + "₫ - " + $("#slider-range").slider("values", 1) + "₫");
 	   
     /*----------------------------
     Countdown active

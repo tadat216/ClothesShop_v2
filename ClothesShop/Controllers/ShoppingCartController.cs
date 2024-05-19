@@ -180,10 +180,10 @@ namespace ClothesShop.Controllers
             int i = 1;
             foreach (var item in cartDetails)
             {
-                //Rate userRate = new Rate();
-                //userRate.UserId = user.Id;
-                //userRate.ProductVariantId = item.VariantSize.ProductVariantId;
-                //db.Rates.Add(userRate);
+                Rate userRate = new Rate();
+                userRate.UserId = user.Id;
+                userRate.ProductVariantId = item.VariantSize.ProductVariantId;
+                db.Rates.Add(userRate);
 
                 OrderDetail od = new OrderDetail();
                 od.OrderId = order.Id;

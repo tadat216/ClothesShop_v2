@@ -165,7 +165,7 @@ namespace ClothesShop.Controllers
         {
             var user = await UserManager.FindByNameAsync(User.Identity.Name);
             var cart = db.Carts.FirstOrDefault(x => x.UserId == user.Id);
-            var cartDetails = db.CartDetails.Where(x => x.CartId == cart.Id).ToList();
+            var cartDetails = db.CartDetails.Where(x => x.CartId == cart.Id && x.Selected == true).ToList();
             Order order = new Order();
             order.UserId = user.Id;
             order.Address = receiverAddress;
@@ -213,6 +213,7 @@ namespace ClothesShop.Controllers
                 thanhtien += moneySaleItem;
                 //tongTien += moneyItem;
                 i++;
+                db.CartDetails.Remove(item);
             }
             db.SaveChanges();
 

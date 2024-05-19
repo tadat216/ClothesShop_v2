@@ -260,10 +260,8 @@ $(document).ready(function () {
             url: '/ShoppingCart/AddToCart',
             type: 'POST',
             data: { variantSizeId: sizeId, quantity: quantity },
-            function(rs) {
-                if (rs.success) {
-                    alert("Thêm vào giỏ hàng thành công!");
-                }
+            success: function (rs) {
+                alert(rs.message);
             },
         });
     });

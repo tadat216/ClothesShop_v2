@@ -120,7 +120,7 @@
                         <th>Địa chỉ</th>
                         <th>Số điện thoại</th>
                         <th>Email</th>
-                        <th>Phương thức thanh toán</th>
+                        @*<th>Phương thức thanh toán</th>*@
                         <th>Ngày đặt</th>
                         <th>Xác nhận đi đơn</th>
                         <th>Thanh toán</th>
@@ -143,7 +143,7 @@
                                 <td>@item.Address</td>
                                 <td>@item.Phone</td>
                                 <td>@item.User.Email</td>
-                                <td>@item.PaymentMethod</td>
+                                @*<td>@item.PaymentMethod</td>*@
                                 <td>@item.OrderedDate.ToString("dd/MM/yyyy")</td>
                                 <td>
                                     <a href="#" data-id="@item.Id" class="btnVerified">@Html.Raw(strPaid)</a>

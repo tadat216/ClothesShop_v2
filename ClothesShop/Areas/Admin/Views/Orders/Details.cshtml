@@ -93,7 +93,7 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label>Phương thức thnah toán</label>
+                        <label>Phương thức thanh toán</label>
                         <p class="form-control">@Model.PaymentMethod</p>
                     </div>
                 </div>
@@ -162,16 +162,16 @@
                     {
                         <tr id="trow_@od.Id">
                             <td>@i</td>
-                            <td>@od.ProductVariantId</td>
-                            <td>@od.ProductVariant.Product.Title</td>
-                            <td>@od.ProductVariant.Color.Name</td>
-                            <td>@od.ProductVariant.Size.Name</td>
+                            <td>@od.VariantSizeId</td>
+                            <td>@od.VariantSize.ProductVariant.Product.Title</td>
+                            <td>@od.VariantSize.ProductVariant.Color.Name</td>
+                            <td>@od.VariantSize.Size.Name</td>
                             <td>@od.Price</td>
                             <td>@od.Quantity</td>
 
-                            <td>
-                                <a href="/Admin/Product/Details/@od.ProductVariant.Product.Id" data-id="@od.ProductVariant.Product.Id" class="btn btn-sm btn-primary btnDetail"><i class="fa fa-eye" aria-hidden="true"></i></a>
-                            </td>
+                            @*<td>
+                                <a href="/Admin/Product/Details/@od.VariantSize.Product.Id" data-id="@od.ProductVariant.Product.Id" class="btn btn-sm btn-primary btnDetail"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                            </td>*@
                         </tr>
                         ++i;
                     }

@@ -54,23 +54,36 @@
                     @Html.AntiForgeryToken();
                     @Html.ValidationSummary(true);
                     <!-- your steps content here -->
-                    <div id="logins-part" class="content active dstepper-block" role="tabpanel" aria-labelledby="logins-part-trigger">
-                        <div class="form-group">
-                            <label for="Name">Tên tham số</label>
-                            @Html.TextBoxFor(x => x.Name, new { @class = "form-control", @placeholder = "Tên tham số" })
-                            @Html.ValidationMessageFor(x => x.Name, null, new { @class = "text-danger" })
-                        </div>
-                        <div class="form-group">
-                            <label for="Value">Giá trị</label>
-                            @Html.TextBoxFor(x => x.Value, new { @class = "form-control", @placeholder = "Giá trị" })
-                            @Html.ValidationMessageFor(x => x.Value, null, new { @class = "text-danger" })
-                        </div>
-
-                        <div class="form-group">
-                            <a class="btn btn-danger" href="~/Admin/Parameters">Trở lại</a>
-                            <button type="submit" class="btn btn-primary">Thêm</button>
-                        </div>
+                <div id="logins-part" class="content active dstepper-block" role="tabpanel" aria-labelledby="logins-part-trigger">
+                    <div class="form-group">
+                        <label for="Name">Tên tham số</label>
+                        @Html.TextBoxFor(x => x.Name, new { @class = "form-control", @placeholder = "Tên tham số" })
+                        @Html.ValidationMessageFor(x => x.Name, null, new { @class = "text-danger" })
                     </div>
+                    <div class="form-group">
+                        <label for="Value">Mô tả</label>
+                        @Html.TextBoxFor(x => x.Description, new { @class = "form-control", @placeholder = "Mô tả" })
+                        @Html.ValidationMessageFor(x => x.Description, null, new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        <label for="Value">Giá trị</label>
+                        @Html.TextBoxFor(x => x.Value, new { @class = "form-control", @placeholder = "Giá trị" })
+                        @Html.ValidationMessageFor(x => x.Value, null, new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        <label for="Value">Đơn vị tính</label>
+                        @Html.TextBoxFor(x => x.Unit, new { @class = "form-control", @placeholder = "Giá trị" })
+                        @Html.ValidationMessageFor(x => x.Unit, null, new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Apply, "Áp dụng")
+                        @Html.CheckBoxFor(x => x.Apply)
+                    </div>
+                    <div class="form-group">
+                        <a class="btn btn-danger" href="~/Admin/Parameters">Trở lại</a>
+                        <button type="submit" class="btn btn-primary">Thêm</button>
+                    </div>
+                </div>
                 }
 
             </div>

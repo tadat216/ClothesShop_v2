@@ -92,7 +92,6 @@ namespace ClothesShop.Areas.Admin.Controllers
 
         }
 
-
         public ActionResult Index(string Searchtext, string role, DateTime? from, DateTime? to, int? page, int? size, string confirm = "")
         {
             var pageIndex = page.HasValue ? Convert.ToInt32(page) : 1;

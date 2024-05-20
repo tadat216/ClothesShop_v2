@@ -4,6 +4,17 @@
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
+@section naviheader{
+    <ul class="navbar-nav">
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="~/Admin/Home" class="nav-link">Trang chủ</a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="~/Admin/Statistics" class="nav-link">@ViewBag.Title</a>
+        </li>
+    </ul>
+}
+
 <section class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
@@ -32,19 +43,19 @@
             <input type="date" id="to" class="ml-3" />
             @*<label class="focus-label ml-5">Số lượng</label>*@
             @*<div class="ml-3">
-                <select id="quantity" name="quantity" class="col-12" style="height: 37px; border: 1px solid #ced4da; border-radius: .25rem; box-shadow: inset 0 0 0 transparent;">
-                    <option value="5">5</option>
-                    <option value="10">10</option>
-                    <option value="20">20</option>
-                    <option value="50">50</option>
-                </select>
-            </div>*@
+                    <select id="quantity" name="quantity" class="col-12" style="height: 37px; border: 1px solid #ced4da; border-radius: .25rem; box-shadow: inset 0 0 0 transparent;">
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="50">50</option>
+                    </select>
+                </div>*@
             <button type="button" id="statistics" class="btn btn-default col-2 ml-5">Thống kê</button>
         </div>
         <div class="row">
             <div class="col-md-8">
                 <div class="chart " style="width: 500px; height: 500px;">
-                    <canvas id="barChart" ></canvas>
+                    <canvas id="barChart"></canvas>
                 </div>
             </div>
             <div class="col-md-4" id="load_data"></div>
@@ -76,14 +87,14 @@
                     data: JSON.stringify({
                         from: from ? from.toISOString().split('T')[0] : null,
                         to: to ? to.toISOString().split('T')[0] : null,
-                        
+
                     }),
                     success: function (rs) {
                         if (rs.error) alert(rs.error);
                         else {
                             var count = rs.productQuantities.length;
                             console.log(rs.productQuantities);
-                            for (var i = 0; i < count; i++){
+                            for (var i = 0; i < count; i++) {
                                 arrProduct.push(rs.productQuantities[i].ProductId);
                                 arrPercentage.push(rs.percentageList[i]);
                                 strHtml += "<tr>";

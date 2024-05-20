@@ -1,7 +1,18 @@
 ﻿@model IEnumerable<ClothesShop.Areas.Admin.Controllers.MonthlyMoneyStatistics>
 @{
-    ViewBag.Title = "Doanh thu";
+    ViewBag.Title = "Doanh thu theo tháng/năm";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@section naviheader{
+    <ul class="navbar-nav">
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="~/Admin/Home" class="nav-link">Trang chủ</a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="~/Admin/Statistics" class="nav-link">@ViewBag.Title</a>
+        </li>
+    </ul>
 }
 
 <section class="content-header">
@@ -22,7 +33,7 @@
 </section>
 <section class="content">
     <div class="card-header">
-        <h3 class="card-title">Thống kê doanh thu</h3>
+        <h3 class="card-title">@ViewBag.Title</h3>
     </div>
     <div class="card-body">
         <div class="col-2">

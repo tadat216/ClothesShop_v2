@@ -31,13 +31,13 @@ namespace ClothesShop
                 namespaces: new[] { "ClothesShop.Controllers" }
             );
             routes.MapRoute(
-                name: "News",
+                name: "NewsDetail",
                 url: "chi-tiet/{alias}-n{id}",
                 defaults: new { controller = "News", action = "Detail", id = UrlParameter.Optional },
                 namespaces: new[] { "ClothesShop.Controllers" }
             );
             routes.MapRoute(
-                name: "NewsDetail",
+                name: "News",
                 url: "tin-tuc",
                 defaults: new { controller = "News", action = "Index", alias = UrlParameter.Optional },
                 namespaces: new[] { "ClothesShop.Controllers" }

@@ -38,7 +38,7 @@ namespace ClothesShop.Controllers
 
         public ActionResult BlogPartial()
         {
-            var items = db.Newes.ToList();
+            var items = db.Newes.Take(10).ToList();
             return PartialView("_BlogPartial", items);
         }
 
@@ -49,6 +49,7 @@ namespace ClothesShop.Controllers
                 .Select(pc => pc.Title)
                 .ToList();
             ViewBag.CategoryIds = db.ProductCategories
+                .Take(20)
                 .Where(pc => pc.Level == 0)
                 .Select(pc => pc.Id)
                 .ToList();

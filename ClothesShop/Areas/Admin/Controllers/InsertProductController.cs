@@ -8,6 +8,8 @@ using ClothesShop.Models.EF;
 using ClothesShop.Models;
 using OfficeOpenXml;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
+using System.Drawing.Imaging;
 
 namespace ClothesShop.Areas.Admin.Controllers
 {
@@ -35,23 +37,36 @@ namespace ClothesShop.Areas.Admin.Controllers
 
                 ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
                 int rowCount = worksheet.Dimension.Rows;
-
-                for (int row = 3; row <= rowCount; row++) 
+                if (worksheet.Cells[2,1].Value?.ToString().Trim()== "STT"
+                    && worksheet.Cells[2, 2].Value?.ToString().Trim() == "ProductCode"
+                    && worksheet.Cells[2, 3].Value?.ToString().Trim() == "Title"
+                    && worksheet.Cells[2, 4].Value?.ToString().Trim() == "Size"
+                    && worksheet.Cells[2, 5].Value?.ToString().Trim() == "Color"
+                    && worksheet.Cells[2, 6].Value?.ToString().Trim() == "ColorCode"
+                    && worksheet.Cells[2, 7].Value?.ToString().Trim() == "Quantity"
+                    && worksheet.Cells[2, 8].Value?.ToString().Trim() == "Price"
+                    && worksheet.Cells[2, 9].Value?.ToString().Trim() == "ProductCategory")
                 {
-                    products.Add(new ProductImportModel
+                    for (int row = 3; row <= rowCount; row++)
                     {
-                        ProductCode = worksheet.Cells[row, 2].Value?.ToString().Trim(),
-                        Title = worksheet.Cells[row, 3].Value?.ToString().Trim(),
-                        Size = worksheet.Cells[row, 4].Value?.ToString().Trim(),
-                        Color = worksheet.Cells[row, 5].Value?.ToString().Trim(),
-                        ColorCode = worksheet.Cells[row, 6].Value?.ToString().Trim(),
-                        Quantity = int.Parse(worksheet.Cells[row, 7].Value?.ToString().Trim()),
-                        Price = int.Parse(worksheet.Cells[row, 8].Value?.ToString().Trim()),
-                        Category = worksheet.Cells[row, 9].Value?.ToString().Trim(),
-                    });
+                        products.Add(new ProductImportModel
+                        {
+                            ProductCode = worksheet.Cells[row, 2].Value?.ToString().Trim(),
+                            Title = worksheet.Cells[row, 3].Value?.ToString().Trim(),
+                            Size = worksheet.Cells[row, 4].Value?.ToString().Trim(),
+                            Color = worksheet.Cells[row, 5].Value?.ToString().Trim(),
+                            ColorCode = worksheet.Cells[row, 6].Value?.ToString().Trim(),
+                            Quantity = int.Parse(worksheet.Cells[row, 7].Value?.ToString().Trim()),
+                            Price = int.Parse(worksheet.Cells[row, 8].Value?.ToString().Trim()),
+                            Category = worksheet.Cells[row, 9].Value?.ToString().Trim(),
+                        });
+                    }
+                    
                 }
+                return products;
+
             }
-            return products;
+            
         }
         public void ProcessAndSaveData(List<ProductImportModel> products)
         {
@@ -154,19 +169,30 @@ namespace ClothesShop.Areas.Admin.Controllers
         public ActionResult InsertProduct(HttpPostedFileBase file)
         
         {
-            if (file != null && file.ContentLength > 0)
+            string extension = Path.GetExtension(file.FileName);
+            if (extension.ToLower() == ".xlsx")
             {
-                // Lưu hoặc xử lý tệp tại đây
-                // ví dụ: lưu tệp tạm trong server
-                var path = Path.Combine(Server.MapPath("~/Uploads"), file.FileName);
-                file.SaveAs(path);
+                if (file != null && file.ContentLength > 0)
+                {
+                    // Lưu hoặc xử lý tệp tại đây
+                    // ví dụ: lưu tệp tạm trong server
+                    var path = Path.Combine(Server.MapPath("~/Uploads"), file.FileName);
+                    file.SaveAs(path);
 
-                // Tiếp tục xử lý tệp sau khi lưu
-                List<ProductImportModel> list = ReadExcelFile(path);
-                ProcessAndSaveData(list);
-                return Json(new { Success = true });
+                    // Tiếp tục xử lý tệp sau khi lưu
+                    List<ProductImportModel> list = ReadExcelFile(path);
+                    if(list != null && list.Count > 0)
+                    {
+                        ProcessAndSaveData(list);
+                        return Json(new { Success = true });
+                    }
+                    
+                }
+                
             }
             return Json(new { Success = false });
         }
+               
     }
 }
+

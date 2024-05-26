@@ -51,15 +51,29 @@
         </div>
         <div class="card-body">
             <div class="row">
-                <div class="col-6">
+                <div class="col-12">
                     @using (Html.BeginForm("index", "Parameters", FormMethod.Get, new { enctype = "multipart/form-data" }))
                     {
                         <div class="input-group">
                             @*<input type="search" name="searchText" class="form-control form-control-lg" placeholder="Nhập vào từ khóa">*@
-                            @Html.TextBox("Searchtext", "", new { @class = "form-control", @placeholder = "Nhập từ khóa tìm kiếm", @id = "searchText" })
+                            @*@Html.TextBox("Searchtext", "", new { @class = "form-control", @placeholder = "Nhập từ khóa tìm kiếm", @id = "searchText" })
                             @Html.TextBox("size", "", new { @class = "form-control", @placeholder = "" })
                             <div class="input-group-append">
                                 <button type="submit" class="btn btn-default">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </div>*@
+                            <div class="col-5">
+                                <label class="focus-label">Từ khóa</label>
+                                @Html.TextBox("Searchtext", "", new { @class = "form-control", @placeholder = "" })
+                            </div>
+                            <div class="col-5">
+                                <label class="focus-label">Số dòng mỗi trang</label>
+                                @Html.TextBox("size", "", new { @class = "form-control", @placeholder = "" })
+                            </div>
+                            <div class="col-2">
+                                <div style="height:30px;"></div>
+                                <button type="submit" class="btn btn-default offset-4 col-5 btn-sm" style="height:37px;">
                                     <i class="fa fa-search"></i>
                                 </button>
                             </div>

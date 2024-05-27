@@ -14,6 +14,7 @@ using Size = ClothesShop.Models.EF.Size;
 
 namespace ClothesShop.Areas.Admin.Controllers
 {
+    [Authorize(Roles = "Admin, Employee")]
     public class SizesController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();

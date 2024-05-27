@@ -13,6 +13,7 @@ using System.Drawing.Imaging;
 
 namespace ClothesShop.Areas.Admin.Controllers
 {
+    [Authorize(Roles = "Admin, Employee")]
     public class ProductImportModel
     {
         public string Category { get; set; }

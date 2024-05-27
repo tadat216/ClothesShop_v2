@@ -126,8 +126,8 @@
                                         <i class="fa fa-angle-down"></i>
                                     </a>
                                     <ul class="account_selection">
-                                        <li><a href="/Account/Login"><i class="fa fa-sign-in" aria-hidden="true"></i>Đăng nhập</a></li>
-                                        <li><a href="/Account/Register"><i class="fa fa-user-plus" aria-hidden="true"></i>Đăng kí</a></li>
+                                        <li><a href="/dang-nhap"><i class="fa fa-sign-in" aria-hidden="true"></i>Đăng nhập</a></li>
+                                        <li><a href="/dang-ki"><i class="fa fa-user-plus" aria-hidden="true"></i>Đăng kí</a></li>
                                     </ul>
                                 }
                                 else
@@ -142,8 +142,16 @@
                                             <li><a href="/Admin/Home"><i class="fa fa-vcard" aria-hidden="true"></i>Trang admin</a></li>
                                         }
                                         <li><a href="/Account/Profile"><i class="fa fa-user" aria-hidden="true"></i>Hồ sơ</a></li>
-                                        <li><a href="/Account/ShoppingHistory"><i class="fa fa-money" aria-hidden="true"></i>Lịch sử mua hàng</a></li>
-                                        <li><a href="javascript:document.getElementById('logOffForm').submit()"><i class="fa fa-sign-out" aria-hidden="true"></i>Đăng xuất</a></li>
+                                        <li><a href="/Account/ShoppingHistory"><i class="fa fa-money" aria-hidden="true"></i>Đơn mua</a></li>
+                                        <li>
+                                            @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
+                                            {
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit" class="nav-link styled-button" style="background: none; border: none;">
+                                                    <i class="fa fa-sign-out" aria-hidden="true"></i> Đăng xuất
+                                                </button>
+                                            }
+                                        </li>
                                     </ul>
                                 }
                             </li>
@@ -175,7 +183,7 @@
                         <div class="col-md-2">
                             <div class="logo ptb-20">
                                 <a href="index.html">
-                                    <img src="Content/ShopPage/images/logo/logo.png" alt="main logo">
+                                    <img src="/Content/ShopPage/images/logo/logo.png" alt="main logo">
                                 </a>
                             </div>
                         </div>
@@ -595,12 +603,12 @@
                         </div>
                         <div class="instagrm">
                             <ul>
-                                <li><a href="#"><img src="Content/ShopPage/images/gallery/01.jpg" alt=""></a></li>
-                                <li><a href="#"><img src="Content/ShopPage/images/gallery/02.jpg" alt=""></a></li>
-                                <li><a href="#"><img src="Content/ShopPage/images/gallery/03.jpg" alt=""></a></li>
-                                <li><a href="#"><img src="Content/ShopPage/images/gallery/04.jpg" alt=""></a></li>
-                                <li><a href="#"><img src="Content/ShopPage/images/gallery/05.jpg" alt=""></a></li>
-                                <li><a href="#"><img src="Content/ShopPage/images/gallery/06.jpg" alt=""></a></li>
+                                <li><a href="#"><img src="/Content/ShopPage/images/gallery/01.jpg" alt=""></a></li>
+                                <li><a href="#"><img src="/Content/ShopPage/images/gallery/02.jpg" alt=""></a></li>
+                                <li><a href="#"><img src="/Content/ShopPage/images/gallery/03.jpg" alt=""></a></li>
+                                <li><a href="#"><img src="/Content/ShopPage/images/gallery/04.jpg" alt=""></a></li>
+                                <li><a href="#"><img src="/Content/ShopPage/images/gallery/05.jpg" alt=""></a></li>
+                                <li><a href="#"><img src="/Content/ShopPage/images/gallery/06.jpg" alt=""></a></li>
                             </ul>
                         </div>
                     </div>

@@ -13,7 +13,7 @@ using PagedList;
 
 namespace ClothesShop.Areas.Admin.Controllers
 {
-
+    [Authorize(Roles = "Admin, Employee")]
     public class OrdersController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();

@@ -18,6 +18,7 @@ using OfficeOpenXml.Drawing.Chart;
 using System.Web.Helpers;
 namespace ClothesShop.Areas.Admin.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class MonthlyMoneyStatistics
     {
         public int Month { get; set; }

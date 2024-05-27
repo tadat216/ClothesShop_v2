@@ -22,5 +22,11 @@ namespace ClothesShop.Controllers
 
             return View(product);
         }
+
+        public ActionResult ProductRating(string ProductId)
+        {
+            var rates = db.Rates.Where(x => x.ProductVariant.ProductId.Equals(ProductId)).ToList();
+            return PartialView("_ProductRating", rates);
+        }
     }
 }

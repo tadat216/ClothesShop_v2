@@ -179,8 +179,8 @@
                     <div class="title-tab-product-category row">
                         <div class="col-lg-12 text-center">
                             <ul class="nav mb-40 heading-style-2" role="tablist">
-                                <li role="presentation"><a href="#newarrival" aria-controls="newarrival" role="tab" data-bs-toggle="tab">Description</a></li>
-                                <li role="presentation"><a class="active" href="#bestsellr" aria-controls="bestsellr" role="tab" data-bs-toggle="tab">Review</a></li>
+                                <li role="presentation"><a href="#newarrival" aria-controls="newarrival" role="tab" data-bs-toggle="tab">Chi tiết</a></li>
+                                <li role="presentation"><a class="active" href="#bestsellr" aria-controls="bestsellr" role="tab" data-bs-toggle="tab">Đánh giá</a></li>
                                 <li role="presentation"><a href="#specialoffer" aria-controls="specialoffer" role="tab" data-bs-toggle="tab">Tags</a></li>
                             </ul>
                         </div>
@@ -197,17 +197,8 @@
                                 </div>
                                 <div role="tabpanel" class="tab-pane fix fade show active" id="bestsellr">
                                     <div class="review-wraper">
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim <br> veniam, quis nostrud exercitation.</p>
-                                        <h5>SIZE & FIT</h5>
-                                        <ul>
-                                            <li>Model wears: Style Photoliya U2980</li>
-                                            <li>Model's height: 185”66</li>
-                                        </ul>
-                                        <h5>ABOUT ME</h5>
-                                        <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English.It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English</p>
-                                        <h5>Overview</h5>
-                                        <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form.</p>
-                                    </div>
+                                        @Html.Action("ProductRating", new { ProductId = Model.Id })
+                                    </div>  
                                 </div>
                                 <div role="tabpanel" class="tab-pane fix fade in" id="specialoffer">
                                     <ul class="tag-filter">

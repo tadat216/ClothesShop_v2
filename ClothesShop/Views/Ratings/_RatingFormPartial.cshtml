@@ -1,0 +1,64 @@
+﻿@model ClothesShop.Models.EF.Rate
+
+<div class="rating-form">
+    @if (Model != null && Model.CanRate)
+    {
+        using (Html.BeginForm("SubmitRating", "Ratings", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(model => model.ProductVariantId)
+            @Html.HiddenFor(model => model.UserId)
+            var product = Model.ProductVariant.Product;
+            var color = Model.ProductVariant.Color;
+
+            <h5>Sản phẩm: @product.Title</h5>
+            <h5>Màu sắc: @color.Name </h5>
+
+            <label for="comment">Đánh giá:</label>
+            <div class="star-rating">
+                
+                <input id="star-5" type="radio" name="RateValue" value="5" @(Model.RateValue == 5 ? "checked" : "") />
+                <label for="star-5" title="5 stars">
+                    <i class="fa fa-star"></i>
+                </label>
+                <input id="star-4" type="radio" name="RateValue" value="4" @(Model.RateValue == 4 ? "checked" : "") />
+                <label for="star-4" title="4 stars">
+                    <i class="fa fa-star"></i>
+                </label>
+                <input id="star-3" type="radio" name="RateValue" value="3" @(Model.RateValue == 3 ? "checked" : "") />
+                <label for="star-3" title="3 stars">
+                    <i class="fa fa-star"></i>
+                </label>
+                <input id="star-2" type="radio" name="RateValue" value="2" @(Model.RateValue == 2 ? "checked" : "") />
+                <label for="star-2" title="2 stars">
+                    <i class="fa fa-star"></i>
+                </label>
+                <input id="star-1" type="radio" name="RateValue" value="1" @(Model.RateValue == 1 ? "checked" : "") />
+                <label for="star-1" title="1 star">
+                    <i class="fa fa-star"></i>
+                </label>
+            </div>
+
+            <div>
+                <label for="comment">Bình luận:</label>
+                <textarea id="comment" name="comment" rows="4">@Model.Comment</textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Đánh giá</button>
+        }
+    }
+    else
+    {
+        <p>Bạn đã đánh giá sản phẩm này hoặc hiện tại không thể đánh giá sản phẩm.</p>
+    }
+</div>
+
+<script>
+    document.querySelector('.rating-form').addEventListener('submit', function (e) {
+        var isChecked = document.querySelector('input[name="RateValue"]:checked');
+        if (!isChecked) {
+            e.preventDefault(); // Ngăn form không được submit
+            alert('Vui lòng chọn số sao để đánh giá.');
+        }
+    });
+</script>

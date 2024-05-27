@@ -15,7 +15,7 @@ using PagedList;
 
 namespace ClothesShop.Areas.Admin.Controllers
 {
-    //[Authorize(Roles = "Admin, Employee")]
+    [Authorize(Roles = "Admin")]
     public class ParametersController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();

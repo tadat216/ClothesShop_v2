@@ -19,6 +19,12 @@ namespace ClothesShop
                 namespaces: new[] { "ClothesShop.Controllers" }
             );
             routes.MapRoute(
+                name: "ShoppingHistory",
+                url: "lich-su-mua-hang",
+                defaults: new { controller = "Account", action = "ShoppingHistory", alias = UrlParameter.Optional },
+                namespaces: new[] { "ClothesShop.Controllers" }
+            );
+            routes.MapRoute(
                 name: "About",
                 url: "gioi-thieu",
                 defaults: new { controller = "Home", action = "About", alias = UrlParameter.Optional },
@@ -46,6 +52,18 @@ namespace ClothesShop
                 name: "ShoppingCart",
                 url: "gio-hang",
                 defaults: new { controller = "ShoppingCart", action = "Index", alias = UrlParameter.Optional },
+                namespaces: new[] { "ClothesShop.Controllers" }
+            );
+            routes.MapRoute(
+                name: "LoginHome",
+                url: "dang-nhap",
+                defaults: new { controller = "Account", action = "Login", alias = UrlParameter.Optional },
+                namespaces: new[] { "ClothesShop.Controllers" }
+            );
+            routes.MapRoute(
+                name: "RegisterHome",
+                url: "dang-ki",
+                defaults: new { controller = "Account", action = "Register", alias = UrlParameter.Optional },
                 namespaces: new[] { "ClothesShop.Controllers" }
             );
             routes.MapRoute(

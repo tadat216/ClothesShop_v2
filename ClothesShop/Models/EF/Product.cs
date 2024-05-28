@@ -40,5 +40,10 @@ namespace ClothesShop.Models.EF
         public bool IsActive { get; set; }
         public virtual ProductCategory ProductCategory { get; set; }
         public virtual ICollection<ProductVariant> ProductVariants { get; set; }
+        
+        public int CalStar() {
+            float val = db.Rates.Average(x => x.RateValue)??0;
+            return (int)Math.Ceiling(val);
+        }
     }
 }

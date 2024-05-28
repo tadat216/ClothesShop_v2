@@ -44,7 +44,7 @@ namespace ClothesShop.Areas.Admin.Controllers
             var months = Enumerable.Range(1, 12).Select(m => new { Month = m }).ToList();
 
             var monthlyMoneys = months.GroupJoin(
-                    db.Orders.Where(o => o.OrderedDate.Year == year && o.IsPaid).SelectMany(o => o.OrderDetails).Select(d => new { Month = d.Order.OrderedDate.Month, Money = d.Price * d.Quantity }),
+                    db.Orders.Where(o => o.OrderedDate.Year == year && o.IsPaid).SelectMany(o => o.OrderDetails).Select(d => new { Month = d.Order.OrderedDate.Month, Money = (decimal)d.Price * (decimal)d.Quantity }),
                     m => m.Month,
                     d => d.Month,
                     (month, sales) => new { Month = month.Month, TotalMoney = sales.Sum(s => s.Money) }

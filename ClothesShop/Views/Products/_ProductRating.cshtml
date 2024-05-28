@@ -1,6 +1,9 @@
-﻿@model IEnumerable<ClothesShop.Models.EF.Rate>
+﻿@using PagedList.Mvc
+@using PagedList
+@model IPagedList<ClothesShop.Models.EF.Rate>
 
-@if(Model != null && Model.Any())
+
+@if (Model != null && Model.Any())
 {
     <div class="comments-body">
         <ul>
@@ -23,9 +26,10 @@
                     </div>
                 </li>
             }
+            @Html.PagedListPager(Model, page => Url.Action("Index", new { page }), PagedListRenderOptions.Classic)
         </ul>
     </div>
-}   
+}
 else
 {
     <p>Sản phẩm chưa có đánh giá!!!</p>

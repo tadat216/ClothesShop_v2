@@ -1,4 +1,5 @@
 ﻿using ClothesShop.Models;
+using PagedList;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,15 @@ namespace ClothesShop.Controllers
             }
 
             return View(product);
+        }
+
+        public ActionResult ProductRating(int? page, string ProductId)
+        {
+            var rates = db.Rates.Where(x => x.ProductVariant.ProductId.Equals(ProductId)).ToList();
+            int pageSize = 5;
+            int pageNumber = (page ?? 1);
+            ViewBag.productId = ProductId;
+            return PartialView("_ProductRating", rates.ToPagedList(pageNumber, pageSize));
         }
     }
 }

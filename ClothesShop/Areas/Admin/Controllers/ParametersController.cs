@@ -15,7 +15,7 @@ using PagedList;
 
 namespace ClothesShop.Areas.Admin.Controllers
 {
-    //[Authorize(Roles = "Admin, Employee")]
+    [Authorize(Roles = "Admin")]
     public class ParametersController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
@@ -44,21 +44,6 @@ namespace ClothesShop.Areas.Admin.Controllers
             return View(p);
         }
 
-        // POST: Admin/Parameters/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(Parameter parameter)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Parameters.Add(parameter);
-                db.SaveChanges();
-                TempData["message"] = new XMessage("success", "Thêm mới mẫu tin thành công");
-                return RedirectToAction("Index");
-            }
-
-            return View(parameter);
-        }
 
         // GET: Admin/Parameters/Edit/5
         public ActionResult Edit(string id)

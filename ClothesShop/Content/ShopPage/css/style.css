@@ -2228,12 +2228,10 @@ textarea {
     color: #333;
     padding: 7px 14px;
 }
-.comments-body ul li.signle-comments:last-child {
+.comments-body ul li.signle-comments {
     margin: 0
 }
-.comments-body ul li:nth-child(2n) {
-    padding-left: 70px
-}
+
 .leave-ib input {
     border-color: #e2e2e2;
     border-radius: 0;
@@ -2408,3 +2406,24 @@ p.error {
   .frequently-accordion .card-header a:hover {
     color: #e23e57!important;
   }
+.star-rating {
+    direction: rtl; /* Reverse the order of the stars */
+    font-size: 0;
+}
+
+.star-rating input[type="radio"] {
+    display: none;
+}
+
+.star-rating label {
+    display: inline-block;
+    font-size: 32px;
+    color: #ccc;
+    cursor: pointer;
+}
+
+.star-rating label:hover,
+.star-rating label:hover ~ label,
+.star-rating input[type="radio"]:checked ~ label {
+    color: #f5b301; /* Change star color on hover or checked */
+}

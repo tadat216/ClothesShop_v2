@@ -2,13 +2,13 @@
 @using Microsoft.Owin.Security
 
 <style>
-    #socialLoginList {
+    /*#socialLoginList {
         display: flex;
         justify-content: center;
         align-items: center;
-        flex-direction: column; /* Sắp xếp các mục theo chiều dọc */
-        width: 100%; /* Đảm bảo rằng container chiếm toàn bộ chiều rộng có thể */
-    }
+        flex-direction: column;*/ /* Sắp xếp các mục theo chiều dọc */
+        /*width: 100%;*/ /* Đảm bảo rằng container chiếm toàn bộ chiều rộng có thể */
+    /*}*/
 </style>
 @{
     var loginProviders = Context.GetOwinContext().Authentication.GetExternalAuthenticationTypes();
@@ -25,11 +25,25 @@
         using (Html.BeginForm("ExternalLogin", "Account", new { ReturnUrl = Model.ReturnUrl }, FormMethod.Post, new { role = "form" }))
         {
             @Html.AntiForgeryToken()
-            <div id="socialLoginList">
+            <div class="w-100">
                 @foreach (AuthenticationDescription p in loginProviders)
                 {
+                    string color = "";
+                    string icon = "";
+                    if (p.AuthenticationType == "Google")
+                    {
+                        color = "dd4b39";
+                        icon = "fa-google";
+                    }
+                    else if(p.AuthenticationType == "Facebook")
+                    {
+                        color = "3b5998";
+                        icon = "fa-facebook";
+                    }
                     <div>
-                        <button type="submit" class="btn  p-2 m-2 " id="@p.AuthenticationType" name="provider" value="@p.AuthenticationType" title="Log in using your @p.Caption account">
+                        
+                        <button type="submit" class="btn-primary btn-md btn-block p-2 m-2 w-100 text-uppercase fw-bold" id="@p.AuthenticationType" name="provider" value="@p.AuthenticationType" title="Log in using your @p.Caption account" style="background-color: #@color; border: none">
+                            <i class="fa @icon me-2"></i>
                             Đăng nhập bằng @p.AuthenticationType
                         </button>
                     </div>

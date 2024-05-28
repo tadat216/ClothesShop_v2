@@ -95,5 +95,23 @@ namespace ClothesShop
                        || value is double
                        || value is decimal;
         }
+
+        public static string ShowStar(float? value)
+        {
+            int roundedValue = (int)Math.Ceiling(value.Value);  // Làm tròn lên giá trị
+
+            string html = "";
+            
+            for (int i = 0; i < roundedValue; i++)
+            {
+                html += "<span class=\"fa fa-star\" style=\"color: #f5b301\"></span>";
+                
+            }
+            for (int i = 0; i < 5 - roundedValue; i++)
+            {
+                html += "<span class=\"fa fa-star\"></span>";
+            }
+            return html;
+        }
     }
 }

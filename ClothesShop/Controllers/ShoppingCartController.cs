@@ -180,11 +180,16 @@ namespace ClothesShop.Controllers
             int i = 1;
             foreach (var item in cartDetails)
             {
-                Rate userRate = new Rate();
-                userRate.UserId = user.Id;
-                userRate.ProductVariantId = item.VariantSize.ProductVariantId;
-                db.Rates.Add(userRate);
-
+                var rates = db.Rates.Where(x => x.UserId == user.Id && x.ProductVariantId == item.VariantSize.ProductVariantId);
+                if (!rates.Any() || rates == null)
+                {
+                    Rate userRate = new Rate();
+                    userRate.UserId = user.Id;
+                    userRate.ProductVariantId = item.VariantSize.ProductVariantId;
+                    userRate.CanRate = true;
+                    userRate.Rated = false;
+                    db.Rates.Add(userRate);
+                }
                 OrderDetail od = new OrderDetail();
                 od.OrderId = order.Id;
                 od.VariantSizeId = item.VariantSizeId;
@@ -260,6 +265,7 @@ namespace ClothesShop.Controllers
 
             return Json(new { tb = "Đặt hàng thành công." });
         }
+
 
         [HttpGet]
         [AllowAnonymous]

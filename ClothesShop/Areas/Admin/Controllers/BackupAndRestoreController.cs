@@ -12,6 +12,7 @@ using System.IO;
 
 namespace ClothesShop.Areas.Admin.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class BackupAndRestoreController : Controller
     {
         private string connectionString = "Data Source=DESKTOP-NJF4LHP; Initial Catalog=ClothesShop; Integrated Security=True; MultipleActiveResultSets=True";

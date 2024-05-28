@@ -77,7 +77,7 @@
         <a class="KI5har tab-link btnOrder" data-value="IsVerified" aria-role="tab" aria-selected="false" aria-controls="olp_panel_id-0.5641504579440175">
             <span class="NoH9rC">Đã đi đơn</span>
         </a>
-        <a  class="KI5har tab-link btnOrder" data-value="IsPaid" aria-role="tab" aria-selected="false" aria-controls="olp_panel_id-0.8466887306709114">
+        <a class="KI5har tab-link btnOrder" data-value="IsPaid" aria-role="tab" aria-selected="false" aria-controls="olp_panel_id-0.8466887306709114">
             <span class="NoH9rC">Hoàn thành</span>
         </a>
     </section>
@@ -85,26 +85,40 @@
     {
         foreach (var order in Model)
         {
-            <div class="order-card mt-3 p-3 border"  data-is-verified="@order.IsVerified" data-is-paid="@order.IsPaid">
+            <div class="order-card mt-3 p-3 border" data-is-verified="@order.IsVerified" data-is-paid="@order.IsPaid">
                 <h4><a href="/Account/OrderDetail/@order.Id" style="color: black">Đơn Hàng: @order.Id</a></h4>
                 @foreach (var od in order.OrderDetails)
                 {
                     var money = od.Quantity * od.Price;
                     var imgUrl = od.VariantSize.ProductVariant.ImageLists.FirstOrDefault(x => x.IsDefault)?.ImageUrl;
+                    var product = od.VariantSize.ProductVariant.Product;
                     <div class="media row">
                         <img src="@imgUrl" class="mr-3 col-4" style="width: 100px;">
-                        <div class="media-body col-5">
-                            <a href="/Product/Detail/@od.VariantSize.ProductVariant.Product.Id"><h5>@od.VariantSize.ProductVariant.Product.Title</h5></a>
+                        <div class="media-body col-3">
+                            <a href="/san-pham/@product.Alias-p@{@product.Id} "><h5>@od.VariantSize.ProductVariant.Product.Title</h5></a>
                             <p>Màu: @od.VariantSize.ProductVariant.Color.Name</p>
                             <p>Kích cỡ: @od.VariantSize.Size.Name</p>
 
                         </div>
                         <div class="col-2"><p>Số lượng: @od.Quantity</p></div>
                         <div class="col-2"><p>Số tiền: @money</p></div>
+                        <button class="btn-link btn-md col-1 h-25 openRatingModalBtn" product-variant-id="@od.VariantSize.ProductVariantId"
+                                user-id="@order.UserId" style="background-color: transparent; border: none;">
+                            Đánh giá sản phẩm
+                        </button>
                     </div>
                 }
             </div>
         }
+        <div class="modal fade" id="ratingModal" tabindex="-1" role="dialog" aria-labelledby="ratingModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <!-- Nội dung form sẽ được tải vào đây -->
+                    </div>
+                </div>
+            </div>
+        </div>
     }
     else
     {
@@ -153,6 +167,24 @@
                     });
                 });
             });
+            $('.openRatingModalBtn').click(function (e) {
+                e.preventDefault();
+                var productVariantId = $(this).attr('product-variant-id');
+                var userId = $(this).attr('user-id');
+                $.ajax({
+                    url: '/Ratings/RatingFormPartial', // Thay đổi URL tương ứng với action của bạn
+                    type: 'GET',
+                    data: { userId:userId, productId: productVariantId },
+                    success: function (res) {
+                        $('#ratingModal .modal-body').html(res);
+                        $('#ratingModal').modal('show');
+                    },
+                    error: function () {
+                        alert('Hiện xảy ra lỗi, vui lòng thử lại sau.');
+                    }
+                });
+            });
         });
+        
     </script>
 }

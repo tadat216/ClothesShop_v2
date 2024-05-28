@@ -21,14 +21,16 @@
 <div class="breadcumb-area overlay pos-rltv">
     <div class="bread-main">
         <div class="bred-hading text-center">
-            <h5>Prodcut Details</h5>
+            <h5>Chi tiết sản phẩm</h5>
         </div>
         <ol class="breadcrumb">
-            <li class="home"><a title="Go to Home Page" href="index.html">Home</a></li>
-            <li class="active">product-details</li>
+            <li class="home"><a title="Go to Home Page" href="/trang-chu">Trang chủ</a></li>
+            <li class="active">sản phẩm - @Model.Title</li>
         </ol>
     </div>
 </div>
+
+@{var numStar = Model.CalStar();}
 
 <!--single-protfolio-area are start-->
 <input type="hidden" id="selectedSizeId" value="@Model.ProductVariants.FirstOrDefault().VariantSizes.FirstOrDefault().Id" />
@@ -40,6 +42,7 @@
                 <div class="portfolio-thumbnil-area" id="img_list-@Model.Id">
                     @foreach (var variant in Model.ProductVariants)
                     {
+                        
                         var productId = Model.Id;
                         <div class="product-more-views @(variant.IsDefault ? "" : "d-none") product-image" id="image-@Model.Id-@variant.Id">
                             <div class="tab_thumbnail" data-tabs="tabs">
@@ -78,12 +81,23 @@
                     <div class="sp-top-des">
                         <h3>@Model.Title</h3>
                         <div class="prodcut-ratting-price">
+
                             <div class="prodcut-ratting">
-                                <a href="#" tabindex="0"><i class="fa fa-star-o"></i></a>
-                                <a href="#" tabindex="0"><i class="fa fa-star-o"></i></a>
-                                <a href="#" tabindex="0"><i class="fa fa-star-o"></i></a>
-                                <a href="#" tabindex="0"><i class="fa fa-star-o"></i></a>
-                                <a href="#" tabindex="0"><i class="fa fa-star-o"></i></a>
+                                @if (numStar == 0)
+                                {
+                                    <p>Sản phẩm chưa có đánh giá</p>
+                                }
+                                else
+                                {
+                                    for (int i = 0; i < numStar; i++)
+                                    {
+                                        <a href="#" tabindex="0"><i class="fa fa-star"></i></a>
+                                    }
+                                    for (int i = 0; i < 5 - numStar; i++)
+                                    {
+                                        <a href="#" tabindex="0"><i class="fa fa-star-o"></i></a>
+                                    }
+                                }
                             </div>
                             @if (Model.IsSale)
                             {
@@ -157,7 +171,7 @@
                         </div>
                         <div class="social-icon socile-icon-style-1">
                             <ul>
-                                <li><a data-tooltip="Add To Cart" class="add-cart add-cart-text" data-placement="left" tabindex="0">Add To Cart<i class="fa fa-cart-plus"></i></a></li>
+                                <li><a data-tooltip="Add To Cart" class="add-cart add-cart-text" data-placement="left" tabindex="0">Thêm vào giỏ hàng<i class="fa fa-cart-plus"></i></a></li>
                                 <li><a href="#" data-tooltip="Wishlist" class="w-list" tabindex="0"><i class="fa fa-heart-o"></i></a></li>
                                 <li><a href="#" data-tooltip="Compare" class="cpare" tabindex="0"><i class="fa fa-refresh"></i></a></li>
                                 <li><a href="#" data-tooltip="Quick View" class="q-view" data-bs-toggle="modal" data-bs-target=".modal" tabindex="0"><i class="fa fa-eye"></i></a></li>
@@ -179,8 +193,8 @@
                     <div class="title-tab-product-category row">
                         <div class="col-lg-12 text-center">
                             <ul class="nav mb-40 heading-style-2" role="tablist">
-                                <li role="presentation"><a href="#newarrival" aria-controls="newarrival" role="tab" data-bs-toggle="tab">Description</a></li>
-                                <li role="presentation"><a class="active" href="#bestsellr" aria-controls="bestsellr" role="tab" data-bs-toggle="tab">Review</a></li>
+                                <li role="presentation"><a href="#newarrival" aria-controls="newarrival" role="tab" data-bs-toggle="tab">Chi tiết</a></li>
+                                <li role="presentation"><a class="active" href="#bestsellr" aria-controls="bestsellr" role="tab" data-bs-toggle="tab">Đánh giá</a></li>
                                 <li role="presentation"><a href="#specialoffer" aria-controls="specialoffer" role="tab" data-bs-toggle="tab">Tags</a></li>
                             </ul>
                         </div>
@@ -196,17 +210,8 @@
                                     </div>
                                 </div>
                                 <div role="tabpanel" class="tab-pane fix fade show active" id="bestsellr">
-                                    <div class="review-wraper">
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim <br> veniam, quis nostrud exercitation.</p>
-                                        <h5>SIZE & FIT</h5>
-                                        <ul>
-                                            <li>Model wears: Style Photoliya U2980</li>
-                                            <li>Model's height: 185”66</li>
-                                        </ul>
-                                        <h5>ABOUT ME</h5>
-                                        <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English.It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English</p>
-                                        <h5>Overview</h5>
-                                        <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form.</p>
+                                    <div class="review-wraper" id="partialViewContainer">
+                                        @Html.Action("ProductRating", new { ProductId = Model.Id })
                                     </div>
                                 </div>
                                 <div role="tabpanel" class="tab-pane fix fade in" id="specialoffer">
@@ -233,56 +238,61 @@
     </div>
 </div>
 <script>
-$(document).ready(function () {
-    var sizeButtons = document.querySelectorAll('.size-button');
-    for (var i = 0; i < sizeButtons.length; i++) {
-        sizeButtons[i].addEventListener('click', function () {
-            document.getElementById('selectedSizeId').value = this.getAttribute('data-size-id');
-            // Thêm phản hồi người dùng tại đây nếu cần
+    $(document).ready(function () {
+        var sizeButtons = document.querySelectorAll('.size-button');
+        for (var i = 0; i < sizeButtons.length; i++) {
+            sizeButtons[i].addEventListener('click', function () {
+                document.getElementById('selectedSizeId').value = this.getAttribute('data-size-id');
+                // Thêm phản hồi người dùng tại đây nếu cần
+            });
+        }
+
+        // Xử lý khi số lượng thay đổi
+        var quantityInput = document.querySelector('input[name="qtybutton"]');
+        quantityInput.addEventListener('click', function () {
+            document.getElementById('selectedQuantity').value = this.value;
         });
-    }
 
-    // Xử lý khi số lượng thay đổi
-    var quantityInput = document.querySelector('input[name="qtybutton"]');
-    quantityInput.addEventListener('click', function () {
-        document.getElementById('selectedQuantity').value = this.value;
-    });
+        // Xử lý khi nút "Thêm vào giỏ hàng" được nhấn
+        var addToCartButton = document.querySelector('.add-cart');
+        addToCartButton.addEventListener('click', function () {
+            var sizeId = document.getElementById('selectedSizeId').value;
+            var quantity = $('.cart-plus-minus-box').val();
+            //console.log(sizeId + ' ' + quantity);
+            //alert(sizeId + " " + quantity)
 
-    // Xử lý khi nút "Thêm vào giỏ hàng" được nhấn
-    var addToCartButton = document.querySelector('.add-cart');
-    addToCartButton.addEventListener('click', function () {
-        var sizeId = document.getElementById('selectedSizeId').value;
-        var quantity = $('.cart-plus-minus-box').val();
-        //console.log(sizeId + ' ' + quantity);
-        //alert(sizeId + " " + quantity)
-        
-        $.ajax({
-            url: '/ShoppingCart/AddToCart',
-            type: 'POST',
-            data: { variantSizeId: sizeId, quantity: quantity },
-            success: function (rs) {
-                alert(rs.message);
-                $('.cart-container').empty();
-                $.get('/ShoppingCart/CartHeaderPartial', function (data) {
-                    $('.cart-container').html(data);
-                });
-            },
+            $.ajax({
+                url: '/ShoppingCart/AddToCart',
+                type: 'POST',
+                data: { variantSizeId: sizeId, quantity: quantity },
+                success: function (rs) {
+                    alert(rs.message);
+                    $('.cart-container').empty();
+                    $.get('/ShoppingCart/CartHeaderPartial', function (data) {
+                        $('.cart-container').html(data);
+                    });
+                },
+            });
+        });
+
+        $('.color-variant').click(function () {
+            // Bỏ chọn tất cả các nút màu
+            $('.color-variant').removeClass('selected');
+            // Chọn nút đã click
+            $(this).addClass('selected');
+        });
+
+        // Xử lý sự kiện click cho các nút kích thước
+        $('.size-button').click(function () {
+            // Bỏ chọn tất cả các nút kích thước
+            $('.size-button').removeClass('selected');
+            // Chọn nút đã click
+            $(this).addClass('selected');
+        });
+        $("#partialViewContainer").on("click", ".pagedList a", function () {
+            var url = $(this).attr("href");
+            $("#partialViewContainer").load(url);
+            console.log(1);
         });
     });
-
-    $('.color-variant').click(function () {
-        // Bỏ chọn tất cả các nút màu
-        $('.color-variant').removeClass('selected');
-        // Chọn nút đã click
-        $(this).addClass('selected');
-    });
-
-    // Xử lý sự kiện click cho các nút kích thước
-    $('.size-button').click(function () {
-        // Bỏ chọn tất cả các nút kích thước
-        $('.size-button').removeClass('selected');
-        // Chọn nút đã click
-        $(this).addClass('selected');
-    });
-});
 </script>

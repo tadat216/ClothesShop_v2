@@ -10,13 +10,18 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using System.Globalization;
+using System.Security.Claims;
+using System.Data.Entity.ModelConfiguration.Configuration;
+using System.Web.DynamicData;
 
 namespace ClothesShop.Areas.Admin.Controllers
 {
-    //[Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     public class AccountController : Controller
     {
         ApplicationDbContext db = new ApplicationDbContext();
@@ -144,8 +149,14 @@ namespace ClothesShop.Areas.Admin.Controllers
         {
             TempData["id"] = data;
         }
-       
-        
+
+        private IAuthenticationManager AuthenticationManager
+        {
+            get
+            {
+                return HttpContext.GetOwinContext().Authentication;
+            }
+        }
         public ActionResult Edit(string id)
         {
             if (id == null)
@@ -231,6 +242,15 @@ namespace ClothesShop.Areas.Admin.Controllers
 
             // If we got this far, something failed, redisplay form
             return View(model);
+        }
+
+        // POST: /Account/LogOff
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult LogOff()
+        {
+            AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpPost]

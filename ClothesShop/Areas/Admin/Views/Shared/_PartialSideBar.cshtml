@@ -181,14 +181,21 @@
                     </a>
                 </li>
             }
-            <li class="nav-item">
-                <a href="javascript:document.getElementById('logOffForm').submit()" class="nav-link">
-                    <i class="nav-icon fas fa-power-off"></i>
-                    <p>
-                        Đăng xuất
-                    </p>
-                </a>
-            </li>
+        <li class="nav-item">
+            @if (User.Identity.IsAuthenticated)
+            {
+                <div>
+                    @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="nav-link">
+                            <i class="nav-icon fas fa-sign-out-alt"></i>
+                            <p>Đăng xuất</p>
+                        </button>
+                    }
+                </div>
+            }
+        </li>
         </ul>
     </nav>
     <!-- /.sidebar-menu -->

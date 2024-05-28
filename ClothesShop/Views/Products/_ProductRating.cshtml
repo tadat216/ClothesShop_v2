@@ -1,0 +1,36 @@
+﻿@using PagedList.Mvc
+@using PagedList
+@model IPagedList<ClothesShop.Models.EF.Rate>
+
+
+@if (Model != null && Model.Any())
+{
+    <div class="comments-body">
+        <ul>
+            @foreach (var rate in Model)
+            {
+                <li class="signle-comments my-5">
+                    <div class="commets-text">
+
+                        <h5>@rate.User.FullName</h5>
+                        <div>
+                            Loại: @rate.ProductVariant.Color.Name
+                        </div>
+                        @Html.Raw(ClothesShop.Common.ShowStar(rate.RateValue))
+                        <div>
+                            <span>@rate.RatedDate.Value.ToString("yyyy-MM-dd")</span> <span> lúc @rate.RatedDate.Value.ToString("hh:mm")</span>
+                        </div>
+                        <p>
+                            @rate.Comment
+                        </p>
+                    </div>
+                </li>
+            }
+            @Html.PagedListPager(Model, page => Url.Action("Index", new { page }), PagedListRenderOptions.Classic)
+        </ul>
+    </div>
+}
+else
+{
+    <p>Sản phẩm chưa có đánh giá!!!</p>
+}    

@@ -9,7 +9,7 @@ using System.Web.Mvc;
 
 namespace ClothesShop.Areas.Admin.Controllers
 {
-    //[Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     public class RoleController : Controller
     {
         ApplicationDbContext db = new ApplicationDbContext();

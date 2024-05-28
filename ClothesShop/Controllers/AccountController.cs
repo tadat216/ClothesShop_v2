@@ -261,8 +261,8 @@ namespace ClothesShop.Controllers
                     TempData["ViewBagLink"] = callbackUrl;
 
                     ViewBag.Message = "Kiểm tra Email và xác minh tài khoản. Bạn phải tiến hành xác minh tài khoản để đăng nhập.";
-                    return View("Info");
-                    // return RedirectToAction("Index", "Home");
+                    //return View("Info");
+                    return RedirectToAction("Index", "Home");
                 }
                 AddErrors(result);
             }

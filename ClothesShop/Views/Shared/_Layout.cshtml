@@ -126,8 +126,8 @@
                                         <i class="fa fa-angle-down"></i>
                                     </a>
                                     <ul class="account_selection">
-                                        <li><a href="/Account/Login"><i class="fa fa-sign-in" aria-hidden="true"></i>Đăng nhập</a></li>
-                                        <li><a href="/Account/Register"><i class="fa fa-user-plus" aria-hidden="true"></i>Đăng kí</a></li>
+                                        <li><a href="/dang-nhap"><i class="fa fa-sign-in" aria-hidden="true"></i>Đăng nhập</a></li>
+                                        <li><a href="/dang-ki"><i class="fa fa-user-plus" aria-hidden="true"></i>Đăng kí</a></li>
                                     </ul>
                                 }
                                 else
@@ -142,8 +142,16 @@
                                             <li><a href="/Admin/Home"><i class="fa fa-vcard" aria-hidden="true"></i>Trang admin</a></li>
                                         }
                                         <li><a href="/Account/Profile"><i class="fa fa-user" aria-hidden="true"></i>Hồ sơ</a></li>
-                                        <li><a href="/Account/ShoppingHistory"><i class="fa fa-money" aria-hidden="true"></i>Lịch sử mua hàng</a></li>
-                                        <li><a href="javascript:document.getElementById('logOffForm').submit()"><i class="fa fa-sign-out" aria-hidden="true"></i>Đăng xuất</a></li>
+                                        <li><a href="/Account/ShoppingHistory"><i class="fa fa-money" aria-hidden="true"></i>Đơn mua</a></li>
+                                        <li>
+                                            @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
+                                            {
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit" class="nav-link styled-button" style="background: none; border: none;">
+                                                    <i class="fa fa-sign-out" aria-hidden="true"></i> Đăng xuất
+                                                </button>
+                                            }
+                                        </li>
                                     </ul>
                                 }
                             </li>
@@ -175,7 +183,7 @@
                         <div class="col-md-2">
                             <div class="logo ptb-20">
                                 <a href="index.html">
-                                    <img src="Content/ShopPage/images/logo/logo.png" alt="main logo">
+                                    <img src="/Content/ShopPage/images/logo/logo.png" alt="main logo">
                                 </a>
                             </div>
                         </div>
@@ -189,129 +197,8 @@
                                         <a href="/danh-muc-san-pham">Sản phẩm</a>
                                         @Html.Action("NavBarProductCategory", "ProductCategories")
                                     </li>
-                                    <li class="mega-parent">
-                                        <a href="shop.html">Shortcut</a>
-                                        <div class="mega-menu-area mma-970">
-                                            <ul class="single-mega-item">
-                                                <li class="menu-title uppercase">Shortcode-01</li>
-                                                <li><a href="shortcode-banner.html">shortcode-banner</a></li>
-                                                <li>
-                                                    <a href="shortcode-best-top-on-sale-slider.html">too-on-sale</a>
-                                                </li>
-                                                <li>
-                                                    <a href="shortcode-blog-item.html">
-                                                        Short Blog
-                                                        Item
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="shortcode-brand-prodcut.html">
-                                                        Brand
-                                                        Product
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="shortcode-brand-slider.html">
-                                                        Brand
-                                                        Slider
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                            <ul class="single-mega-item">
-                                                <li class="menu-title uppercase">Shortcode-02</li>
-                                                <li><a href="shortcode-breadcrumb.html">Breadcrumb</a></li>
-                                                <li>
-                                                    <a href="shortcode-related-product.html">
-                                                        Related
-                                                        Product
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="shortcode-service.html">Service</a>
-                                                </li>
-                                                <li><a href="shortcode-skill.html">Skill</a></li>
-                                                <li><a href="shortcode-slider.html">Slider</a></li>
-                                            </ul>
-                                            <ul class="single-mega-item">
-                                                <li class="menu-title uppercase">Shortcode-03</li>
-                                                <li><a href="shortcode-team.html">Team</a></li>
-                                                <li><a href="shortcode-testimonial.html">Testimonial</a></li>
-                                                <li>
-                                                    <a href="shortcode-why-choose-us.html">
-                                                        Why
-                                                        Choose Us
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </li>
-                                    <li class="mega-parent">
-                                        <a href="index.html">Pages</a>
-                                        <div class="mega-menu-area mma-970">
-                                            <ul class="single-mega-item coloum-4">
-                                                <li class="menu-title uppercase">Pages-01</li>
-                                                <li><a href="about-us.html">About-us</a></li>
-                                                <li><a href="tin-tuc">Tin tức</a></li>
-                                                <li><a href="blog-right.html">Blog-Right</a></li>
-                                                <li><a href="single-blog.html">Single Blog</a></li>
-                                                <li>
-                                                    <a href="single-blog-right.html">
-                                                        Single Blog
-                                                        Right
-                                                    </a>
-                                                </li>
-                                                <li><a href="blog-full.html">Blog-Fullwidth</a></li>
-                                            </ul>
-                                            <ul class="single-mega-item coloum-4">
-                                                <li class="menu-title uppercase">pages-02</li>
-                                                <li>
-                                                    <a href="blog-full-right.html">
-                                                        Blog Ful
-                                                        Rightl
-                                                    </a>
-                                                </li>
-                                                <li><a href="cart.html">Cart</a></li>
-                                                <li><a href="checkout.html">Checkout</a></li>
-                                                <li><a href="compare.html">Compare</a></li>
-                                                <li>
-                                                    <a href="complete-order.html">Complete Order</a>
-                                                </li>
-                                                <li><a href="contact-us.html">Contact US</a></li>
-                                            </ul>
-                                            <ul class="single-mega-item coloum-4">
-                                                <li class="menu-title uppercase">pages-03</li>
-                                                <li><a href="login.html">Login</a></li>
-                                                <li><a href="my-account.html">My Account</a></li>
-                                                <li>
-                                                    <a href="shop-full-grid.html">Shop Full Grid</a>
-                                                </li>
-                                                <li>
-                                                    <a href="shop-full-list.html">Shop Full List</a>
-                                                </li>
-                                                <li>
-                                                    <a href="shop-list-right-sidebar.html">
-                                                        Shop List
-                                                        Right
-                                                    </a>
-                                                </li>
-                                                <li><a href="shop-list.html">Shop List</a></li>
-                                            </ul>
-                                            <ul class="single-mega-item coloum-4">
-                                                <li class="menu-title uppercase">pages-03</li>
-                                                <li>
-                                                    <a href="shop-right-sidebar.html">Shop Right</a>
-                                                </li>
-                                                <li><a href="shop.html">Shop</a></li>
-                                                <li>
-                                                    <a href="single-product.html">Single Prodcut</a>
-                                                </li>
-                                                <li><a href="wishlist.html">Wishlist</a></li>
-                                                <li><a href="faq.html">FAQ</a></li>
-                                            </ul>
-                                        </div>
-                                    </li>
                                     <li><a href="/tin-tuc">Tin tức</a></li>
-                                    <li><a href="about-us.html">ABOUT</a></li>
+                                    <li><a href="about-us.html">Giới thiệu</a></li>
                                 </ul>
                             </nav>
                         </div>
@@ -595,12 +482,12 @@
                         </div>
                         <div class="instagrm">
                             <ul>
-                                <li><a href="#"><img src="Content/ShopPage/images/gallery/01.jpg" alt=""></a></li>
-                                <li><a href="#"><img src="Content/ShopPage/images/gallery/02.jpg" alt=""></a></li>
-                                <li><a href="#"><img src="Content/ShopPage/images/gallery/03.jpg" alt=""></a></li>
-                                <li><a href="#"><img src="Content/ShopPage/images/gallery/04.jpg" alt=""></a></li>
-                                <li><a href="#"><img src="Content/ShopPage/images/gallery/05.jpg" alt=""></a></li>
-                                <li><a href="#"><img src="Content/ShopPage/images/gallery/06.jpg" alt=""></a></li>
+                                <li><a href="#"><img src="/Content/ShopPage/images/gallery/01.jpg" alt=""></a></li>
+                                <li><a href="#"><img src="/Content/ShopPage/images/gallery/02.jpg" alt=""></a></li>
+                                <li><a href="#"><img src="/Content/ShopPage/images/gallery/03.jpg" alt=""></a></li>
+                                <li><a href="#"><img src="/Content/ShopPage/images/gallery/04.jpg" alt=""></a></li>
+                                <li><a href="#"><img src="/Content/ShopPage/images/gallery/05.jpg" alt=""></a></li>
+                                <li><a href="#"><img src="/Content/ShopPage/images/gallery/06.jpg" alt=""></a></li>
                             </ul>
                         </div>
                     </div>

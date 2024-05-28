@@ -12,12 +12,13 @@ using System.Web.Mvc;
 
 namespace ClothesShop.Areas.Admin.Controllers
 {
-    //[Authorize(Roles = "Admin, Employee")]
+    
     public class NewsController : Controller
     {
         ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Admin/News
+        [Authorize(Roles = "Admin, Employee")]
         public ActionResult SearchId(string Searchtext, DateTime? from, DateTime? to, int? page, int? size, string active = "")
         {
             var pageIndex = page.HasValue ? Convert.ToInt32(page) : 1;
@@ -49,7 +50,7 @@ namespace ClothesShop.Areas.Admin.Controllers
 
         }
 
-
+        [Authorize(Roles = "Admin, Employee")]
         public ActionResult Index(string Searchtext, DateTime? from, DateTime? to, int? page, int? size, string active = "")
         {
             var pageIndex = page.HasValue ? Convert.ToInt32(page) : 1;
@@ -89,17 +90,18 @@ namespace ClothesShop.Areas.Admin.Controllers
 
         }
         [HttpPost]
+        [Authorize(Roles = "Admin, Employee")]
         public void SetTempData(string data)
         {
             TempData["id"] = data;
         }
 
-
+        [Authorize(Roles = "Admin, Employee")]
         public ActionResult Create()
         {
             return View();
         }
-
+        [Authorize(Roles = "Admin, Employee")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(News news)
@@ -117,6 +119,7 @@ namespace ClothesShop.Areas.Admin.Controllers
             }
             return View(news);
         }
+        [Authorize(Roles = "Admin, Employee")]
         public ActionResult Edit(string id)
         {
             if (id == null)
@@ -134,6 +137,7 @@ namespace ClothesShop.Areas.Admin.Controllers
             return View(item);
         }
 
+        [Authorize(Roles = "Admin, Employee")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(News news)
@@ -153,6 +157,7 @@ namespace ClothesShop.Areas.Admin.Controllers
             return View(news);
         }
 
+        [Authorize(Roles = "Admin, Employee")]
         [HttpPost]
         public ActionResult Delete(string id)
         {
@@ -165,7 +170,7 @@ namespace ClothesShop.Areas.Admin.Controllers
             }
             return Json(new { success = false });
         }
-
+        [Authorize(Roles = "Admin, Employee")]
         public ActionResult Detail(String id)
         {
             if (id == null)
@@ -185,7 +190,7 @@ namespace ClothesShop.Areas.Admin.Controllers
 
         }
 
-
+        [Authorize(Roles = "Admin, Employee")]
         [HttpPost]
         public ActionResult IsActive(string id)
         {

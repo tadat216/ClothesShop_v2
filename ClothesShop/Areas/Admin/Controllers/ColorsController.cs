@@ -12,6 +12,7 @@ using ClothesShop.Models.EF;
 
 namespace ClothesShop.Areas.Admin.Controllers
 {
+    [Authorize(Roles = "Admin, Employee")]
     public class ColorsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();

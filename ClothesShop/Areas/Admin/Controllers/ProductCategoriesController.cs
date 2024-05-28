@@ -15,6 +15,7 @@ using Microsoft.Ajax.Utilities;
 
 namespace ClothesShop.Areas.Admin.Controllers
 {
+    [Authorize(Roles = "Admin, Employee")]
     public class ProductCategoriesController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();

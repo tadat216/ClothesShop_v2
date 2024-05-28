@@ -21,7 +21,7 @@
     <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
             <!-- Add icons to the links using the .nav-icon class
-    with font-awesome or any other icon font library -->
+            with font-awesome or any other icon font library -->
             <li class="nav-item">
                 <a href="/trang-chu" class="nav-link">
                     <i class="nav-icon fas fa-home"></i>
@@ -30,17 +30,6 @@
                     </p>
                 </a>
             </li>
-            @if (this.User.IsInRole("Admin"))
-            {
-                <li class="nav-item">
-                    <a href="~/Admin/ProductCategories" class="nav-link">
-                        <i class="nav-icon fas fa-th"></i>
-                        <p>
-                            Danh mục
-                        </p>
-                    </a>
-                </li>
-            }
             <li class="nav-item">
                 <a href="~/Admin/News" class="nav-link">
                     <i class="nav-icon fas fa-th"></i>
@@ -67,13 +56,13 @@
                 </ul>
             </li>
             @*<li class="nav-item">
-            <a href="~/Admin/Order/SaleReport" class="nav-link">
-                <i class="nav-icon fas fa-th"></i>
-                <p>
-                    Thống kê báo cáo
-                </p>
-            </a>
-        </li>*@
+                    <a href="~/Admin/Order/SaleReport" class="nav-link">
+                        <i class="nav-icon fas fa-th"></i>
+                        <p>
+                            Thống kê báo cáo
+                        </p>
+                    </a>
+                </li>*@
             <li class="nav-item">
                 <a href="#" class="nav-link">
                     <i class="nav-icon fas fa-th"></i>
@@ -181,21 +170,21 @@
                     </a>
                 </li>
             }
-        <li class="nav-item">
-            @if (User.Identity.IsAuthenticated)
-            {
-                <div>
-                    @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
-                    {
-                        @Html.AntiForgeryToken()
-                        <button type="submit" class="nav-link">
-                            <i class="nav-icon fas fa-sign-out-alt"></i>
-                            <p>Đăng xuất</p>
-                        </button>
-                    }
-                </div>
-            }
-        </li>
+            <li class="nav-item">
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <div>
+                        @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="nav-link">
+                                <i class="nav-icon fas fa-sign-out-alt"></i>
+                                <p>Đăng xuất</p>
+                            </button>
+                        }
+                    </div>
+                }
+            </li>
         </ul>
     </nav>
     <!-- /.sidebar-menu -->
